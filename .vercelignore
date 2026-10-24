@@ -1,0 +1,5 @@
+.env*
+.local
+test
+scripts
+discovery-sheet-*.png

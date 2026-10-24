@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PPCP · Google integration test</title><link rel="stylesheet" href="/style.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+<main>
+  <header><p class="eyebrow">REDX · PPCP</p><h1>Google integration test</h1>
+    <p>Save a pain point to your test Sheet and its attachments to your test Drive folder.</p>
+    <p class="notice">Single-operator prototype. Use synthetic information. Student accounts and production permissions are a later stage.</p>
+  </header>
+  <section aria-labelledby="access-title"><h2 id="access-title">1. Connect</h2>
+    <form id="login"><label>Test access key<input id="access-key" type="password" autocomplete="off" required></label>
+      <button>Unlock test API</button></form>
+    <div class="actions"><button id="check" type="button">Check Google connection</button><button id="logout" type="button">Lock API</button></div>
+    <p id="connection" role="status">Use TEST_ACCESS_KEY from your local configuration.</p>
+  </section>
+  <section aria-labelledby="submit-title"><h2 id="submit-title">2. Submit a test pain point</h2>
+    <form id="submission">
+      <div class="grid">
+        <label>Name<input name="name" value="Test Student" maxlength="200" required></label>
+        <label>Test email<input name="email" type="email" value="student@example.com" maxlength="254" required></label>
+        <label>Student ID<input name="studentId" value="TEST-001" maxlength="200" required></label>
+        <label>Program<input name="program" value="Test Program" maxlength="200" required></label>
+      </div>
+      <label>Domain<select name="domain" id="domain" required><option value="">Check connection to load active domains</option></select></label>
+      <label>Title<input name="title" maxlength="300" required></label>
+      <label>Description<textarea name="description" maxlength="20000" required></textarea></label>
+      <label>Possible solution<textarea name="solution" maxlength="10000"></textarea></label>
+      <label>Attachments<input id="files" type="file" multiple accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.ppt,.pptx"></label>
+      <p class="hint">Up to 10 files; 5 MB each; 20 MB total. Files remain restricted unless your test folder already grants access.</p>
+      <div class="actions"><button id="save" type="submit">Upload and save</button><button id="retry" type="button" disabled>Retry saving uploaded files</button></div>
+      <p id="progress" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+  <section aria-labelledby="results-title"><div class="actions"><h2 id="results-title">3. Read back and add feedback</h2><button id="refresh" type="button">Refresh recent submissions</button></div>
+    <div id="records"></div><article id="detail" hidden></article>
+  </section>
+</main>
+</body>
+</html>

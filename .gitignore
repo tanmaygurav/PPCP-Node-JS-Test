@@ -1,0 +1,8 @@
+.env
+.env.*
+!.env.example
+.local/
+.vercel/
+node_modules/
+coverage/
+discovery-sheet-*.png
