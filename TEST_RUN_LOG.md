@@ -21,13 +21,15 @@ Append results; do not overwrite earlier failures or promote reported/manual res
 | 2026-10-24 | Final Chromium → Vercel, read-only | B01/B03/B04 | Passed; `browser-live-2026-10-24T14-03-15-613Z-ffb272a8.json`; no new Google artifacts |
 | 2026-10-24 | Local target with separated local credentials | L01–L03 | Passed; `api-smoke-2026-10-24T14-03-00-507Z-38827d63.json`; no new Google artifacts |
 | 2026-10-24 | Final Node 22 harness | All 18 offline cases | Passed after local-alias safety check; `offline-2026-10-24T14-06-03-437Z-03129b34.json` |
+| 2026-10-24 | GitHub Actions, Ubuntu / Node 22, commit `9e794a3` | Syntax, offline suite, Chromium fixture and artifact upload | Passed; [run 40101243415](https://github.com/tanmaygurav/PPCP-Node-JS-Test/actions/runs/40101243415) |
+| 2026-10-24 | GitHub Actions, Ubuntu / Node 22, tooling v1.0.1 / `7bd1707` | Syntax, offline suite, Chromium fixture and artifact upload | Passed; [run 40101541777](https://github.com/tanmaygurav/PPCP-Node-JS-Test/actions/runs/40101541777); permanent job/step summary in `test-evidence/m01/github-actions-40101541777.json` |
 
 ## Pending verification
 
 - Live API and real-browser write regressions are now captured above. Reports contain exact created IDs; no secrets or upload-session URLs are retained.
 - Manual M01-M02 boundary acceptance, M03 real network interruption, M04 ambiguous save-response recovery: not individually verified in historical evidence.
 - 60-user burst, production identity/private attachment delivery, and M02 accounts: not implemented or verified by M01.
-- GitHub workflows are pushed. Live GitHub runs require the **M01_TEST_ACCESS_KEY repository secret**; offline runs do not. Hosted Actions execution was not verified through the unauthenticated API (private repository returned 404). Source refs alone do not freeze Vercel's production branch; verify branch tracking independently.
+- Offline GitHub Actions passed. Live GitHub runs still require the **M01_TEST_ACCESS_KEY repository secret**; local live API/browser evidence is recorded above. The repository initially returned 404 while private; after the user made it public, hosted job/step results were independently verified. Source refs alone do not freeze Vercel's production branch; verify branch tracking independently.
 - User selected the milestone branch, but the supplied screenshot showed **No deployments found**, so the saved branch setting is not yet confirmed. Deploy that branch once and retry the setting.
 
 Selected passing JSON reports are archived permanently under `test-evidence/m01/`; they show the exact runner commit and whether the tooling checkout had uncommitted changes. They do not claim a clean release checkout or a verified deployment commit when those facts were unknown.
