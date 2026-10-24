@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "runId": "2026-10-24T13-47-20-502Z-b601b920",
+  "kind": "api-smoke",
+  "milestone": "M01",
+  "runnerCommit": "7f1e82ef11edcc7b4e36c1e193035951b79e2d21",
+  "runnerDirty": true,
+  "expectedAppCommit": "7f1e82ef11edcc7b4e36c1e193035951b79e2d21",
+  "actualDeploymentCommit": null,
+  "target": "https://ppcp-node-js-test.vercel.app",
+  "environment": "deployed",
+  "node": "v20.12.2",
+  "startedAt": "2026-10-24T13:47:20.575Z",
+  "status": "passed",
+  "steps": [
+    {
+      "id": "M01-L01",
+      "purpose": "Node liveness and unlock",
+      "status": "passed",
+      "startedAt": "2026-10-24T13:47:20.576Z",
+      "durationMs": 569
+    },
+    {
+      "id": "M01-L02",
+      "purpose": "Expected Google Sheet and Media folder",
+      "status": "passed",
+      "startedAt": "2026-10-24T13:47:21.149Z",
+      "durationMs": 837
+    },
+    {
+      "id": "M01-L03",
+      "purpose": "Active domains and list retrieval",
+      "status": "passed",
+      "startedAt": "2026-10-24T13:47:21.987Z",
+      "durationMs": 770
+    },
+    {
+      "id": "M01-L04",
+      "purpose": "Two resumable uploads complete",
+      "status": "passed",
+      "startedAt": "2026-10-24T13:47:22.758Z",
+      "durationMs": 12652
+    },
+    {
+      "id": "M01-L05",
+      "purpose": "Save and read back complete submission",
+      "status": "passed",
+      "startedAt": "2026-10-24T13:47:35.410Z",
+      "durationMs": 1585
+    },
+    {
+      "id": "M01-L06",
+      "purpose": "Sequential retry returns same record",
+      "status": "passed",
+      "startedAt": "2026-10-24T13:47:36.997Z",
+      "durationMs": 355
+    },
+    {
+      "id": "M01-L07",
+      "purpose": "Remark write and readback",
+      "status": "passed",
+      "startedAt": "2026-10-24T13:47:37.353Z",
+      "durationMs": 1110
+    }
+  ],
+  "artifacts": {
+    "submissionId": "efb9b379-9b50-49ce-b894-5f3d05099abe",
+    "files": [
+      {
+        "id": "1ajVMplzkohakTmUmQbinfWwwsZ_iFS-g",
+        "name": "ppcp-2026-10-24T13-47-20-502Z-b601b920-a.png",
+        "completed": true
+      },
+      {
+        "id": "1L2ItVPbIS0CXJPzgCUkCqRLDETHzjnQ3",
+        "name": "ppcp-2026-10-24T13-47-20-502Z-b601b920-b.png",
+        "completed": true
+      }
+    ],
+    "remark": {
+      "submissionId": "efb9b379-9b50-49ce-b894-5f3d05099abe",
+      "text": "Synthetic regression feedback 2026-10-24T13-47-20-502Z-b601b920"
+    }
+  },
+  "cleanup": "Retained. Use only this manifest for manual cleanup. An ambiguous timeout does not prove no write occurred.",
+  "finishedAt": "2026-10-24T13:47:38.464Z"
+}

@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "runId": "2026-10-24T14-03-15-613Z-ffb272a8",
+  "kind": "browser-live",
+  "milestone": "M01",
+  "runnerCommit": "7f1e82ef11edcc7b4e36c1e193035951b79e2d21",
+  "runnerDirty": true,
+  "expectedAppCommit": "7f1e82ef11edcc7b4e36c1e193035951b79e2d21",
+  "actualDeploymentCommit": null,
+  "target": "https://ppcp-node-js-test.vercel.app",
+  "environment": "deployed",
+  "node": "v20.12.2",
+  "writeEnabled": false,
+  "fixtureVersion": 1,
+  "startedAt": "2026-10-24T14:03:15.682Z",
+  "status": "passed",
+  "steps": [
+    {
+      "id": "M01-B01",
+      "purpose": "Browser unlock and Google connection UI",
+      "status": "passed",
+      "startedAt": "2026-10-24T14:03:15.894Z",
+      "durationMs": 3490
+    },
+    {
+      "id": "M01-B03",
+      "purpose": "Oversized file is rejected before upload-session request",
+      "status": "passed",
+      "startedAt": "2026-10-24T14:03:19.386Z",
+      "durationMs": 741
+    },
+    {
+      "id": "M01-B04",
+      "purpose": "Browser logout removes API access",
+      "status": "passed",
+      "startedAt": "2026-10-24T14:03:20.128Z",
+      "durationMs": 575
+    }
+  ],
+  "artifacts": {
+    "submissionId": null,
+    "files": [],
+    "remark": null
+  },
+  "cleanup": "Retained. Use only this manifest for manual cleanup. An ambiguous timeout does not prove no write occurred.",
+  "finishedAt": "2026-10-24T14:03:20.705Z"
+}

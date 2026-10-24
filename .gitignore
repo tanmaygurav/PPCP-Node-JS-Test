@@ -1,9 +1,12 @@
 .env
 .env.*
 !.env.example
+!.env.test.example
 .local/
 .vercel/
 node_modules/
 coverage/
 discovery-sheet-*.png
 output/
+playwright-report/
+test-results/

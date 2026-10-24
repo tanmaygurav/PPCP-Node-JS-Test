@@ -5,7 +5,7 @@ import { GoogleStore } from '../src/google.mjs';
 const config = { origin: 'http://localhost:3000', clientId: 'test-client', clientSecret: 'test-secret', refreshToken: 'test-refresh', spreadsheetId: 'test-sheet', folderId: 'test-folder' };
 const json = (value, status = 200) => new Response(JSON.stringify(value), { status, headers: { 'Content-Type': 'application/json' } });
 
-test('token refresh is coalesced and bearer credentials stay server-side', async () => {
+test('M01-G01 token refresh is coalesced and bearer credentials stay server-side', async () => {
   let refreshes = 0, reads = 0;
   const store = new GoogleStore(config, async (url, options) => {
     if (url.includes('/token')) { refreshes++; return json({ access_token: 'private-token', expires_in: 3600 }); }
@@ -14,7 +14,7 @@ test('token refresh is coalesced and bearer credentials stay server-side', async
   await Promise.all([store.list(), store.list()]);
   assert.equal(refreshes, 1); assert.equal(reads, 2);
 });
-test('append uses RAW and exact A:R mapping; rejects row-number formula sheets', async () => {
+test('M01-G02 append uses RAW and exact A:R mapping; rejects row-number formula sheets', async () => {
   let formula = false; const calls = [];
   const store = new GoogleStore(config, async (url, options) => {
     if (url.includes('/token')) return json({ access_token: 'token', expires_in: 3600 });
@@ -33,7 +33,7 @@ test('append uses RAW and exact A:R mapping; rejects row-number formula sheets',
   assert.equal(JSON.parse(write.options.body).values[0][17], 'Description');
   formula = true; await assert.rejects(store.appendSubmission('id-2', data, []), /Remove formulas/);
 });
-test('resumable creation uses generated file ID, folder, size, and app properties without exposing token', async () => {
+test('M01-G03 resumable creation uses generated file ID, folder, size, and app properties without exposing token', async () => {
   const store = new GoogleStore(config, async (url, options) => {
     if (url.includes('/token')) return json({ access_token: 'secret-access-token', expires_in: 3600 });
     if (url.includes('/generateIds')) return json({ ids: ['new-file-id'] });
@@ -46,7 +46,7 @@ test('resumable creation uses generated file ID, folder, size, and app propertie
   const uploads = await store.createUploads('submission', [{ name: 'x.pdf', size: 100, mimeType: 'application/pdf' }]);
   assert.equal(uploads[0].id, 'new-file-id'); assert.ok(!JSON.stringify(uploads).includes('secret-access-token'));
 });
-test('Drive verification rejects wrong folder, size, ownership marker, trashed and incomplete files', async () => {
+test('M01-G04 Drive verification rejects wrong folder, size, ownership marker, trashed and incomplete files', async () => {
   const actual = { id: 'file', name: 'x.pdf', size: '100', mimeType: 'application/pdf', parents: ['test-folder'],
     trashed: false, appProperties: { prototype: 'ppcp-v3-test', submissionId: 'submission' } };
   let result = actual;
@@ -57,7 +57,7 @@ test('Drive verification rejects wrong folder, size, ownership marker, trashed a
     result = { ...actual, ...change }; await assert.rejects(store.verifyUploads('submission', expected), /attachment/);
   }
 });
-test('ambiguous write failures are never automatically retried', async () => {
+test('M01-G05 ambiguous write failures are never automatically retried', async () => {
   let writes = 0;
   const store = new GoogleStore(config, async url => {
     if (url.includes('/token')) return json({ access_token: 'token', expires_in: 3600 });

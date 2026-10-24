@@ -1,0 +1,6 @@
+{
+  "email": "prototype@example.com", "name": "Synthetic test operator", "studentId": "TEST-ONLY",
+  "program": "Integration test", "title": "PPCP automated regression",
+  "description": "Synthetic M01 regression record. Use its run report to identify records and files.",
+  "solution": "Validate preserved Google integration."
+}

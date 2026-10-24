@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "runId": "2026-10-24T13-51-13-000Z-a28c0892",
+  "kind": "browser-live",
+  "milestone": "M01",
+  "runnerCommit": "7f1e82ef11edcc7b4e36c1e193035951b79e2d21",
+  "runnerDirty": true,
+  "expectedAppCommit": "7f1e82ef11edcc7b4e36c1e193035951b79e2d21",
+  "actualDeploymentCommit": null,
+  "target": "https://ppcp-node-js-test.vercel.app",
+  "environment": "deployed",
+  "node": "v20.12.2",
+  "startedAt": "2026-10-24T13:51:13.219Z",
+  "status": "passed",
+  "steps": [
+    {
+      "id": "M01-B01",
+      "purpose": "Browser unlock and Google connection UI",
+      "status": "passed",
+      "startedAt": "2026-10-24T13:51:13.652Z",
+      "durationMs": 2020
+    },
+    {
+      "id": "M01-B02",
+      "purpose": "Browser direct upload, submission and readback",
+      "status": "passed",
+      "startedAt": "2026-10-24T13:51:15.679Z",
+      "durationMs": 17853
+    },
+    {
+      "id": "M01-B03",
+      "purpose": "Oversized file is rejected before upload-session request",
+      "status": "passed",
+      "startedAt": "2026-10-24T13:51:33.535Z",
+      "durationMs": 974
+    },
+    {
+      "id": "M01-B04",
+      "purpose": "Browser logout removes API access",
+      "status": "passed",
+      "startedAt": "2026-10-24T13:51:34.513Z",
+      "durationMs": 613
+    }
+  ],
+  "artifacts": {
+    "submissionId": "f4a16f8e-e2ea-4298-86de-a1cb25b97c69",
+    "files": [
+      {
+        "id": "1p2YPFsKPcayee7Z1BtEplNAS9WHbZ8_3",
+        "name": "ppcp-2026-10-24T13-51-13-000Z-a28c0892-a.png",
+        "completed": true
+      },
+      {
+        "id": "1_kfQeJ2YEVCmgTAQHr39zv-3S5vfpWyI",
+        "name": "ppcp-2026-10-24T13-51-13-000Z-a28c0892-b.png",
+        "completed": true
+      }
+    ],
+    "remark": {
+      "submissionId": "f4a16f8e-e2ea-4298-86de-a1cb25b97c69",
+      "text": "Browser feedback 2026-10-24T13-51-13-000Z-a28c0892"
+    }
+  },
+  "cleanup": "Retained. Use only this manifest for manual cleanup. An ambiguous timeout does not prove no write occurred.",
+  "finishedAt": "2026-10-24T13:51:35.130Z"
+}

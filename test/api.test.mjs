@@ -35,7 +35,7 @@ async function fixture(t) {
 const data = { email: 'test@example.com', name: 'Test', studentId: '01', program: 'Test program',
   domain: 'Education', title: 'A test problem', description: '=literal text', solution: '' };
 
-test('API requires an access key and blocks cross-origin mutations', async t => {
+test('M01-A01 API requires an access key and blocks cross-origin mutations', async t => {
   const { call, login } = await fixture(t);
   assert.equal((await call('/api/health')).status, 200);
   assert.equal((await call('/api/submissions')).status, 401);
@@ -43,7 +43,7 @@ test('API requires an access key and blocks cross-origin mutations', async t => 
   assert.equal((await login()).status, 200);
   assert.equal((await call('/api/upload-sessions', { files: [] }, { origin: 'https://elsewhere.example' })).status, 403);
 });
-test('upload plan -> submission -> detail -> remark -> repeat save reuses same ID', async t => {
+test('M01-A02 upload plan -> submission -> detail -> remark -> repeat save reuses same ID', async t => {
   const { call, login, records, remarks } = await fixture(t); await login();
   const plan = await call('/api/upload-sessions', { files: [{ name: 'test.pdf', size: 20 }] });
   assert.equal(plan.status, 201);
@@ -57,14 +57,14 @@ test('upload plan -> submission -> detail -> remark -> repeat save reuses same I
   assert.equal(remarks[0].givenBy, 'Prototype operator');
   assert.equal((await call(`/api/submissions/${id}/remarks`)).body.items.length, 1);
 });
-test('attachment verification failure does not write a Sheet row', async t => {
+test('M01-A03 attachment verification failure does not write a Sheet row', async t => {
   const { call, login, store, records } = await fixture(t); await login();
   store.verifyUploads = async () => { throw new AppError(409, 'Wrong folder or size'); };
   const { body } = await call('/api/upload-sessions', { files: [{ name: 'x.pdf', size: 10 }] });
   assert.equal((await call('/api/submissions', { ...data, ticket: body.ticket })).status, 409);
   assert.equal(records.length, 0);
 });
-test('domain, JSON shape, file limits, and ticket validation run on server', async t => {
+test('M01-A04 domain, JSON shape, file limits, and ticket validation run on server', async t => {
   const { call, login } = await fixture(t); await login();
   assert.equal((await call('/api/upload-sessions', { files: [{ name: 'a.exe', size: 1 }] })).status, 400);
   assert.equal((await call('/api/upload-sessions', null)).status, 400);
@@ -72,7 +72,7 @@ test('domain, JSON shape, file limits, and ticket validation run on server', asy
   assert.equal((await call('/api/submissions', { ...data, domain: 'Unknown', ticket: body.ticket })).status, 400);
   assert.equal((await call('/api/submissions', { ...data, ticket: body.ticket + 'tampered' })).status, 401);
 });
-test('Vercel rewrite query and logout use the same handler', async t => {
+test('M01-A05 Vercel rewrite query and logout use the same handler', async t => {
   const { call, login } = await fixture(t); await login();
   assert.equal((await call('/api/index?route=submissions&limit=1')).status, 200);
   assert.equal((await call('/api/logout', {})).status, 200);

@@ -1,0 +1,11 @@
+{
+  "milestone": "M01", "version": 1,
+  "tabs": {
+    "Responses": ["TAG", "ID", "Timestamp", "Email address", "Name", "Student ID", "Program Name", "Domain", "Title", "Who is experiencing the problem?", "Insert Image / Video", "Possible Solution", "What is the problem?", "Where is the user experiencing the problem?", "When does the problem present itself to the user?", "What other activities is the user performing?", "Why should this problem be solved?", "Description"],
+    "Users": ["UUID", "Name", "Access Granted", "Email", "Password", "Access Status", "Program", "ID/ Roll no."],
+    "Remarks": ["UUID", "Given by", "Remarks", "Timestamp"],
+    "Calculations": ["Domain", "Program Name", "Active Domains"]
+  },
+  "activeDomain": "Education",
+  "formulaPolicy": "Use fixed IDs. Maintain Active Domains in C2:C manually."
+}

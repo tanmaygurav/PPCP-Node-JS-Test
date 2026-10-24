@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "runId": "2026-10-24T12-50-01-524Z-ff4a2f7b",
+  "kind": "browser-mock",
+  "milestone": "M01",
+  "runnerCommit": "7f1e82ef11edcc7b4e36c1e193035951b79e2d21",
+  "runnerDirty": true,
+  "expectedAppCommit": "7f1e82ef11edcc7b4e36c1e193035951b79e2d21",
+  "actualDeploymentCommit": null,
+  "target": "http://127.0.0.1:1455",
+  "environment": "local",
+  "node": "v20.12.2",
+  "startedAt": "2026-10-24T12:50:01.669Z",
+  "status": "passed",
+  "steps": [
+    {
+      "id": "M01-B01",
+      "purpose": "Browser unlock and Google connection UI",
+      "status": "passed",
+      "startedAt": "2026-10-24T12:50:02.138Z",
+      "durationMs": 751
+    },
+    {
+      "id": "M01-B02",
+      "purpose": "Browser direct upload, submission and readback",
+      "status": "passed",
+      "startedAt": "2026-10-24T12:50:02.893Z",
+      "durationMs": 821
+    },
+    {
+      "id": "M01-B05",
+      "purpose": "Interrupted upload resumes after status probe (mock only)",
+      "status": "passed",
+      "startedAt": "2026-10-24T12:50:03.718Z",
+      "durationMs": 0
+    },
+    {
+      "id": "M01-B03",
+      "purpose": "Oversized file is rejected before upload-session request",
+      "status": "passed",
+      "startedAt": "2026-10-24T12:50:03.719Z",
+      "durationMs": 916
+    },
+    {
+      "id": "M01-B04",
+      "purpose": "Browser logout removes API access",
+      "status": "passed",
+      "startedAt": "2026-10-24T12:50:04.636Z",
+      "durationMs": 83
+    }
+  ],
+  "artifacts": {
+    "submissionId": "1097f119-b07f-497e-9fcb-8c1c6c35b1e0",
+    "files": [
+      {
+        "id": "6d6ebc65-21f4-4019-80a4-c1a8d5c2de08",
+        "name": "ppcp-2026-10-24T12-50-01-524Z-ff4a2f7b-a.png",
+        "completed": true
+      },
+      {
+        "id": "c49aca4a-0bb0-4f55-8daa-fb012c82b73b",
+        "name": "ppcp-2026-10-24T12-50-01-524Z-ff4a2f7b-b.png",
+        "completed": true
+      }
+    ],
+    "remark": {
+      "submissionId": "1097f119-b07f-497e-9fcb-8c1c6c35b1e0",
+      "text": "Browser feedback 2026-10-24T12-50-01-524Z-ff4a2f7b"
+    }
+  },
+  "cleanup": "Retained. Use only this manifest for manual cleanup. An ambiguous timeout does not prove no write occurred.",
+  "finishedAt": "2026-10-24T12:50:04.721Z"
+}

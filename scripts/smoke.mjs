@@ -1,60 +1,60 @@
-import { randomUUID } from 'node:crypto';
-import { loadLocalEnv, readConfig } from '../src/config.mjs';
+import { pathToFileURL } from 'node:url';
+import { apiClient, check, createReport, fixture, liveConfig, loadTestEnv, parseArgs, png } from '../test-tools/runtime.mjs';
 
-loadLocalEnv();
-const config = readConfig();
-let cookie = '';
-async function api(path, body) {
-  const started = performance.now();
-  const response = await fetch(`${config.origin}/api${path}`, {
-    method: body === undefined ? 'GET' : 'POST', signal: AbortSignal.timeout(60_000),
-    headers: { Origin: config.origin, Cookie: cookie, 'Content-Type': 'application/json' },
-    body: body === undefined ? undefined : JSON.stringify(body)
-  });
-  if (response.headers.get('set-cookie')) cookie = response.headers.get('set-cookie').split(';')[0];
-  const result = await response.json();
-  console.log(`${body === undefined ? 'GET' : 'POST'} ${path}: ${response.status}, ${Math.round(performance.now() - started)} ms`);
-  if (!response.ok) throw new Error(result.error || 'API request failed');
-  return result;
-}
-try {
-  await api('/health');
-  await api('/session', { accessKey: config.secret });
-  const checks = await api('/checks');
-  console.log(`Sheet: ${checks.spreadsheet}; folder: ${checks.folder}`);
-  const { domains } = await api('/domains');
-  console.log(`Active domains: ${domains.length}`);
-  if (process.argv.includes('--write')) {
-    if (!domains.length) throw new Error('Add a test domain in Calculations!C2 before the write test.');
-    // Valid 1x1 PNG; intentionally synthetic, with no real student information.
-    const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jZQAAAABJRU5ErkJggg==', 'base64');
-    const suffix = randomUUID().slice(0, 8);
-    const files = ['a', 'b'].map(letter => ({ name: `ppcp-smoke-${suffix}-${letter}.png`, size: png.length }));
-    const plan = await api('/upload-sessions', { files });
-    for (const upload of plan.uploads) {
-      const response = await fetch(upload.uploadUrl, {
-        method: 'PUT', signal: AbortSignal.timeout(60_000), headers: {
-          Origin: config.origin, 'Content-Type': upload.mimeType, 'Content-Range': `bytes 0-${png.length - 1}/${png.length}`
-        }, body: png
+export async function smoke(options, config) {
+  const log = createReport('api-smoke', options, config), api = apiClient(config);
+  try {
+    await log.step('M01-L01', 'Node liveness and unlock', async () => {
+      check((await api.call('/health')).ok === true, 'Health response was not healthy.');
+      await api.call('/session', { accessKey: config.key });
+    });
+    await log.step('M01-L02', 'Expected Google Sheet and Media folder', async () => {
+      const result = await api.call('/checks');
+      check(result.spreadsheet === config.baseline.expectedSpreadsheetName && result.folder === config.baseline.expectedFolderName, 'Resource names do not match M01. Check the target configuration before writing.');
+    });
+    const domains = await log.step('M01-L03', 'Active domains and list retrieval', async () => {
+      const result = await api.call('/domains');
+      check(Array.isArray(result.domains) && result.domains.length > 0, 'Add an active domain in Calculations!C2:C.');
+      check(Array.isArray((await api.call('/submissions?limit=1')).items), 'Expected a submission list.');
+      return result.domains;
+    });
+    if (options.write) {
+      const runId = log.report.runId;
+      const files = ['a', 'b'].map(letter => ({ name: `ppcp-${runId}-${letter}.png`, size: png.length }));
+      const plan = await log.step('M01-L04', 'Two resumable uploads complete', async () => {
+        const plan = await api.call('/upload-sessions', { files });
+        log.report.artifacts.submissionId = plan.submissionId;
+        log.report.artifacts.files = plan.uploads.map(upload => ({ id: upload.id, name: upload.name, completed: false })); log.persist();
+        for (const upload of plan.uploads) {
+          const response = await fetch(upload.uploadUrl, { method: 'PUT', signal: AbortSignal.timeout(60_000),
+            headers: { Origin: config.origin, 'Content-Type': upload.mimeType, 'Content-Range': `bytes 0-${png.length - 1}/${png.length}` }, body: png });
+          check(response.ok, `Drive upload returned HTTP ${response.status}. Inspect manifest before retrying.`);
+          log.report.artifacts.files.find(file => file.id === upload.id).completed = true; log.persist();
+        }
+        return plan;
       });
-      console.log(`Drive upload ${upload.name}: ${response.status}; CORS origin: ${response.headers.get('access-control-allow-origin') || '(not exposed)'}`);
-      if (!response.ok) throw new Error('Upload failed; no Sheet row was written. Inspect the test Media folder.');
+      const body = { ...fixture, title: `${fixture.title} ${runId}`, description: `${fixture.description}\nRun: ${runId}`, domain: domains[0], ticket: plan.ticket };
+      await log.step('M01-L05', 'Save and read back complete submission', async () => {
+        check((await api.call('/submissions', body)).item.id === plan.submissionId, 'Saved ID differs from upload plan.');
+        const result = await api.call(`/submissions/${plan.submissionId}`);
+        check(result.item.description === body.description && result.item.media.length === 2, 'Submission readback differs from fixture.');
+        check(result.item.media.every(file => plan.uploads.some(upload => upload.id === file.fileId)), 'Readback file IDs do not match this run.');
+      });
+      await log.step('M01-L06', 'Sequential retry returns same record', async () => {
+        const retry = await api.call('/submissions', body);
+        check(retry.alreadySaved === true && retry.item.id === plan.submissionId, 'Retry did not reuse the saved record.');
+      });
+      await log.step('M01-L07', 'Remark write and readback', async () => {
+        const remark = `Synthetic regression feedback ${runId}`;
+        log.report.artifacts.remark = { submissionId: plan.submissionId, text: remark }; log.persist();
+        await api.call(`/submissions/${plan.submissionId}/remarks`, { remark });
+        check((await api.call(`/submissions/${plan.submissionId}/remarks`)).items.some(item => item.remark === remark), 'Remark readback failed.');
+      });
     }
-    const body = { ticket: plan.ticket, email: 'prototype@example.com', name: 'Synthetic test operator',
-      studentId: 'TEST-ONLY', program: 'Integration test', domain: domains[0], title: `Node integration smoke ${suffix}`,
-      description: 'Synthetic local Node to Google Sheets and Drive integration test. Safe to remove after review.', solution: 'Validate migration feasibility.' };
-    const saved = await api('/submissions', body);
-    console.log(`Saved submission: ${saved.item.id}`);
-    const repeated = await api('/submissions', body);
-    if (!repeated.alreadySaved || repeated.item.id !== saved.item.id) throw new Error('Sequential retry did not return the same record.');
-    const detail = await api(`/submissions/${saved.item.id}`);
-    if (detail.item.media.length !== 2 || detail.item.description !== body.description) throw new Error('Readback did not match the submitted data.');
-    await api(`/submissions/${saved.item.id}/remarks`, { remark: 'Synthetic integration feedback.' });
-    const remarks = await api(`/submissions/${saved.item.id}/remarks`);
-    if (!remarks.items.some(item => item.remark === 'Synthetic integration feedback.')) throw new Error('Remark readback failed.');
-    console.log('PASS: two uploaded files, submission readback, sequential save retry, and remark readback. Test artifacts were retained for inspection.');
-  } else {
-    await api('/submissions?limit=1');
-    console.log('Read-only smoke passed. Add --write to create one synthetic submission, two small PNGs and one remark.');
-  }
-} catch (error) { console.error(error.message); process.exitCode = 1; }
+    log.finish(true); return log.report;
+  } catch (error) { log.finish(false); throw error; }
+}
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  try { loadTestEnv(); const options = parseArgs(); await smoke(options, liveConfig(options)); }
+  catch (error) { console.error(error.safeMessage || 'Live test failed. See the last run report; raw errors are suppressed.'); process.exitCode = 1; }
+}

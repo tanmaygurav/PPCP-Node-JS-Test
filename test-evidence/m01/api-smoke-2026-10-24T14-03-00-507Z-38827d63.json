@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "runId": "2026-10-24T14-03-00-507Z-38827d63",
+  "kind": "api-smoke",
+  "milestone": "M01",
+  "runnerCommit": "7f1e82ef11edcc7b4e36c1e193035951b79e2d21",
+  "runnerDirty": true,
+  "expectedAppCommit": "7f1e82ef11edcc7b4e36c1e193035951b79e2d21",
+  "actualDeploymentCommit": null,
+  "target": "http://localhost:3000",
+  "environment": "local",
+  "node": "v20.12.2",
+  "writeEnabled": false,
+  "fixtureVersion": 1,
+  "startedAt": "2026-10-24T14:03:00.641Z",
+  "status": "passed",
+  "steps": [
+    {
+      "id": "M01-L01",
+      "purpose": "Node liveness and unlock",
+      "status": "passed",
+      "startedAt": "2026-10-24T14:03:00.643Z",
+      "durationMs": 105
+    },
+    {
+      "id": "M01-L02",
+      "purpose": "Expected Google Sheet and Media folder",
+      "status": "passed",
+      "startedAt": "2026-10-24T14:03:00.752Z",
+      "durationMs": 2471
+    },
+    {
+      "id": "M01-L03",
+      "purpose": "Active domains and list retrieval",
+      "status": "passed",
+      "startedAt": "2026-10-24T14:03:03.224Z",
+      "durationMs": 839
+    }
+  ],
+  "artifacts": {
+    "submissionId": null,
+    "files": [],
+    "remark": null
+  },
+  "cleanup": "Retained. Use only this manifest for manual cleanup. An ambiguous timeout does not prove no write occurred.",
+  "finishedAt": "2026-10-24T14:03:04.065Z"
+}

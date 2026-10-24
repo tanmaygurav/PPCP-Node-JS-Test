@@ -1,0 +1,56 @@
+name: Live milestone regression (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Read-only by default; write modes create retained synthetic records and files
+        type: choice
+        options: [api-read, api-write, browser-read, browser-write]
+        default: api-read
+        required: true
+      target:
+        description: m01 or an explicit test deployment HTTPS origin
+        type: string
+        default: m01
+        required: true
+permissions:
+  contents: read
+concurrency:
+  group: m01-live-regression
+  cancel-in-progress: false
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    environment: m01
+    timeout-minutes: 15
+    env:
+      TEST_TARGET_ACCESS_KEY: ${{ secrets.TEST_TARGET_ACCESS_KEY }}
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+      TEST_TARGET: ${{ inputs.target }}
+      TEST_MODE: ${{ inputs.mode }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - if: startsWith(inputs.mode, 'browser-')
+        run: npx playwright install --with-deps chromium
+      - name: Run explicitly selected live test
+        shell: bash
+        run: |
+          case "$TEST_MODE" in
+            api-read) npm run google:smoke -- --target "$TEST_TARGET" ;;
+            api-write) npm run google:smoke -- --target "$TEST_TARGET" --write ;;
+            browser-read) npm run test:browser -- --target "$TEST_TARGET" ;;
+            browser-write) npm run test:browser -- --target "$TEST_TARGET" --write ;;
+            *) exit 1 ;;
+          esac
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: m01-live-${{ github.run_id }}-${{ github.run_attempt }}
+          path: output/test-runs/*.json
+          retention-days: 90
+          if-no-files-found: warn

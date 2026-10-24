@@ -4,3 +4,11 @@ test
 scripts
 discovery-sheet-*.png
 output
+test-tools
+fixtures
+.github
+milestones.json
+MILESTONES.md
+TEST_CATALOG.md
+TEST_RUN_LOG.md
+test-evidence

@@ -3,15 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "engines": { "node": "22.x" },
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "setup": "node scripts/setup.mjs",
     "google:authorize": "node scripts/authorize.mjs",
     "google:smoke": "node scripts/smoke.mjs",
     "start": "node server.mjs",
-    "test": "node --test",
+    "test": "node scripts/offline.mjs",
+    "test:browser": "node scripts/browser.mjs",
+    "test:browser:mock": "node scripts/browser.mjs --mock --write",
+    "fixtures:export": "node scripts/export-fixtures.mjs",
     "check:deploy": "node --check src/app.mjs && node --check src/google.mjs && node --check src/config.mjs && node --check src/domain.mjs && node --check src/security.mjs && node --check public/app.js && node --check api/index.js",
     "check": "npm run check:deploy",
-    "check:local": "npm run check:deploy && node --check scripts/authorize.mjs && node --check scripts/setup.mjs && node --check scripts/smoke.mjs && node --check server.mjs"
+    "check:local": "npm run check:deploy && node --check scripts/authorize.mjs && node --check scripts/setup.mjs && node --check scripts/smoke.mjs && node --check scripts/browser.mjs && node --check scripts/offline.mjs && node --check test-tools/runtime.mjs && node --check test-tools/mock-server.mjs && node --check server.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.64.1"
   }
 }

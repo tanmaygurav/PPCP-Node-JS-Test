@@ -2,6 +2,14 @@
 
 This is step 2: a Node backend and a small browser test page for a **personal test Sheet and Drive folder**. It does not use Apps Script. The same handler runs locally and as a Vercel Node function. There are no third-party runtime dependencies. The full React frontend and student authentication are later milestones.
 
+## Preserved versions and repeatable tests
+
+- [Milestones and restoring M01](MILESTONES.md): frozen source tag/branch, stable URL, schema and credential renewal.
+- [Test catalog](TEST_CATALOG.md): every test's purpose, exact commands/manual steps, expected results and cleanup.
+- [Test run log](TEST_RUN_LOG.md): historical results, fresh evidence and explicitly unverified scenarios.
+
+For current tooling, use Node 22.x, `npm ci`, then `npm test`. Install browser support with `npx playwright install chromium`; run `npm run test:browser:mock` without Google access. For Vercel, put its deployed key in TEST_TARGET_ACCESS_KEY in ignored `.env.test.local` and run `npm run google:smoke -- --target m01` (read-only). Add `--write` for labelled synthetic writes. Reports are saved to `output/test-runs`.
+
 ## Start here
 
 1. Install/use Node 22 LTS. Node 20.12+ also runs the local prototype; Vercel uses 22.x.
@@ -33,7 +41,7 @@ This is step 2: a Node backend and a small browser test page for a **personal te
 9. Open [http://localhost:3000](http://localhost:3000), enter `TEST_ACCESS_KEY` from `.env.local`, and click **Check Google connection**. Use localhost consistently; 127.0.0.1 is a different browser origin.
 10. Submit synthetic information with two small attachments. Confirm the new Responses row and both files in Media, read the record back, and add a test remark.
 
-PowerShell alternative if npm.ps1 is blocked: use `npm.cmd` instead of `npm`, or `node scripts/authorize.mjs` / `node server.mjs` directly. No `npm install` is needed.
+PowerShell alternative if npm.ps1 is blocked: use `npm.cmd` instead of `npm`, or `node scripts/authorize.mjs` / `node server.mjs` directly. The app has no runtime dependencies; current browser-test tooling requires `npm ci` and its pinned Playwright dependency.
 
 ## Test resources
 
@@ -111,9 +119,9 @@ npm test
 npm run check:local
 ```
 
-With the server running and Google authorized, `npm run google:smoke` checks the live connection without writing. `npm run google:smoke -- --write` creates **one synthetic submission, two tiny PNGs, and one test remark**, checks readback and sequential save retry, and retains the artifacts for inspection. It never logs credentials or upload session URLs. This exercises the live API from Node; browser CORS must still be checked using the test page.
+With the server running and Google authorized, `npm run google:smoke -- --target local` checks the live connection without writing. `npm run google:smoke -- --target local --write` creates **one synthetic submission, two tiny PNGs, and one test remark**, checks readback and sequential save retry, and retains artifacts with a JSON run manifest. Use `--target m01` for the preserved Vercel deployment with its explicit TEST_TARGET_ACCESS_KEY. For real browser uploads use `npm run test:browser -- --target m01 --write`; see TEST_CATALOG.md.
 
-Automated tests use fake Google responses and loopback HTTP. They cover authorization/CSRF, ticket tampering, file/total limits, 18-column data mapping, formula-safe writes, Google refresh coalescing, Google upload metadata, file verification, retry behavior, detail and remarks. They **do not prove a live OAuth consent, Google CORS, deployed Vercel routing, or a 60-user burst**. Those need real configured integration tests.
+The offline suite uses fake Google responses and loopback HTTP. It covers authorization/CSRF, ticket tampering, file/total limits, column mapping, token refresh, attachment verification, retries, and harness safeguards. Offline results do not establish live Google or Vercel behavior; the separate live API and Chromium commands do. Neither suite establishes 60-user burst capacity. See TEST_RUN_LOG.md for actual evidence and remaining scenarios.
 
 Manual acceptance:
 

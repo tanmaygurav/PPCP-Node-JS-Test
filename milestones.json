@@ -1,0 +1,12 @@
+{
+  "M01": {
+    "name": "Google integration baseline",
+    "appCommit": "7f1e82ef11edcc7b4e36c1e193035951b79e2d21",
+    "tag": "m01-google-integration-v0.1.0", "branch": "milestone/m01-google-integration",
+    "url": "https://ppcp-node-js-test.vercel.app", "schema": "fixtures/m01/schema.json",
+    "expectedSpreadsheetName": "PPCP Test DB", "expectedFolderName": "Media",
+    "spreadsheetId": "15UGqhLqvg9dbuQ9AAAmtRbxiZvcI0z8ZQY46Kl-WcpA",
+    "folderId": "1NCKrlzniwuUaEcBNVzW4LocVYPYu5sem",
+    "deploymentCommitVerification": "Expected baseline; verify Source in Vercel. Legacy API does not expose commit."
+  }
+}

@@ -1,0 +1,101 @@
+# Test catalog — M01 / harness v1
+
+Every case below has a stable ID. Offline tests exercise synthetic fixtures; live tests use the exact selected target and can require renewed Google authorization. M01 means the app tag in MILESTONES.md, not whichever code main contains later. Never edit an old case's meaning without documenting a revision.
+
+## Setup and commands
+
+Use Node 22.x and `npm ci` on the tooling checkout. Install Chromium once with `npx playwright install chromium` (Linux: `--with-deps`). Browser version is pinned by package-lock.json. `npm run fixtures:export` exports manual test images, an oversized rejection file, and all tab headers to `output/fixtures/m01` without Google writes.
+
+| Command | Purpose / side effects |
+| --- | --- |
+| `npm run check:local` | Syntax-check server, browser, and test helpers; no Google access |
+| `npm test` | Offline Node suite; mocked Google plus temporary loopback servers; JSON result manifest |
+| `npm run test:browser:mock` | Actual Chromium and in-memory server; upload/feedback/readback and one simulated interruption; no Google access |
+| `npm run google:smoke -- --target local` | Running local server, read-only Google operations |
+| `npm run google:smoke -- --target m01` | Preserved Vercel deployment, read-only Google operations |
+| `npm run google:smoke -- --target m01 --write` | One labelled submission, two tiny PNGs, one remark; verifies readback/retry |
+| `npm run test:browser -- --target m01` | Browser unlock, connection, oversize rejection and logout; no Google file/record writes |
+| `npm run test:browser -- --target m01 --write` | Browser submission, two direct uploads, feedback, readback, oversize rejection and logout |
+
+Replace `m01` with an explicit origin (e.g. `http://localhost:3000`) when recreating a baseline elsewhere; choose the server's actual origin. `--headed` displays the browser when useful. Remote HTTP, credentials in URLs, paths, query strings and fragments are rejected. Remote tests require TEST_TARGET_ACCESS_KEY in ignored `.env.test.local` or the environment, and never reuse the local key implicitly. Optional VERCEL_AUTOMATION_BYPASS_SECRET handles deployment protection; it is sent only to the app origin. Do not put keys in command arguments. No Google OAuth secrets are needed by the remote runner.
+
+To rerun **one offline test**, use its prefix:
+
+```powershell
+node --test --test-name-pattern=M01-U01 test/domain.test.mjs
+```
+
+For A cases use `test/api.test.mjs`; G cases `test/google.test.mjs`; TOOL cases `test/harness.test.mjs`. U cases use `test/domain.test.mjs`. The table is the assertion recipe and expected outcome; those commands reproduce it without external data.
+
+## Offline cases (18)
+
+| ID | Purpose / fixture action | Expected result |
+| --- | --- | --- |
+| M01-U01 | Test exactly 5,000,000 bytes/file and 20,000,000 total; exceed file/total/count; zero/null entries | Exact limits accepted; >5 MB, >20 MB, >10 files, empty/malformed rejected |
+| M01-U02 | Uppercase PDF and misleading MIME; EXE/DOCM and path/control characters | Canonical PDF type; unsafe extensions and names rejected |
+| M01-U03 | Map fixture to Responses; add legacy J/M fragments; formula-looking title | 18 columns; fixed B ID; R description; legacy fragments preserved; literal title |
+| M01-U04 | Sign ticket, tamper, expire, use it as session | Valid ticket accepted; other cases rejected |
+| M01-U05 | Submit missing metadata | Validation rejects missing email |
+| M01-A01 | No key, bad key, correct key, foreign-origin POST | Protected reads 401; valid unlock; foreign mutation 403 |
+| M01-A02 | Mock upload/save/detail/list/remark, then save same ticket again | One record; same ID; compact list; server-set author; feedback reads back |
+| M01-A03 | Make attachment verification fail | 409 and zero Sheet rows written |
+| M01-A04 | EXE, null JSON body, inactive domain, forged ticket | Server rejects each independently of UI |
+| M01-A05 | Use Vercel rewrite query; log out and read protected endpoint | Rewrite works; logout removes cookie access |
+| M01-G01 | Concurrent mock reads need token refresh | One refresh; bearer used only in server requests |
+| M01-G02 | Append formula-looking literal; switch ID header to ArrayFormula | RAW write with correct 18-column mapping; formula-based ID sheet rejected |
+| M01-G03 | Create resumable session with pre-generated ID | Expected folder/size/marker; no general Google token in returned plan |
+| M01-G04 | Change folder, size, marker, trash flag or omit completed size | Valid metadata accepted; all mismatches rejected |
+| M01-G05 | Google append returns ambiguous 503 | Fails without automatically retrying the write |
+| TOOL-U01 | Missing target, remote HTTP, credential/path/query URLs | Fail before issuing requests; local/m01 aliases resolve |
+| TOOL-U02 | Remote target with only local key; unknown milestone/options | Refuse key fallback and invalid options; explicit remote key works |
+| TOOL-U03 | Default vs --write; inject secret-like raw error into self-test report | Writes default off; saved report omits keys/raw errors; intentional self-test failure is expected |
+
+## Live API cases
+
+Run L01–L03 using read smoke; add `--write` for L04–L07. Prerequisites: correct key, running target, writable test Sheet/folder, plain headers, active domain, Google authorization. Every failure exits nonzero and retains the last step and known artifact IDs.
+
+| ID | Purpose / steps | Expected result |
+| --- | --- | --- |
+| M01-L01 | GET health; unlock with selected target key | Healthy Node JSON and session cookie |
+| M01-L02 | GET checks | Expected `PPCP Test DB` and `Media`; schema/access checks pass |
+| M01-L03 | Read domains and one-record list | At least one domain; list response shape valid |
+| M01-L04 | Initiate two PNG sessions; upload bytes to Google | Both complete; IDs/filenames recorded, no token/session URL recorded |
+| M01-L05 | Save fixture labelled with run ID; retrieve detail | Same ID, exact description, exactly the two uploaded file IDs |
+| M01-L06 | Save identical ticket sequentially | alreadySaved true and same ID; not a concurrent exactly-once guarantee |
+| M01-L07 | Append unique run-labelled remark; read remarks | Unique text appears under the test submission |
+
+Resource **names** are a guardrail, not proof of resource IDs. Inspect the target's configured Sheet/folder IDs before a new write target. Actual deployment commit is not exposed by M01; confirm its Source view in Vercel and record evidence separately.
+
+## Browser cases
+
+These run in Chromium, not just an HTTP client. No tracing/HAR/storage-state or raw browser errors are saved because they may contain credentials, cookies or upload URLs. A failure report names the stage; use `--headed` for diagnosis. Read-only mode runs B01/B03/B04; write adds B02; mock write also runs B05.
+
+| ID | Purpose / browser actions | Expected result |
+| --- | --- | --- |
+| M01-B01 | Load page, unlock, click Check Google connection | Expected Sheet name; domain choices populate |
+| M01-B02 | Fill synthetic form; attach two tiny PNGs; save; add feedback | Saved detail and two attachment links; feedback visible; manifest records IDs |
+| M01-B03 | Fill valid metadata; attach 5,000,001-byte file; submit | UI reports file limit; no upload-session request sent |
+| M01-B04 | Lock API; request protected records | Session access removed, HTTP 401 |
+| M01-B05 | Mock only: abort first upload request, allow status probe and retry | Browser resumes and completes B02; proves application recovery logic, not real-network resilience |
+
+## Manual cases and exact reproduction
+
+Export fixtures, open the recorded M01 URL (or local server), unlock with its key, and check the connection. Use only synthetic metadata. Record target, source/deployment, date, outcome, and any created IDs in TEST_RUN_LOG.md or your own sanitized run note.
+
+| ID | Purpose / procedure | Expected result |
+| --- | --- | --- |
+| M01-M01 | Submit `tiny-a.png` and `tiny-b.png`; open saved detail; add a unique remark; inspect Sheet/Media/Remarks | One Responses row; two correct files; description in R; remark references fixed B ID |
+| M01-M02 | Submit exactly 5 MB/file; four 5 MB files; then >5 MB, >20 MB combined, >10 files and EXE | Boundaries accepted; invalid cases rejected; count/total cases already covered offline |
+| M01-M03 | Using a file within limits, go offline in browser devtools during upload; restore connection before timeout | Resume if retry window allows; otherwise explicit failure with no incomplete saved submission; inspect retained files |
+| M01-M04 | After files upload, interrupt only the app save response; restore network; choose Retry saving uploaded files without reloading | Same fixed ID; one logical sequential submission; do not start a new upload |
+| M01-M05 | Access API without unlocking, then unlock and Lock API | Protected records inaccessible before login and after logout |
+
+## Cleanup and reports
+
+Reports live in `output/test-runs/*.json`, ignored by Git and deployment. They include run ID, target, runner commit/dirty flag, expected milestone source, timings, pass/fail, and known created IDs. Configuration errors before a test starts print a safe message and do not create a run. Ctrl+C or a killed process can leave status `running`; treat that as incomplete, never passed. A failed report can still list successful writes. Lost initiation responses can leave artifacts whose IDs the runner never received; inspect run-labelled filenames before cleanup. Google app properties also carry the submission ID.
+
+Preserve artifacts by default. For explicit manual cleanup: back up the test Sheet, match the exact Responses B ID and run-labelled title, remove only matching Remarks A IDs, and trash only the exact file IDs/names in that run manifest. Do not delete unrelated rows or folders. Re-run reports keep old data intact. No automatic destructive cleanup or production-data writes exist.
+
+## GitHub Actions
+
+`Offline regression` runs on main pushes/PRs and on demand with no secrets or Google access. `Live milestone regression (manual)` defaults to API read-only; explicitly select write mode to create retained fixtures. Create GitHub environment `m01`, add secret TEST_TARGET_ACCESS_KEY (optional protection bypass secret too). No Google OAuth secrets are required in GitHub. Reports upload as artifacts retained 90 days; download important evidence before expiry. Selected sanitized milestone reports are kept permanently in `test-evidence/m01/` in Git. Workflow files must reach main before they appear in Actions. Baseline branches intentionally do not evolve; run the tooling workflow against their preserved deployment.
