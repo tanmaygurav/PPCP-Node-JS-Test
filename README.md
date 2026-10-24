@@ -108,7 +108,7 @@ All responses disable caching. Except health and unlocking, every endpoint requi
 
 ```powershell
 npm test
-npm run check
+npm run check:local
 ```
 
 With the server running and Google authorized, `npm run google:smoke` checks the live connection without writing. `npm run google:smoke -- --write` creates **one synthetic submission, two tiny PNGs, and one test remark**, checks readback and sequential save retry, and retains the artifacts for inspection. It never logs credentials or upload session URLs. This exercises the live API from Node; browser CORS must still be checked using the test page.
@@ -127,11 +127,15 @@ Manual acceptance:
 
 ## Vercel (next integration stage)
 
-1. Deploy this directory using framework preset **Other**, Node 22.x. `vercel.json` defines the static output directory, `npm run check:deploy` build and API rewrite. Leave the dashboard Build Command override disabled, or set it to `npm run check:deploy`. Local OAuth/setup helpers are intentionally excluded by `.vercelignore`; the deployment check only references deployed files. `npm run check` remains the full local check. Avoid deploying from a parent directory containing credentials.
+1. Deploy the project root containing `package.json`, `vercel.json`, `api/`, `src/`, and `public/`, using framework preset **Other**, Node 22.x. **Do not set the Root Directory to `public`**: that folder contains browser code, not the Node entry point. `vercel.json` explicitly disables framework autodetection, sets static output to `public`, runs `npm run check:deploy`, and routes only `/api/*` to the Node handler. Leave the dashboard Build Command override disabled, or set it to `npm run check:deploy`. Local OAuth/setup helpers are intentionally excluded by `.vercelignore`; both `npm run check` and `npm run check:deploy` check deployed files only. `npm run check:local` is the full local check. Avoid deploying from a parent directory containing credentials.
 2. Set server-only environment variables: `TEST_ACCESS_KEY` (a different random value for deployment), `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN`, `GOOGLE_SPREADSHEET_ID`, `GOOGLE_MEDIA_FOLDER_ID`, and `APP_ORIGIN` (the exact stable HTTPS deployment origin, no trailing slash).
 3. Copy only the refresh token value from local `.local/google-oauth.json` into Vercel's secret environment field yourself. Never put this JSON or `.env.local` into the deployment, client bundle, Git or chat. Local consent already issued the token; Vercel does not need a callback URL for this prototype.
 4. Redeploy after setting the stable origin and credentials. Changing deployment hostnames requires updating APP_ORIGIN and redeploying. Preview origins are not automatically trusted. Keep deployment protection enabled where available.
 5. Repeat the local acceptance tests. `/api/health` tests Node; `/api/checks` tests Google access.
+
+### GitHub deployment troubleshooting
+
+Local edits are not automatically copied to a connected GitHub repository. Commit/push the updated source to the branch Vercel deploys, then deploy that new commit. Redeploying an older deployment uses its old source. Confirm that Vercel's Source view has the current `package.json` (`check` delegates to `check:deploy`) and `vercel.json` (`framework: null`, `outputDirectory: public`). The Root Directory must be the directory containing both configuration files, not `public`. If browser code throws `document is not defined` inside a function, inspect root/framework settings and deployed source; browser `public/app.js` must be served as a static asset, and the function must be `api/index.js`.
 
 ## Deliberate prototype limitations
 

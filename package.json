@@ -11,6 +11,7 @@
     "start": "node server.mjs",
     "test": "node --test",
     "check:deploy": "node --check src/app.mjs && node --check src/google.mjs && node --check src/config.mjs && node --check src/domain.mjs && node --check src/security.mjs && node --check public/app.js && node --check api/index.js",
-    "check": "npm run check:deploy && node --check scripts/authorize.mjs && node --check scripts/setup.mjs && node --check scripts/smoke.mjs && node --check server.mjs"
+    "check": "npm run check:deploy",
+    "check:local": "npm run check:deploy && node --check scripts/authorize.mjs && node --check scripts/setup.mjs && node --check scripts/smoke.mjs && node --check server.mjs"
   }
 }
