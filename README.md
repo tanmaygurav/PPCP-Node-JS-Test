@@ -127,7 +127,7 @@ Manual acceptance:
 
 ## Vercel (next integration stage)
 
-1. Deploy this directory using framework preset **Other**, Node 22.x. `vercel.json` defines the static output directory, syntax-check build and API rewrite. Avoid deploying from a parent directory containing credentials.
+1. Deploy this directory using framework preset **Other**, Node 22.x. `vercel.json` defines the static output directory, `npm run check:deploy` build and API rewrite. Leave the dashboard Build Command override disabled, or set it to `npm run check:deploy`. Local OAuth/setup helpers are intentionally excluded by `.vercelignore`; the deployment check only references deployed files. `npm run check` remains the full local check. Avoid deploying from a parent directory containing credentials.
 2. Set server-only environment variables: `TEST_ACCESS_KEY` (a different random value for deployment), `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN`, `GOOGLE_SPREADSHEET_ID`, `GOOGLE_MEDIA_FOLDER_ID`, and `APP_ORIGIN` (the exact stable HTTPS deployment origin, no trailing slash).
 3. Copy only the refresh token value from local `.local/google-oauth.json` into Vercel's secret environment field yourself. Never put this JSON or `.env.local` into the deployment, client bundle, Git or chat. Local consent already issued the token; Vercel does not need a callback URL for this prototype.
 4. Redeploy after setting the stable origin and credentials. Changing deployment hostnames requires updating APP_ORIGIN and redeploying. Preview origins are not automatically trusted. Keep deployment protection enabled where available.
