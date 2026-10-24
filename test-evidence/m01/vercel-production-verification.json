@@ -1,0 +1,18 @@
+{
+  "verifiedAt": "2026-10-24T14:18:42.377Z",
+  "source": "Authenticated Vercel get_deployment",
+  "projectId": "prj_7svBHE2LW9nv78o7VXY59NyPO7HG",
+  "deploymentId": "dpl_6XDdWjrDhGTa7Jr7w3Bk74fFtjV3",
+  "url": "ppcp-node-js-test-q8yum6orh-tanmays-projects-8434e035.vercel.app",
+  "stableAlias": "https://ppcp-node-js-test.vercel.app",
+  "target": "production",
+  "readyState": "READY",
+  "branch": "milestone/m01-google-integration",
+  "commit": "7f1e82ef11edcc7b4e36c1e193035951b79e2d21",
+  "aliases": [
+    "ppcp-node-js-test.vercel.app",
+    "ppcp-node-js-test-tanmays-projects-8434e035.vercel.app",
+    "ppcp-node-js-test-git-mileston-5ffe5d-tanmays-projects-8434e035.vercel.app"
+  ],
+  "branchTrackingSettingsExposed": false
+}

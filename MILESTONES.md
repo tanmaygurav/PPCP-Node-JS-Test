@@ -4,7 +4,7 @@ Start here when something breaks. Use a preserved version to separate applicatio
 
 | Milestone | App source | Runnable target | Evidence | Status |
 | --- | --- | --- | --- | --- |
-| M01 — Google integration | Tag `m01-google-integration-v0.1.0`; branch `milestone/m01-google-integration`; commit `7f1e82ef11edcc7b4e36c1e193035951b79e2d21` | [Vercel baseline](https://ppcp-node-js-test.vercel.app), or a local checkout | [Run log](TEST_RUN_LOG.md) | Source preserved; production branch tracking must be verified separately |
+| M01 — Google integration | Tag `m01-google-integration-v0.1.0`; branch `milestone/m01-google-integration`; commit `7f1e82ef11edcc7b4e36c1e193035951b79e2d21` | [Vercel baseline](https://ppcp-node-js-test.vercel.app), or a local checkout | [Run log](TEST_RUN_LOG.md) | Production verified on milestone source; main observed as a separate Preview |
 | M02 — Accounts and permissions | Not started | A separate pilot Vercel project, to be provisioned when M02 starts | None | Planned |
 
 The M01 code has not changed. Tests, fixtures, workflows and this registry live on `main`; the latest tooling tag is `m01-regression-tools-v1.0.1`. The original `m01-regression-tools-v1` tag remains available; v1.0.1 switches live CI to repository secrets so private repositories do not require paid GitHub Environments. The frozen app tag retains its original scripts, while the current harness can test its unchanged API remotely. Tags are never moved; a fix becomes a new version.
@@ -14,6 +14,8 @@ The M01 code has not changed. Tests, fixtures, workflows and this registry live 
 The existing Vercel project is `ppcp-node-js-test`, in `tanmays-projects-8434e035`. Keep its Production environment tracking `milestone/m01-google-integration`, **not main**. Vercel: Project Settings → Environments → Production → Branch Tracking. Confirm Production's Source commit is `7f1e82e`. If Vercel reports **No deployments found** for the branch, first use Deployments → Create Deployment to deploy `milestone/m01-google-integration`, then retry saving Branch Tracking. Selecting a branch with an error toast does not confirm it was saved. No APP_ORIGIN change is needed for the existing stable domain. Never promote main/M02 previews onto this baseline domain.
 
 The tag and branch preserve code independently of Vercel's deployment retention. The URL alone does not prove a deployment's source version. Reports record the expected commit and leave actual deployment commit unknown unless independently verified. [Vercel branch configuration](https://vercel.com/docs/git).
+
+**Verified 2026-10-24:** authenticated Vercel metadata resolves the stable alias to READY Production deployment `dpl_6XDdWjrDhGTa7Jr7w3Bk74fFtjV3`, branch `milestone/m01-google-integration`, commit `7f1e82e`. The subsequent `main` commit `920ef91` produced a separate Preview, not the stable Production alias. Read-only Google smoke checks passed after this verification. The API does not expose the saved Branch Tracking field; this evidence confirms the deployed source and observed main/Production separation. See `test-evidence/m01/vercel-production-verification.json`.
 
 ## Recreate M01 locally without disturbing current work
 

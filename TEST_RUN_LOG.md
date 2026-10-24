@@ -23,6 +23,8 @@ Append results; do not overwrite earlier failures or promote reported/manual res
 | 2026-10-24 | Final Node 22 harness | All 18 offline cases | Passed after local-alias safety check; `offline-2026-10-24T14-06-03-437Z-03129b34.json` |
 | 2026-10-24 | GitHub Actions, Ubuntu / Node 22, commit `9e794a3` | Syntax, offline suite, Chromium fixture and artifact upload | Passed; [run 40101243415](https://github.com/tanmaygurav/PPCP-Node-JS-Test/actions/runs/40101243415) |
 | 2026-10-24 | GitHub Actions, Ubuntu / Node 22, tooling v1.0.1 / `7bd1707` | Syntax, offline suite, Chromium fixture and artifact upload | Passed; [run 40101541777](https://github.com/tanmaygurav/PPCP-Node-JS-Test/actions/runs/40101541777); permanent job/step summary in `test-evidence/m01/github-actions-40101541777.json` |
+| 2026-10-24 | Authenticated Vercel metadata | Production source / branch separation | Confirmed stable URL → READY Production `dpl_6XDdWjrDhGTa7Jr7w3Bk74fFtjV3`, milestone branch, commit `7f1e82e`; later main `920ef91` is a separate Preview. Metadata archived in `vercel-production-verification.json` |
+| 2026-10-24 | Confirmed M01 Production deployment | L01–L03 | Passed; `api-smoke-2026-10-24T14-18-49-472Z-ce758b2d.json`; no new records/files |
 
 ## Pending verification
 
@@ -30,7 +32,7 @@ Append results; do not overwrite earlier failures or promote reported/manual res
 - Manual M01-M02 boundary acceptance, M03 real network interruption, M04 ambiguous save-response recovery: not individually verified in historical evidence.
 - 60-user burst, production identity/private attachment delivery, and M02 accounts: not implemented or verified by M01.
 - Offline GitHub Actions passed. Live GitHub runs still require the **M01_TEST_ACCESS_KEY repository secret**; local live API/browser evidence is recorded above. The repository initially returned 404 while private; after the user made it public, hosted job/step results were independently verified. Source refs alone do not freeze Vercel's production branch; verify branch tracking independently.
-- User selected the milestone branch, but the supplied screenshot showed **No deployments found**, so the saved branch setting is not yet confirmed. Deploy that branch once and retry the setting.
+- The earlier **No deployments found** error is resolved at the deployment level: authenticated metadata now verifies M01 in Production and later main work in Preview. The raw Branch Tracking settings field is not exposed by this connector; the observed deployed source/alias separation is archived above.
 
 Selected passing JSON reports are archived permanently under `test-evidence/m01/`; they show the exact runner commit and whether the tooling checkout had uncommitted changes. They do not claim a clean release checkout or a verified deployment commit when those facts were unknown.
 
