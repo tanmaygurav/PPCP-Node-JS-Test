@@ -1,0 +1,72 @@
+{
+  "milestone": "M02",
+  "schemaVersion": 2,
+  "suite": "unit",
+  "timestamp": "2026-10-25T05:32:31.928Z",
+  "node": "v24.22.1",
+  "runnerCommit": "e59fc9421083a83b45b5b51fd87d9864bf83aeb4",
+  "runnerDirty": true,
+  "steps": [
+    {
+      "id": "M02-A01",
+      "purpose": "M02-A01 missing, invalid, unverified and wrong-domain identities are rejected",
+      "status": "passed",
+      "durationMs": 52.5666
+    },
+    {
+      "id": "M02-A02",
+      "purpose": "M02-A02 new profiles default to student and cannot self-promote",
+      "status": "passed",
+      "durationMs": 13.2464
+    },
+    {
+      "id": "M02-A03",
+      "purpose": "M02-A03 ownership covers list, detail, remarks, attachments and upload tickets",
+      "status": "passed",
+      "durationMs": 27.4344
+    },
+    {
+      "id": "M02-A04",
+      "purpose": "M02-A04 ticket tampering, expiry, foreign origins and disabled profiles fail closed",
+      "status": "passed",
+      "durationMs": 9.3012
+    },
+    {
+      "id": "M02-A05",
+      "purpose": "M02-A05 logout revokes saved sessions and clears the browser cookie",
+      "status": "passed",
+      "durationMs": 6.5506
+    },
+    {
+      "id": "M02-S01",
+      "purpose": "M02-S01 profile reads reject disabled, invalid-role and conflicting rows",
+      "status": "passed",
+      "durationMs": 1.4308
+    },
+    {
+      "id": "M02-S02",
+      "purpose": "M02-S02 profile writes use RAW values and contain no password column",
+      "status": "passed",
+      "durationMs": 1.1317
+    },
+    {
+      "id": "M02-S03",
+      "purpose": "M02-S03 config rejects M01 resource reuse and emulator in deployed environments",
+      "status": "passed",
+      "durationMs": 1.7783
+    },
+    {
+      "id": "M02-S04",
+      "purpose": "M02-S04 role assignment dry run does not write; applying targets one RAW role cell",
+      "status": "passed",
+      "durationMs": 1.2323
+    },
+    {
+      "id": "M02-S05",
+      "purpose": "M02-S05 Firebase Admin loads when native CommonJS-to-ESM require is disabled",
+      "status": "passed",
+      "durationMs": 238.4238
+    }
+  ],
+  "status": "passed"
+}

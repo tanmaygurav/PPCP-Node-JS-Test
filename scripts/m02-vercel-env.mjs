@@ -5,7 +5,7 @@ const config = m02Config();
 const teamId = 'team_abf9xIKj95Kv5Rei3QPOU6Gb', projectId = 'prj_VSQ1HfIdZmNiFOhIT81Bja3jrAi2';
 const apply = process.argv.includes('--apply');
 const values = {
-  APP_ORIGIN: 'https://ppcp-m02-auth-test-tanmays-projects-8434e035.vercel.app', FIREBASE_PROJECT_ID: config.projectId,
+  APP_ORIGIN: 'https://ppcp-m02-auth-test.vercel.app', FIREBASE_PROJECT_ID: config.projectId,
   FIREBASE_WEB_API_KEY: config.web.apiKey, FIREBASE_AUTH_DOMAIN: config.web.authDomain, FIREBASE_WEB_APP_ID: config.web.appId,
   GOOGLE_CLIENT_ID: config.clientId, GOOGLE_CLIENT_SECRET: config.clientSecret, GOOGLE_REFRESH_TOKEN: config.refreshToken,
   M02_GOOGLE_SPREADSHEET_ID: config.spreadsheetId, M02_GOOGLE_MEDIA_FOLDER_ID: config.folderId, M02_SIGNING_SECRET: config.secret,

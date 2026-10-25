@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { M02Store, PROFILE_HEADERS } from '../src/m02/store.mjs';
 import { m02Config } from '../src/m02/config.mjs';
+import { spawnSync } from 'node:child_process';
 test('M02-S01 profile reads reject disabled, invalid-role and conflicting rows', async () => {
   const store = new M02Store({});
   let rows = [['uid','a@welingkar.org','Alice','Test','01','student','active','now']];
@@ -40,4 +41,9 @@ test('M02-S04 role assignment dry run does not write; applying targets one RAW r
   assert.equal(decodeURIComponent(written.url.pathname).split('/values/')[1], "'Profiles'!F2");
   assert.equal(written.options.method, 'PUT'); assert.deepEqual(JSON.parse(written.options.body).values, [['faculty']]);
   await assert.rejects(() => store.assignRole('uid', 'different@welingkar.org', 'admin', true), error => error.status === 409);
+});
+test('M02-S05 Firebase Admin loads when native CommonJS-to-ESM require is disabled', () => {
+  // Vercel's loader does not provide Node's native require(esm) behavior.
+  const result = spawnSync(process.execPath, ['--no-experimental-require-module', '--input-type=module', '-e', 'await import("firebase-admin/auth")'], { encoding: 'utf8' });
+  assert.equal(result.status, 0, 'Firebase Admin must start under the restricted loader; inspect the pinned jwks-rsa/jose compatibility override.');
 });

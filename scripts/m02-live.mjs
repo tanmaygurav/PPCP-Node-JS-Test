@@ -8,9 +8,9 @@ import { M02Store } from '../src/m02/store.mjs';
 
 loadM02Env(); const config = m02Config();
 const args = process.argv.slice(2), index = args.indexOf('--target'), raw = args[index + 1];
-if (index < 0 || !raw || args.some((arg, i) => !['--target', '--write'].includes(arg) && i !== index + 1)) throw new Error('Usage: npm run test:m02:live -- --target local|https://ppcp-m02-auth-test-tanmays-projects-8434e035.vercel.app [--write]');
+if (index < 0 || !raw || args.some((arg, i) => !['--target', '--write'].includes(arg) && i !== index + 1)) throw new Error('Usage: npm run test:m02:live -- --target local|https://ppcp-m02-auth-test.vercel.app [--write]');
 const origin = raw === 'local' ? 'http://localhost:3002' : raw;
-if (!['http://localhost:3002', 'https://ppcp-m02-auth-test-tanmays-projects-8434e035.vercel.app'].includes(origin)) throw new Error('Only the explicit separate M02 local or stable pilot target is allowed.');
+if (!['http://localhost:3002', 'https://ppcp-m02-auth-test.vercel.app'].includes(origin)) throw new Error('Only the explicit separate M02 local or stable pilot target is allowed.');
 if (config.projectId !== 'ppcp-auth-test' || config.emulator) throw new Error('Live tests require the separate real M02 Firebase project.');
 const write = args.includes('--write'), runId = randomUUID(), users = [], cookies = new Map();
 const git = args => { try { return execFileSync('git', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim(); } catch { return null; } };
