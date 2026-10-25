@@ -1,0 +1,55 @@
+{
+  "milestone": "M02",
+  "schemaVersion": 2,
+  "suite": "live-api",
+  "runId": "43b2e523-e279-416e-9ff2-9dae190b8c1e",
+  "timestamp": "2026-10-25T05:36:02.790Z",
+  "node": "v24.22.1",
+  "runnerCommit": "c1c27314b165c267ad4a6329a63646c643d8f4d3",
+  "runnerDirty": false,
+  "target": "https://ppcp-m02-auth-test.vercel.app",
+  "writeEnabled": true,
+  "steps": [
+    {
+      "id": "M02-L01",
+      "purpose": "Target and public configuration identify M02; anonymous access fails",
+      "status": "passed"
+    },
+    {
+      "id": "M02-L02",
+      "purpose": "Separate Google resources and synthetic Firebase sessions work",
+      "status": "passed"
+    },
+    {
+      "id": "M02-L03",
+      "purpose": "Owner-bound upload writes real Drive file and Sheets record",
+      "status": "passed"
+    },
+    {
+      "id": "M02-L04",
+      "purpose": "Owner/staff access works; second student and forged remark author are blocked",
+      "status": "passed"
+    },
+    {
+      "id": "M02-L05",
+      "purpose": "Logout revokes a copied server session",
+      "status": "passed"
+    }
+  ],
+  "created": {
+    "firebaseUids": [
+      "m02-test-43b2e523-e279-416e-9ff2-9dae190b8c1e-owner",
+      "m02-test-43b2e523-e279-416e-9ff2-9dae190b8c1e-other",
+      "m02-test-43b2e523-e279-416e-9ff2-9dae190b8c1e-faculty"
+    ],
+    "submissionIds": [
+      "f56558f2-d381-4b4f-a5b6-b88944fd832c"
+    ],
+    "fileIds": [
+      "1C6JR3CHuyNa3tAjjecbXXnqHGcQcMbOq"
+    ]
+  },
+  "limitation": "Administrator-verified synthetic accounts; does not verify real email delivery. Google artifacts are retained; synthetic Firebase users are deleted at the end.",
+  "status": "passed",
+  "firebaseCleanup": "completed"
+}

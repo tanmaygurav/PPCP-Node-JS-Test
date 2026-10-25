@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import { loadM02Env, m02Config } from '../src/m02/config.mjs';
 import { firebaseAuth } from '../src/m02/auth.mjs';
 import { M02Store } from '../src/m02/store.mjs';
+import { chromium } from 'playwright';
 
 loadM02Env(); const config = m02Config();
 const args = process.argv.slice(2), index = args.indexOf('--target'), raw = args[index + 1];
@@ -12,7 +13,7 @@ if (index < 0 || !raw || args.some((arg, i) => !['--target', '--write'].includes
 const origin = raw === 'local' ? 'http://localhost:3002' : raw;
 if (!['http://localhost:3002', 'https://ppcp-m02-auth-test.vercel.app'].includes(origin)) throw new Error('Only the explicit separate M02 local or stable pilot target is allowed.');
 if (config.projectId !== 'ppcp-auth-test' || config.emulator) throw new Error('Live tests require the separate real M02 Firebase project.');
-const write = args.includes('--write'), runId = randomUUID(), users = [], cookies = new Map();
+const write = args.includes('--write'), runId = randomUUID(), users = [], cookies = new Map(), accounts = new Map();
 const git = args => { try { return execFileSync('git', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim(); } catch { return null; } };
 const report = { milestone: 'M02', schemaVersion: 2, suite: 'live-api', runId, timestamp: new Date().toISOString(), node: process.version,
   runnerCommit: git(['rev-parse', 'HEAD']), runnerDirty: Boolean(git(['status', '--porcelain'])),
@@ -43,6 +44,7 @@ try {
       for (const label of ['owner', 'other', 'faculty']) {
         const uid = `m02-test-${runId}-${label}`, password = randomBytes(24).toString('base64url'), email = `${uid}@welingkar.org`;
         await auth.createUser({ uid, email, password, emailVerified: true, displayName: 'Synthetic M02 regression' });
+        accounts.set(label, { email, password });
         users.push(uid); report.created.firebaseUids.push(uid);
         const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${encodeURIComponent(config.web.apiKey)}`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password, returnSecureToken: true })
@@ -83,6 +85,25 @@ try {
       const copied = cookies.get('owner'); await new Promise(resolve => setTimeout(resolve, 1100));
       assert.equal((await call('auth/logout', {}, 'owner')).status, 200); cookies.set('owner', copied);
       assert.equal((await call('me', undefined, 'owner')).status, 401);
+    });
+    await step('M02-L06', 'Chromium signs in on the real target, reads the saved record, downloads its attachment and signs out', async () => {
+      const browser = await chromium.launch({ headless: true });
+      try {
+        const page = await browser.newPage(), errors = [], owner = accounts.get('owner');
+        page.on('pageerror', error => errors.push(error.name));
+        await page.goto(origin);
+        await page.getByLabel('Organization email').fill(owner.email); await page.getByLabel('Password', { exact: true }).fill(owner.password);
+        await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+        await page.getByRole('heading', { name: 'Your pain points' }).waitFor();
+        await page.getByRole('button', { name: `M02 SYNTHETIC ${runId}`, exact: true }).click();
+        await page.getByRole('heading', { name: `M02 SYNTHETIC ${runId}`, exact: true }).waitFor();
+        const downloaded = page.waitForEvent('download');
+        await page.getByRole('link', { name: `M02-SYNTHETIC-${runId}.png`, exact: true }).click();
+        assert.equal((await downloaded).suggestedFilename(), `M02-SYNTHETIC-${runId}.png`);
+        await page.getByRole('button', { name: 'Sign out', exact: true }).click();
+        await page.getByRole('heading', { name: 'Welcome back' }).waitFor();
+        assert.deepEqual(errors, []);
+      } finally { await browser.close(); }
     });
   }
   report.status = 'passed';

@@ -11,13 +11,15 @@
   },
   "M02": {
     "name": "Firebase accounts and permissions",
-    "status": "candidate-live-acceptance-pending",
-    "appCommit": null, "tag": null, "branch": null, "url": null,
+    "status": "release-candidate-deployed-manual-acceptance-and-branch-pinning-pending",
+    "appCommit": "c1c27314b165c267ad4a6329a63646c643d8f4d3",
+    "tag": "m02-firebase-auth-v0.1.0-rc.1", "branch": "milestone/m02-firebase-auth", "url": "https://ppcp-m02-auth-test.vercel.app",
+    "runtime": "24.x", "toolingTag": "m02-regression-tools-v1.0.0",
     "schema": "fixtures/m02/schema.json",
     "firebaseProjectId": "ppcp-auth-test",
     "spreadsheetId": "1IKhPcT5cYwcGOUAuvZ9HfW_i0RGiRC4c8UDgr1zuCAo",
     "folderId": "1d-NdxhDeEFJywRlESw2p_UjP7nOgQKT4",
     "expectedSpreadsheetName": "PPCP M02 Test DB", "expectedFolderName": "PPCP M02 Test Media",
-    "deploymentCommitVerification": "Not yet deployed or frozen. Do not point M02 tests at M01."
+    "deploymentCommitVerification": "Canonical alias independently verified on READY Production source c1c2731. See test-evidence/m02/vercel-production-verification.json for current branch-tracking evidence."
   }
 }
