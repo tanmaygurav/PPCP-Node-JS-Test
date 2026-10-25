@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "runId": "2026-10-25T04-58-29-762Z-9aa4b083",
+  "kind": "api-smoke",
+  "milestone": "M01",
+  "runnerCommit": "f9e1d0963fe31778428bd46e8d00e17473e68281",
+  "runnerDirty": true,
+  "expectedAppCommit": "7f1e82ef11edcc7b4e36c1e193035951b79e2d21",
+  "actualDeploymentCommit": null,
+  "target": "https://ppcp-node-js-test.vercel.app",
+  "environment": "deployed",
+  "node": "v24.22.1",
+  "writeEnabled": false,
+  "fixtureVersion": 1,
+  "startedAt": "2026-10-25T04:58:29.842Z",
+  "status": "passed",
+  "steps": [
+    {
+      "id": "M01-L01",
+      "purpose": "Node liveness and unlock",
+      "status": "passed",
+      "startedAt": "2026-10-25T04:58:29.843Z",
+      "durationMs": 1497
+    },
+    {
+      "id": "M01-L02",
+      "purpose": "Expected Google Sheet and Media folder",
+      "status": "passed",
+      "startedAt": "2026-10-25T04:58:31.342Z",
+      "durationMs": 2027
+    },
+    {
+      "id": "M01-L03",
+      "purpose": "Active domains and list retrieval",
+      "status": "passed",
+      "startedAt": "2026-10-25T04:58:33.371Z",
+      "durationMs": 719
+    }
+  ],
+  "artifacts": {
+    "submissionId": null,
+    "files": [],
+    "remark": null
+  },
+  "cleanup": "Retained. Use only this manifest for manual cleanup. An ambiguous timeout does not prove no write occurred.",
+  "finishedAt": "2026-10-25T04:58:34.091Z"
+}

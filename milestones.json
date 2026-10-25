@@ -8,5 +8,16 @@
     "spreadsheetId": "15UGqhLqvg9dbuQ9AAAmtRbxiZvcI0z8ZQY46Kl-WcpA",
     "folderId": "1NCKrlzniwuUaEcBNVzW4LocVYPYu5sem",
     "deploymentCommitVerification": "Expected baseline; verify Source in Vercel. Legacy API does not expose commit."
+  },
+  "M02": {
+    "name": "Firebase accounts and permissions",
+    "status": "candidate-live-acceptance-pending",
+    "appCommit": null, "tag": null, "branch": null, "url": null,
+    "schema": "fixtures/m02/schema.json",
+    "firebaseProjectId": "ppcp-auth-test",
+    "spreadsheetId": "1IKhPcT5cYwcGOUAuvZ9HfW_i0RGiRC4c8UDgr1zuCAo",
+    "folderId": "1d-NdxhDeEFJywRlESw2p_UjP7nOgQKT4",
+    "expectedSpreadsheetName": "PPCP M02 Test DB", "expectedFolderName": "PPCP M02 Test Media",
+    "deploymentCommitVerification": "Not yet deployed or frozen. Do not point M02 tests at M01."
   }
 }

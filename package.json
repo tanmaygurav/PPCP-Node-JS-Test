@@ -4,9 +4,16 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": "22.x"
+    "node": "24.x"
   },
   "scripts": {
+    "build:m02": "node scripts/m02-check.mjs && vite build --config vite.m02.config.mjs",
+    "start:m02": "node server-m02.mjs",
+    "m02:resources": "node scripts/m02-resources.mjs",
+    "m02:role": "node scripts/m02-role.mjs",
+    "test:m02": "node scripts/m02-test-runner.mjs unit",
+    "test:m02:live": "node scripts/m02-live.mjs",
+    "test:m02:emulator": "firebase emulators:exec --project demo-ppcp-m02 --only auth \"node scripts/m02-test-runner.mjs emulator\"",
     "setup": "node scripts/setup.mjs",
     "google:authorize": "node scripts/authorize.mjs",
     "google:smoke": "node scripts/smoke.mjs",
@@ -20,6 +27,17 @@
     "check:local": "npm run check:deploy && node --check scripts/authorize.mjs && node --check scripts/setup.mjs && node --check scripts/smoke.mjs && node --check scripts/browser.mjs && node --check scripts/offline.mjs && node --check test-tools/runtime.mjs && node --check test-tools/mock-server.mjs && node --check server.mjs"
   },
   "devDependencies": {
-    "playwright": "1.64.1"
+    "firebase-tools": "^15.34.1",
+    "playwright": "1.64.1",
+    "vite": "^6.4.5"
+  },
+  "dependencies": {
+    "firebase": "13.1.0",
+    "firebase-admin": "14.5.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "overrides": {
+    "@grpc/grpc-js": "^1.13.6"
   }
 }

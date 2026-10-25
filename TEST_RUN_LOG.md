@@ -38,6 +38,18 @@ Selected passing JSON reports are archived permanently under `test-evidence/m01/
 
 Tooling v1.0.1 is a CI compatibility correction: it uses a repository secret instead of a GitHub Environment, avoiding a paid-plan prerequisite for private repositories. Workflow YAML was validated locally; no application runtime code changed.
 
+## M02 implementation — 2026-10-25
+
+- Separate personal Spark project `ppcp-auth-test`; Email/Password enabled, server credential connection verified. Added stable pilot hostname to authorized domains. Created separate test Sheet and private Drive folder listed in milestones.json; Google connection/schema checks passed. No M01 resources changed.
+- Initial API fixture omitted its authentication dependency; fixed. A browser initialization failure exposed mixed Firebase browser SDK versions; aligned Firebase 13.1.0/Admin 14.5.0 and moved M02/tooling to Node 24.22.1. Fixed the browser dropdown selector and a logout UI mode bug. Initial failures were not accepted as passing evidence.
+- M02-A01–A05 and S01–S04 passed (9 cases); latest sanitized unit report `m02-unit-1792905057012.json`. M02-E01–E06 passed, including Chromium full flow (`m02-emulator-1792904699451.json`). Emulator verification/reset use synthetic local action codes, not real mail.
+- First live localhost attempt could not reach a sandboxed server; restarted it with ordinary local networking. The first connected live run caught a malformed role-cell update URL; corrected the operator command and added S04. Synthetic Firebase accounts from that failed run were deleted; its labelled Profiles rows remain for traceability.
+- Real local Node → Firebase → Sheets/Drive live tests L01–L05 then passed (`m02-live-1792904970076.json`): administrator-verified synthetic identities, bound uploads, RAW owned submission, private file permissions/download, second-student isolation, faculty feedback, logout replay. Three synthetic Firebase users deleted; labelled Google records/files retained. This does not establish real email delivery.
+- M01's 18 offline cases passed on Node 24 (`offline-2026-10-25T04-58-22-478Z-93f8604a.json`); its 5 Chromium fixture cases passed (`browser-mock-2026-10-25T04-58-24-800Z-786fc6ef.json`); deployed read-only checks L01–L03 passed (`api-smoke-2026-10-25T04-58-29-762Z-9aa4b083.json`). Frozen M01 app configuration remains unchanged.
+- Syntax and React production build passed. Production dependency audit: zero advisories. Full audit still reports five moderate advisories in Firebase CLI development dependencies; no forced major downgrade applied.
+- Separate Vercel project `ppcp-m02-auth-test` created; 12 sensitive variables configured directly from local files. Real deployed flow, organization inbox delivery/reset, manual mobile/two-account acceptance and final milestone freeze remain pending at this entry. Candidate evidence does not certify 60-user capacity or production readiness.
+- User-reported local M02-M01 acceptance: **success** for actual @welingkar.org registration, received verification email, verified access/profile completion, sign-out and password reset email/action. This is user-reported live mailbox evidence, separate from synthetic automated tests. Deployed mailbox flow remains pending.
+
 ## Entry template
 
 Record: date/time (IST), milestone/app tag, harness commit/tag, local/deployed origin, actual deployment commit if verified, test IDs, manual/automated, outcome, report filenames or archived evidence, created IDs, limitations and cleanup status. Never paste keys, tokens, cookies, raw OAuth callback URLs or upload-session URLs.

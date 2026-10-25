@@ -1,0 +1,66 @@
+{
+  "milestone": "M02",
+  "schemaVersion": 2,
+  "suite": "unit",
+  "timestamp": "2026-10-25T05:10:56.939Z",
+  "node": "v24.22.1",
+  "runnerCommit": "f9e1d0963fe31778428bd46e8d00e17473e68281",
+  "runnerDirty": true,
+  "steps": [
+    {
+      "id": "M02-A01",
+      "purpose": "M02-A01 missing, invalid, unverified and wrong-domain identities are rejected",
+      "status": "passed",
+      "durationMs": 54.4892
+    },
+    {
+      "id": "M02-A02",
+      "purpose": "M02-A02 new profiles default to student and cannot self-promote",
+      "status": "passed",
+      "durationMs": 15.0886
+    },
+    {
+      "id": "M02-A03",
+      "purpose": "M02-A03 ownership covers list, detail, remarks, attachments and upload tickets",
+      "status": "passed",
+      "durationMs": 25.7582
+    },
+    {
+      "id": "M02-A04",
+      "purpose": "M02-A04 ticket tampering, expiry, foreign origins and disabled profiles fail closed",
+      "status": "passed",
+      "durationMs": 9.0878
+    },
+    {
+      "id": "M02-A05",
+      "purpose": "M02-A05 logout revokes saved sessions and clears the browser cookie",
+      "status": "passed",
+      "durationMs": 6.5229
+    },
+    {
+      "id": "M02-S01",
+      "purpose": "M02-S01 profile reads reject disabled, invalid-role and conflicting rows",
+      "status": "passed",
+      "durationMs": 1.6524
+    },
+    {
+      "id": "M02-S02",
+      "purpose": "M02-S02 profile writes use RAW values and contain no password column",
+      "status": "passed",
+      "durationMs": 1.5543
+    },
+    {
+      "id": "M02-S03",
+      "purpose": "M02-S03 config rejects M01 resource reuse and emulator in deployed environments",
+      "status": "passed",
+      "durationMs": 1.9605
+    },
+    {
+      "id": "M02-S04",
+      "purpose": "M02-S04 role assignment dry run does not write; applying targets one RAW role cell",
+      "status": "passed",
+      "durationMs": 1.067
+    }
+  ],
+  "status": "passed"
+}

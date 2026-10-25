@@ -101,3 +101,25 @@ Preserve artifacts by default. For explicit manual cleanup: back up the test She
 `Offline regression` runs on main pushes/PRs and on demand with no secrets or Google access. `Live milestone regression (manual)` defaults to API read-only; explicitly select write mode to create retained fixtures. In GitHub → repository Settings → Secrets and variables → Actions → New repository secret, add **M01_TEST_ACCESS_KEY** with the deployed test key. Optionally add VERCEL_AUTOMATION_BYPASS_SECRET for protected deployments. The workflow maps the repository key to TEST_TARGET_ACCESS_KEY for the runner. No Google OAuth secrets or GitHub Environment are required. Reports upload as artifacts retained 90 days; download important evidence before expiry. Selected sanitized milestone reports are kept permanently in `test-evidence/m01/` in Git. Workflow files must reach main before they appear in Actions. Baseline branches intentionally do not evolve; run the tooling workflow against their preserved deployment.
 
 Tooling v1.0.1 uses repository secrets because GitHub Environments for private repositories require a paid plan. Local `.env.test.local` still uses TEST_TARGET_ACCESS_KEY. [GitHub plan requirements](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments).
+# M02 — Firebase pilot tests
+
+M02 is isolated from M01. See [M02 setup and reconstruction](M02_SETUP.md) for Node 24, separate resources, Firebase credentials, role assignment and deployment configuration. Do not run the M01 shared-key harness against M02.
+
+| IDs | Purpose | Recreate | Expected result |
+| --- | --- | --- | --- |
+| M02-A01–A05 | API identity/domain/verification gate; default student; ownership across list/detail/remarks/files/tickets; expiry/tampering/CSRF; disabled profiles and logout | `npm run test:m02` | All cases pass with injected authentication and in-memory data; no real services |
+| M02-S01–S04 | Conflicting/disabled profiles fail closed; RAW profile writes have no passwords; configuration blocks M01 resources and deployed emulator; operator role writes target the correct RAW cell | `npm run test:m02` | All cases pass |
+| M02-E01 | Real Auth Emulator registration and email action verification | `npm run test:m02:emulator` | Unverified session rejected; applying local verification code allows registration as student |
+| M02-E02 | Real emulator wrong-domain, malformed and expired credentials | Same | Access denied |
+| M02-E03 | Real emulator identity plus submission permissions | Same | Owner succeeds, second student blocked, faculty review allowed |
+| M02-E04 | Replay a copied session after logout | Same | Session rejected |
+| M02-E05 | Reset password through emulator action codes | Same | Old password fails; new password succeeds |
+| M02-E06 | Chromium + built React + Auth Emulator + in-memory application store | `npm run build:m02`, then emulator command | Register → verify → complete profile → submit → faculty remark → logout; no page errors |
+| M02-L01 | Real local/deployed health/config and anonymous-access checks | `npm run test:m02:live -- --target local` or `--target https://ppcp-m02-auth-test.vercel.app` | M02 project identified; anonymous submissions rejected; no writes |
+| M02-L02–L05 | Synthetic administrator-verified Firebase accounts → real Node API → real Sheets/Drive; roles, private upload/download, second-user isolation and logout replay | Add `--write` to live command | All steps pass; labelled Google records/files retained; synthetic Firebase users deleted |
+| M02-M01 | Actual organization inbox verification, immediate profile access and password reset | Follow M02_SETUP.md live acceptance locally and on the pilot URL | Emails actually arrive, verification grants student access, old password fails after reset |
+| M02-M02 | Two controlled student accounts plus staff account, mobile layout and private files | Follow M02_SETUP.md live acceptance | Owner/staff succeed; other student blocked; student cannot add remarks; no public Drive access |
+
+Live write tests create three synthetic `m02-test-...@welingkar.org` accounts marked verified by the administrator credential; **no email is sent**. They do not establish mailbox delivery or a real verification-link journey. Their UIDs are recorded for cleanup; Google Profiles rows, submission and tiny PNG remain inspectable. Do not turn those synthetic identities into real accounts. Manual tests use real inboxes; never record passwords, action codes, ID tokens or cookies in reports. All automated reports are sanitized JSON under output/test-runs.
+
+M02 remains a candidate until required live/manual tests pass and a stable source tag, branch, deployment URL and evidence are recorded. Runtime and browser failures must be logged honestly; an emulator pass does not certify live behavior or 60-user capacity.

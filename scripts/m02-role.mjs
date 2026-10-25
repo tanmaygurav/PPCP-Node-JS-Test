@@ -1,0 +1,10 @@
+import { loadM02Env, m02Config } from '../src/m02/config.mjs';
+import { firebaseAuth } from '../src/m02/auth.mjs';
+import { M02Store } from '../src/m02/store.mjs';
+loadM02Env();
+const [uid, role, flag] = process.argv.slice(2);
+if (!uid || !['student', 'faculty', 'admin'].includes(role) || (flag && flag !== '--apply')) throw new Error('Usage: npm run m02:role -- FIREBASE_UID student|faculty|admin [--apply]');
+const config = m02Config(), store = new M02Store(config), user = await firebaseAuth(config).getUser(uid);
+if (!user.emailVerified || !/^[^\s@]+@welingkar\.org$/.test(user.email || '') || user.disabled) throw new Error('Target must be an active verified organization account.');
+const change = await store.assignRole(uid, user.email, role, Boolean(flag));
+console.log(`Role change for UID ${uid}: ${change.previous} -> ${role}. ${flag ? 'Applied.' : 'Dry run; add --apply to save.'}`);

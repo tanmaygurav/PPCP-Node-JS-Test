@@ -5,7 +5,7 @@ Start here when something breaks. Use a preserved version to separate applicatio
 | Milestone | App source | Runnable target | Evidence | Status |
 | --- | --- | --- | --- | --- |
 | M01 — Google integration | Tag `m01-google-integration-v0.1.0`; branch `milestone/m01-google-integration`; commit `7f1e82ef11edcc7b4e36c1e193035951b79e2d21` | [Vercel baseline](https://ppcp-node-js-test.vercel.app), or a local checkout | [Run log](TEST_RUN_LOG.md) | Production verified on milestone source; main observed as a separate Preview |
-| M02 — Accounts and permissions | Not started | A separate pilot Vercel project, to be provisioned when M02 starts | None | Planned |
+| M02 — Accounts and permissions | Main implementation candidate; not frozen | Separate pilot pending; local port 3002 | [Setup and acceptance](M02_SETUP.md) | Firebase/React implementation; live acceptance pending |
 
 The M01 code has not changed. Tests, fixtures, workflows and this registry live on `main`; the latest tooling tag is `m01-regression-tools-v1.0.1`. The original `m01-regression-tools-v1` tag remains available; v1.0.1 switches live CI to repository secrets so private repositories do not require paid GitHub Environments. The frozen app tag retains its original scripts, while the current harness can test its unchanged API remotely. Tags are never moved; a fix becomes a new version.
 

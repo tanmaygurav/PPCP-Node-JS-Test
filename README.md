@@ -1,5 +1,7 @@
 # PPCP Google integration prototype
 
+**Current development: M02 Firebase/React pilot.** See [M02 setup, permissions, deployment and repeatable tests](M02_SETUP.md). Use `npm run build:m02` and `npm run start:m02` for the pilot. The preserved M01 deployment and frozen branch remain unchanged; instructions below describe the M01 local harness, which is still runnable with `npm start`.
+
 This is step 2: a Node backend and a small browser test page for a **personal test Sheet and Drive folder**. It does not use Apps Script. The same handler runs locally and as a Vercel Node function. There are no third-party runtime dependencies. The full React frontend and student authentication are later milestones.
 
 ## Preserved versions and repeatable tests

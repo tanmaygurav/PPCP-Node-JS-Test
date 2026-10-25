@@ -2,6 +2,7 @@
 .env.*
 !.env.example
 !.env.test.example
+!.env.m02.example
 .local/
 .vercel/
 node_modules/
@@ -10,3 +11,6 @@ discovery-sheet-*.png
 output/
 playwright-report/
 test-results/
+dist-m02/
+*-debug.log
+.firebase/

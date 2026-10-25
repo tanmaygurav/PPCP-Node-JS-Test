@@ -1,13 +1,13 @@
 {
   "version": 2,
   "framework": null,
-  "buildCommand": "npm run check:deploy",
-  "outputDirectory": "public",
-  "functions": { "api/index.js": { "maxDuration": 60 } },
+  "buildCommand": "npm run build:m02",
+  "outputDirectory": "dist-m02",
+  "functions": { "api/index.js": { "maxDuration": 60 }, "api/m02.js": { "maxDuration": 60 } },
   "rewrites": [{ "source": "/api/:path*", "destination": "/api/index?route=:path*" }],
   "headers": [{ "source": "/(.*)", "headers": [
     { "key": "X-Content-Type-Options", "value": "nosniff" },
     { "key": "Referrer-Policy", "value": "no-referrer" },
-    { "key": "Content-Security-Policy", "value": "default-src 'self'; connect-src 'self' https://www.googleapis.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" }
+    { "key": "Content-Security-Policy", "value": "default-src 'self'; connect-src 'self' https://www.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" }
   ] }]
 }
