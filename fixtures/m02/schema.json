@@ -1,0 +1,11 @@
+{
+  "milestone": "M02", "version": 2,
+  "tabs": {
+    "Profiles": ["Firebase UID", "Email", "Name", "Program", "Student ID", "Role", "Status", "Created at"],
+    "Responses": ["TAG", "ID", "Timestamp", "Email address", "Name", "Student ID", "Program Name", "Domain", "Title", "Who is experiencing the problem?", "Insert Image / Video", "Possible Solution", "What is the problem?", "Where is the user experiencing the problem?", "When does the problem present itself to the user?", "What other activities is the user performing?", "Why should this problem be solved?", "Description", "Owner UID"],
+    "Remarks": ["UUID", "Given by", "Remarks", "Timestamp"],
+    "Calculations": ["Domain", "Program Name", "Active Domains"]
+  },
+  "activeDomain": "Education",
+  "formulaPolicy": "Fixed IDs; RAW writes. No password column. Maintain Active Domains in C manually."
+}
