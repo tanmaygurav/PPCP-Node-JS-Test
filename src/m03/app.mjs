@@ -48,8 +48,9 @@ export function createM03Handler(config, store, auth, coordination) {
       if (req.method === 'GET') return send(200, { item: visible(item) });
       const data = await readBody(req);
       if (match[2] === 'edit-uploads') {
+        if (!/^[a-f0-9-]{36}$/i.test(data.operationId || '')) throw new AppError(400, 'A save operation UUID is required.');
         const files = validateFiles(data.files), uploads = await store.createUploads(item.id, files);
-        return send(201, { uploads, ticket: sign(config.secret, { kind: 'm03-edit-upload', uid: identity.uid, submissionId: item.id, exp: Date.now() + 3600000, files: uploads.map(({ uploadUrl, ...file }) => file) }) });
+        return send(201, { uploads, operationId: data.operationId, ticket: sign(config.secret, { kind: 'm03-edit-upload', uid: identity.uid, submissionId: item.id, operationId: data.operationId, exp: Date.now() + 3600000, files: uploads.map(({ uploadUrl, ...file }) => file) }) });
       }
       if (match[2] !== 'edits') throw new AppError(404, 'Endpoint not found.');
       if (!/^[a-f0-9-]{36}$/i.test(data.operationId || '')) throw new AppError(400, 'A save operation UUID is required.');
@@ -70,7 +71,7 @@ export function createM03Handler(config, store, auth, coordination) {
       let added = [];
       if (data.ticket) {
         const ticket = verify(config.secret, data.ticket, 'm03-edit-upload');
-        if (ticket.uid !== identity.uid || ticket.submissionId !== item.id) throw new AppError(403, 'Upload ticket belongs to another record or account.');
+        if (ticket.uid !== identity.uid || ticket.submissionId !== item.id || ticket.operationId !== data.operationId) throw new AppError(403, 'Upload ticket belongs to another record, account or save operation.');
         added = ticket.files;
       }
       const validated = validateSubmission({ ...data, email: item.email, name: item.name, studentId: item.studentId, program: item.program });

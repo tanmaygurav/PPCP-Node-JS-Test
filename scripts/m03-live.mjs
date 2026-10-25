@@ -27,7 +27,7 @@ async function check(name, action) {
   catch (error) { results.push({ name, status: 'failed', ms: Math.round(performance.now() - start), error: error.code || error.name }); console.log(`${name}: failed (${error.code || error.name})`); throw error; }
 }
 async function upload(path, sizes) {
-  const plan = await call(owner, path, { files: sizes.map((size, i) => ({ name: `${runId}-${i}.pdf`, size })) }); assert.equal(plan.status, 201);
+  const plan = await call(owner, path, { operationId: randomUUID(), files: sizes.map((size, i) => ({ name: `${runId}-${i}.pdf`, size })) }); assert.equal(plan.status, 201);
   for (const file of plan.body.uploads) {
     const bytes = new Uint8Array(file.size); bytes.set(new TextEncoder().encode('%PDF-1.4\n').slice(0, file.size));
     const response = await fetch(file.uploadUrl, { method: 'PUT', headers: { 'Content-Type': file.mimeType }, body: bytes }); assert.equal(response.status, 200, 'Drive upload');
@@ -46,11 +46,12 @@ try {
     assert.equal((await call(faculty, `submissions/${id}/remarks`, { remark: `${runId} faculty review` })).status, 201);
     assert.equal((await call(other, `submissions/${id}`)).status, 404);
     assert.equal((await call(other, `submissions/${id}/edit-uploads`, { files: [] })).status, 404);
+    assert.equal((await call(faculty, `submissions/${id}/edit-uploads`, { files: [] })).status, 404);
     assert.equal((await call(owner, `submissions/${id}/remarks`, { remark: 'Unauthorized' })).status, 403);
   });
   await check('B03 edit after remark, replace file and preserve original identity/date', async () => {
     const plan = await upload(`submissions/${id}/edit-uploads`, [1234]); replacement = plan.uploads[0].id;
-    editPayload = { title: `${runId} edited`, description: 'Updated synthetic content', solution: 'Updated solution', domain: 'Education', retainedFileIds: [], ticket: plan.ticket, expectedLastEdited: '', operationId: randomUUID() };
+    editPayload = { title: `${runId} edited`, description: 'Updated synthetic content', solution: 'Updated solution', domain: 'Education', retainedFileIds: [], ticket: plan.ticket, expectedLastEdited: '', operationId: plan.operationId };
     const result = await call(owner, `submissions/${id}/edits`, editPayload); assert.equal(result.status, 200); const item = result.body.item;
     for (const field of ['id', 'ownerUid', 'email', 'name', 'studentId', 'program', 'timestamp']) assert.equal(item[field], initial[field]);
     assert.equal(item.media[0].fileId, replacement); assert.ok(Date.parse(item.lastEdited));
@@ -58,6 +59,7 @@ try {
   });
   await check('B04 duplicate retry and retained remarks', async () => {
     const repeat = await call(owner, `submissions/${id}/edits`, editPayload); assert.equal(repeat.status, 200); assert.equal(repeat.body.alreadySaved, true);
+    assert.equal((await call(owner, `submissions/${id}/edits`, { ...editPayload, operationId: randomUUID() })).status, 403);
     const remarks = await call(owner, `submissions/${id}/remarks`); assert.equal(remarks.body.items.length, 1); assert.equal(remarks.body.items[0].remark, `${runId} faculty review`);
     assert.equal((await call(owner, `submissions/${id}/files/${originalFile}`)).status, 404);
     const download = await call(owner, `submissions/${id}/files/${replacement}`); assert.equal(download.status, 200); assert.equal(download.body.length, 1234);
@@ -80,9 +82,10 @@ try {
     await auth.updateUser(other.uid, { disabled: true });
     try { assert.equal((await call(other, 'submissions')).status, 401); } finally { await auth.updateUser(other.uid, { disabled: false }); }
   });
-  await check('B08 invalid and expired credentials denied', async () => {
+  await check('B08 invalid, missing credentials and foreign origins denied', async () => {
     assert.equal((await call({ cookie: 'ppcp_m02=invalid.expired.session' }, 'submissions')).status, 401);
     assert.equal((await call(null, `submissions/${id}`)).status, 401);
+    assert.equal((await call(owner, `submissions/${id}/edits`, editPayload, { origin: 'https://foreign.example' })).status, 403);
   });
 } catch { process.exitCode = 1; }
 finally {

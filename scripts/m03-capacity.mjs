@@ -73,6 +73,7 @@ async function student(account, index) {
         await response.arrayBuffer(); record('upload-transfer', uploadStart, response, attachment.length);
         if (!response.ok) throw new Error('Upload failed');
       } catch (error) { if (!response) record('upload-transfer', uploadStart, null); throw error; }
+      if (stopped) return;
       const payload = { title: `${runId} synthetic ${index}/${cycle}`, domain: 'Education', description: 'Synthetic capacity observation.', solution: 'Synthetic improvement.', ticket: upload.ticket, operationId: randomUUID() };
       const saved = { id: upload.submissionId, uid: account.uid, operationId: payload.operationId, expectedTitle: payload.title, state: 'pending' }; saves.push(saved);
       const result = await call(account, 'create', 'submissions', payload); saved.state = 'confirmed';

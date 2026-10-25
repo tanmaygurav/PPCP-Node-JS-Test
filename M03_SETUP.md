@@ -53,6 +53,10 @@ Redis Lua atomically reserves each record across instances. Reservations do not 
 
 After confirmed save, a Lua transition atomically records removed file IDs for cleanup and releases the record. Cleanup checks the current attachment list, folder and submission ownership before trashing. Failures remain in the Redis cleanup hash for retry. Current content only is stored; draft/operation hashes and cleanup IDs do not retain prior text.
 
+Replacement tickets bind to one record, owner and operation ID. A ticket cannot be reused by a later edit to reintroduce a file while its cleanup is pending. The browser keeps the same operation when a response is lost. After a conflict, “Reload saved version, keep my text” refreshes the timestamp and saved attachment selection while preserving draft text and selected new files.
+
+Additional verification commands: `node scripts/m03-browser.mjs` (mocked browser draft/conflict/mobile checks), `node scripts/m03-redis-check.mjs` (two real clients, disposable keys), `node scripts/m03-live.mjs --target=https://ppcp-m03-b-test.vercel.app --write` (real functional tests), `node scripts/m03-boundaries.mjs --target=https://ppcp-m03-b-test.vercel.app --write` (actual size and interrupted-upload cases). Run live tests sequentially with capacity tests because all share the OAuth quota. `node scripts/m03-cleanup.mjs` reports queued cleanup; add `--apply` to retry up to ten files with ownership checks.
+
 ## Allowances and evidence limitations
 
 Checked 2026-10-25: [Sheets limits](https://developers.google.com/workspace/sheets/api/limits), [Upstash pricing](https://upstash.com/pricing/redis), [Firebase Auth limits](https://firebase.google.com/docs/auth/limits), [Vercel Hobby](https://vercel.com/docs/plans/hobby). Sheets documents 60 read and 60 write requests per minute per user per project, and 300 each per project. The shared OAuth account means 60 students do not get independent Sheets quotas. Upstash currently lists 250 MB, 500K monthly commands and 10 GB bandwidth on Free. Do not enable paid upgrades.

@@ -12,12 +12,13 @@ export default function EditPainPoint({ item, domains, api, saved }) {
       if (!pending.current) {
         const old = base.media.filter(file => retained.includes(file.fileId));
         if (old.length + files.length > 10 || files.some(file => file.size < 1 || file.size > 5000000) || old.reduce((n, file) => n + Number(file.size || 0), 0) + files.reduce((n, file) => n + file.size, 0) > 20000000) throw new Error('Choose up to 10 files, 5 MB each and 20 MB total. The server also validates existing attachments.');
-        const upload = await api(`submissions/${item.id}/edit-uploads`, { files: files.map(file => ({ name: file.name, size: file.size })) });
+        const operationId = crypto.randomUUID();
+        const upload = await api(`submissions/${item.id}/edit-uploads`, { operationId, files: files.map(file => ({ name: file.name, size: file.size })) });
         for (let i = 0; i < files.length; i++) {
           const result = await fetch(upload.uploads[i].uploadUrl, { method: 'PUT', headers: { 'Content-Type': upload.uploads[i].mimeType }, body: files[i] });
           if (!result.ok) throw new Error('Upload interrupted. Your draft and saved content are unchanged. Retry the upload.');
         }
-        pending.current = { ...draft, retainedFileIds: retained, ticket: upload.ticket, expectedLastEdited: base.lastEdited || '', operationId: crypto.randomUUID() };
+        pending.current = { ...draft, retainedFileIds: retained, ticket: upload.ticket, expectedLastEdited: base.lastEdited || '', operationId };
       }
       const result = await api(`submissions/${item.id}/edits`, pending.current);
       pending.current = null; await saved(result.item); setMessage('Changes saved.');

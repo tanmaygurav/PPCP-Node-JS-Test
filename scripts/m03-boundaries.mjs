@@ -15,7 +15,7 @@ const signIn = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:s
 assert.equal(signIn.status, 200); const identity = await signIn.json(); const session = await call('auth/session', { idToken: identity.idToken }); assert.equal(session.status, 200); cookie = session.cookie;
 const runId = `m03-boundaries-${Date.now()}`, results = [];
 async function check(name, action) { try { await action(); results.push({ name, status: 'passed' }); console.log(`${name}: passed`); } catch (error) { results.push({ name, status: 'failed', error: error.code || error.name }); console.log(`${name}: failed (${error.code || error.name})`); throw error; } }
-async function plan(sizes, path = 'upload-sessions') { const result = await call(path, { files: sizes.map((size, i) => ({ name: `${runId}-${i}.pdf`, size })) }); assert.equal(result.status, 201); return result.body; }
+async function plan(sizes, path = 'upload-sessions') { const result = await call(path, { operationId: randomUUID(), files: sizes.map((size, i) => ({ name: `${runId}-${i}.pdf`, size })) }); assert.equal(result.status, 201); return result.body; }
 async function transfer(file, bytes = file.size) { const body = new Uint8Array(bytes); body.set(new TextEncoder().encode('%PDF-1.4\n').slice(0, bytes)); const response = await fetch(file.uploadUrl, { method: 'PUT', headers: { 'Content-Type': file.mimeType }, body, signal: AbortSignal.timeout(120000) }); assert.equal(response.status, 200); }
 let id, files, item;
 try {
@@ -35,7 +35,7 @@ try {
   console.log('Quota cooldown before replacement boundaries (65 seconds).'); await new Promise(resolve => setTimeout(resolve, 65000));
   await check('F04 retained plus new file above total limit is rejected without changing saved content', async () => {
     const upload = await plan([1], `submissions/${id}/edit-uploads`); await transfer(upload.uploads[0]);
-    const payload = { title: `${runId} must not save`, description: item.description, solution: '', domain: 'Education', retainedFileIds: files.map(file => file.id), ticket: upload.ticket, expectedLastEdited: '', operationId: randomUUID() };
+    const payload = { title: `${runId} must not save`, description: item.description, solution: '', domain: 'Education', retainedFileIds: files.map(file => file.id), ticket: upload.ticket, expectedLastEdited: '', operationId: upload.operationId };
     assert.equal((await call(`submissions/${id}/edits`, payload)).status, 400);
     const current = (await call(`submissions/${id}`)).body.item; assert.equal(current.title, runId); assert.equal(current.lastEdited, ''); assert.equal(current.media.length, 4);
   });
@@ -45,13 +45,13 @@ try {
     const bytes = new Uint8Array(262144);
     const response = await fetch(upload.uploads[0].uploadUrl, { method: 'PUT', headers: { 'Content-Type': 'application/pdf', 'Content-Range': 'bytes 0-262143/1000000' }, body: bytes });
     assert.equal(response.status, 308);
-    const result = await call(`submissions/${id}/edits`, { title: 'Interrupted upload must not save', description: item.description, solution: '', domain: 'Education', retainedFileIds: [], ticket: upload.ticket, expectedLastEdited: '', operationId: randomUUID() });
+    const result = await call(`submissions/${id}/edits`, { title: 'Interrupted upload must not save', description: item.description, solution: '', domain: 'Education', retainedFileIds: [], ticket: upload.ticket, expectedLastEdited: '', operationId: upload.operationId });
     assert.ok([404, 409].includes(result.status)); assert.equal((await call(`submissions/${id}`)).body.item.title, runId);
   });
   await check('F06 actual 10-file resulting set is accepted after removal', async () => {
     const upload = await plan(Array(10).fill(1), `submissions/${id}/edit-uploads`);
     for (const file of upload.uploads) await transfer(file);
-    const result = await call(`submissions/${id}/edits`, { title: `${runId} ten files`, description: item.description, solution: '', domain: 'Education', retainedFileIds: [], ticket: upload.ticket, expectedLastEdited: '', operationId: randomUUID() });
+    const result = await call(`submissions/${id}/edits`, { title: `${runId} ten files`, description: item.description, solution: '', domain: 'Education', retainedFileIds: [], ticket: upload.ticket, expectedLastEdited: '', operationId: upload.operationId });
     assert.equal(result.status, 200); assert.equal(result.body.item.media.length, 10); assert.ok(result.body.item.lastEdited);
   });
 } catch { process.exitCode = 1; }
