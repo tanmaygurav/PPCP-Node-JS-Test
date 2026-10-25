@@ -3,6 +3,7 @@ import { randomUUID, createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { loadM03Env, m03Config } from '../src/m03/config.mjs';
 import { M03Store } from '../src/m03/store.mjs';
+import { RedisCoordination } from '../src/m03/coordination.mjs';
 
 loadM03Env(); const config = m03Config();
 const toolingCommit = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
@@ -117,16 +118,41 @@ try {
   } while (pageToken);
   const filesById = new Map(driveFiles.map(file => [file.id, file]));
   const duplicates = after.length - new Set(after.map(item => item.id)).size;
-  integrity = { duplicates, created: saves.length, missing: [], mismatches: [], pending: [], brokenAttachments: [] };
+  integrity = { duplicates, created: saves.length, missing: [], mismatches: [], pending: [], rejectedBeforeWrite: [], brokenAttachments: [] };
+  const coordination = config.checkpoint === 'M03-B' ? new RedisCoordination(config.redis) : null;
+  async function reconcileOperation(save, operationId, item) {
+    const raw = await coordination.command(['GET', coordination.keys(save.id, operationId)[0]]);
+    if (!raw) return 'not-reserved';
+    const operation = JSON.parse(raw);
+    if (operation.state === 'failed') return 'rejected';
+    if (operation.state === 'complete') return 'complete';
+    if (item?.lastSaveOperation === operationId) {
+      await coordination.finish(save.id, operationId, { ...operation, state: 'complete' }); return 'complete';
+    }
+    return 'pending';
+  }
   for (const save of saves) {
     const item = after.find(item => item.id === save.id);
-    if (!item) { if (save.state === 'confirmed') integrity.missing.push(save.id); else integrity.pending.push(save.id); continue; }
+    if (!item) {
+      if (save.state === 'confirmed') integrity.missing.push(save.id);
+      else if (coordination) {
+        save.reconciliation = await reconcileOperation(save, save.operationId, null);
+        if (['not-reserved', 'rejected'].includes(save.reconciliation)) integrity.rejectedBeforeWrite.push(save.id); else integrity.pending.push(save.id);
+      } else integrity.pending.push(save.id);
+      continue;
+    }
     if (item.ownerUid !== save.uid || (save.state === 'confirmed' && save.editState !== 'pending' && item.title !== save.expectedTitle) || item.media.length !== 1) integrity.mismatches.push(save.id);
     for (const file of item.media) {
       const actual = filesById.get(file.fileId);
       if (!actual || Number(actual.size) !== 1000000 || actual.appProperties?.submissionId !== item.id) integrity.brokenAttachments.push(file.fileId);
     }
-    if (save.editState === 'pending') integrity.pending.push(save.id);
+    if (save.state === 'pending' && coordination) save.reconciliation = await reconcileOperation(save, save.operationId, item);
+    if (save.editState === 'pending') {
+      const outcome = coordination ? await reconcileOperation(save, save.editOperationId, item) : 'pending';
+      save.editReconciliation = outcome;
+      if (outcome === 'pending') integrity.pending.push(save.id);
+      else if (outcome !== 'complete') integrity.rejectedBeforeWrite.push(save.id);
+    }
     save.reconciled = true;
   }
 } catch { integrity = { reconciliationFailed: true }; }
