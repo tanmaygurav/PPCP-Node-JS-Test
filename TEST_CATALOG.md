@@ -1,4 +1,4 @@
-# Test catalog — M01 / harness v1
+# Test catalog — M01 and M02
 
 Every case below has a stable ID. Offline tests exercise synthetic fixtures; live tests use the exact selected target and can require renewed Google authorization. M01 means the app tag in MILESTONES.md, not whichever code main contains later. Never edit an old case's meaning without documenting a revision.
 
@@ -122,4 +122,4 @@ M02 is isolated from M01. See [M02 setup and reconstruction](M02_SETUP.md) for N
 
 Live write tests create three synthetic `m02-test-...@welingkar.org` accounts marked verified by the administrator credential; **no email is sent**. They do not establish mailbox delivery or a real verification-link journey. Their UIDs are recorded for cleanup; Google Profiles rows, submission and tiny PNG remain inspectable. Do not turn those synthetic identities into real accounts. Manual tests use real inboxes; never record passwords, action codes, ID tokens or cookies in reports. All automated reports are sanitized JSON under output/test-runs.
 
-M02 remains a candidate until required live/manual tests pass and a stable source tag, branch, deployment URL and evidence are recorded. Runtime and browser failures must be logged honestly; an emulator pass does not certify live behavior or 60-user capacity.
+M02 is preserved as functional milestone `m02-firebase-auth-v0.1.0`; use tooling tag `m02-regression-tools-v1.0.1` for final acceptance and expanded live browser tests. Historical runtime/browser failures remain in the run log. Load capacity, migration and a device-specific manual matrix remain outside this functional acceptance.

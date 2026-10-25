@@ -1,0 +1,26 @@
+{
+  "milestone": "M02",
+  "schemaVersion": 2,
+  "suite": "live-api",
+  "runId": "255d42f5-d92d-441b-8a16-cc2aad5cfd07",
+  "timestamp": "2026-10-25T05:57:23.237Z",
+  "node": "v24.22.1",
+  "runnerCommit": "9e0b9378dc63de098dd90e3884bc2a99e973a441",
+  "runnerDirty": true,
+  "target": "https://ppcp-m02-auth-test.vercel.app",
+  "writeEnabled": false,
+  "steps": [
+    {
+      "id": "M02-L01",
+      "purpose": "Target and public configuration identify M02; anonymous access fails",
+      "status": "passed"
+    }
+  ],
+  "created": {
+    "firebaseUids": [],
+    "submissionIds": [],
+    "fileIds": []
+  },
+  "limitation": "Administrator-verified synthetic accounts; does not verify real email delivery. Google artifacts are retained; synthetic Firebase users are deleted at the end.",
+  "status": "passed"
+}

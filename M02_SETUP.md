@@ -1,6 +1,6 @@
 # M02 — Firebase accounts and permissions
 
-Status: preserved release candidate `m02-firebase-auth-v0.1.0-rc.1`, app commit `c1c2731`; final deployment/manual acceptance and branch pin are tracked in the milestone registry and run log. M01 remains on its existing branch and URL. Never promote main onto the M01 project. New regression tooling and evidence live on main and tooling tag `m02-regression-tools-v1.0.0`.
+Status: preserved functional milestone `m02-firebase-auth-v0.1.0`, app commit `c1c2731`; production branch/source and user-reported local/Vercel acceptance are verified in the registry and run log. The earlier rc.1 tag remains available. This is not a production-load certification. M01 remains on its existing branch and URL. Never promote main onto either frozen milestone project. New regression tooling and evidence live on main and tooling tag `m02-regression-tools-v1.0.1`.
 
 ## Accounts and test resources
 
@@ -66,7 +66,7 @@ Auth Emulator tests use only `demo-ppcp-m02` on 127.0.0.1:9099, synthetic accoun
 
 The separate `test:m02:live` command requires an explicit local or canonical M02 pilot target. Default is read-only. `--write` uses the local administrator credential to create three labelled, already-verified synthetic accounts without sending email. It tests the real APIs, Google ownership metadata, private file access and role enforcement, then launches Chromium to sign in, read the saved record, download its attachment and sign out on that same target. Finally it deletes only those created Firebase accounts. Labelled Google artifacts remain, with their IDs recorded. This complements the real-mail manual acceptance; it does not replace it.
 
-To reconstruct the app, check out the release-candidate tag in a separate checkout, use Node 24 and `npm ci`, restore the ignored local environment/credential file from your own secure copy, then build and start. The frozen app contains the original five-step live API harness; use tooling tag `m02-regression-tools-v1.0.0` for the expanded six-step browser/API harness against the same preserved server or URL. Do not move old tags for fixes or credential renewal.
+To reconstruct the app, check out the app tag in a separate checkout, use Node 24 and `npm ci`, restore the ignored local environment/credential file from your own secure copy, then build and start. The frozen app contains the original five-step live API harness; use tooling tag `m02-regression-tools-v1.0.1` for the expanded six-step browser/API harness against the same preserved server or URL. Frozen source documentation records the acceptance state at implementation time; use the newer tooling registry/run log for final acceptance evidence. Do not move old tags for fixes or credential renewal.
 
 For interactive emulator development, run `npx firebase emulators:start --project demo-ppcp-m02 --only auth` and configure demo project values plus FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 in a temporary local M02 configuration. Never set that variable on Vercel; startup rejects it there.
 
@@ -93,6 +93,6 @@ Use synthetic content and controlled organization inboxes for live acceptance:
 5. Sign out, replay the saved session cookie through the test harness, and confirm rejection. Refresh the browser and confirm sign-in is required. Check mobile layout and browser console.
 6. Repeat local and Vercel flows, run M01 regression, append dated outcomes to TEST_RUN_LOG.md, and retain sanitized evidence. Do not claim real mail, deployed authorization, Google integration or load tests from emulator success.
 
-Only after required live and offline acceptance passes: record the exact commit, stable URL, resources and fixture version in milestones.json, tag `m02-firebase-auth-v0.1.0`, create `milestone/m02-firebase-auth`, pin the new pilot's production branch to it, verify its source and archive evidence. Never move old tags. Until then M02 remains a candidate and M01 remains the known working baseline.
+Freeze verified 2026-10-25: app commit `c1c2731`, branch `milestone/m02-firebase-auth`, stable Production deployment `dpl_CyCrMN3H1885vMu1n2BDnFDqCsjZ`. The actual saved project Production branch also matches. User reported local and Vercel verification/reset and submission/attachment acceptance as successful; emulator and live API/browser reports are archived separately. A separate second-inbox registration and device-specific mobile/manual two-account matrix were optional in the final user prompt and are not independently established by that aggregate success reply. Automated two-user isolation passed. Existing-data migration, load testing and S3 remain deferred. Never move old tags.
 
 References: [Firebase session cookies](https://firebase.google.com/docs/auth/admin/manage-cookies), [Auth Emulator](https://firebase.google.com/docs/emulator-suite/connect_auth).

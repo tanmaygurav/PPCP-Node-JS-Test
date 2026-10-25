@@ -1,23 +1,23 @@
 {
-  "timestamp": "2026-10-25T05:49:29.517Z",
+  "timestamp": "2026-10-25T05:55:34.616Z",
   "projectId": "prj_VSQ1HfIdZmNiFOhIT81Bja3jrAi2",
   "projectName": "ppcp-m02-auth-test",
-  "productionBranch": "main",
+  "productionBranch": "milestone/m02-firebase-auth",
   "productionBranchEvidence": "Vercel project.link.productionBranch",
   "alias": {
     "name": "ppcp-m02-auth-test.vercel.app",
     "projectId": "prj_VSQ1HfIdZmNiFOhIT81Bja3jrAi2",
-    "deploymentId": "dpl_2my9y9KgyT3Wk729wELVozhGZDeY"
+    "deploymentId": "dpl_CyCrMN3H1885vMu1n2BDnFDqCsjZ"
   },
   "deployment": {
-    "id": "dpl_2my9y9KgyT3Wk729wELVozhGZDeY",
+    "id": "dpl_CyCrMN3H1885vMu1n2BDnFDqCsjZ",
     "readyState": "READY",
     "target": "production",
-    "branch": "main",
+    "branch": "milestone/m02-firebase-auth",
     "commit": "c1c27314b165c267ad4a6329a63646c643d8f4d3"
   },
   "expectedAppCommit": "c1c27314b165c267ad4a6329a63646c643d8f4d3",
   "expectedMilestoneBranch": "milestone/m02-firebase-auth",
   "sourceMatches": true,
-  "branchTrackingMatches": false
+  "branchTrackingMatches": true
 }
