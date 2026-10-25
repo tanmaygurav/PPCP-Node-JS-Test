@@ -24,6 +24,8 @@ jobs:
       - run: npm run build:m02
       - run: npm run test:m02
       - run: npm run test:m02:emulator
+      - run: npm run test:m03
+      - run: npm run build:m03
       - uses: actions/upload-artifact@v4
         if: always()
         with:

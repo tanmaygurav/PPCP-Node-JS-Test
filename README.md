@@ -158,3 +158,7 @@ Local edits are not automatically copied to a connected GitHub repository. Commi
 - Attachment viewing uses Drive's own permissions. Private delivery to portal users without Google accounts, actual email verification, production password storage and existing-account migration remain out of scope for this integration test.
 
 References: [Drive resumable uploads](https://developers.google.com/workspace/drive/api/guides/manage-uploads), [Google OAuth server flow](https://developers.google.com/identity/protocols/oauth2/web-server), [refresh-token expiry](https://developers.google.com/identity/protocols/oauth2#expiration), [Sheets append](https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.values/append), [Vercel function limits](https://vercel.com/docs/functions/limitations).
+# M03 editing and capacity work
+
+See [M03_SETUP.md](M03_SETUP.md) for the isolated A/B checkpoints, setup, save coordination, synthetic fixtures and reproduction commands. Implementation and capacity verification are in progress; M01/M02 remain preserved on their existing milestone branches.
+

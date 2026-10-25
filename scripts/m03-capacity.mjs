@@ -14,6 +14,10 @@ if (!process.argv.includes('--write')) throw new Error('Use --write to create la
 const pool = JSON.parse(readFileSync('.local/m03-accounts.json', 'utf8')).accounts.slice(0, users);
 if (pool.length !== users || pool.some(account => !account.uid.startsWith('m03-') || account.role !== 'student')) throw new Error('Synthetic student pool required.');
 const store = new M03Store(config), before = await store.list();
+const healthResponse = await fetch(`${target}/api/health`, { signal: AbortSignal.timeout(20000) });
+if (!healthResponse.ok) throw new Error('Checkpoint health check failed.');
+const health = await healthResponse.json();
+if (health.milestone !== config.checkpoint) throw new Error('Deployed checkpoint mismatch.');
 if (before.filter(item => item.id.startsWith('m03-seed-')).length < dataset) throw new Error('Seed the selected dataset first.');
 const runId = `m03-${Date.now()}`, samples = [], saves = [];
 let stopped = false, stopReason = null, consecutive = 0, quotaTimes = [], completedUsers = 0;
@@ -96,12 +100,23 @@ if (samples.some(sample => sample.quotaResponses)) { console.log('Waiting 65 sec
 let integrity;
 try {
   const after = await store.list();
+  const driveFiles = [];
+  let pageToken;
+  do {
+    const params = new URLSearchParams({ q: `'${config.folderId}' in parents and trashed = false`, fields: 'nextPageToken,files(id,size,appProperties)', pageSize: '1000', ...(pageToken ? { pageToken } : {}) });
+    const page = await store.request(`https://www.googleapis.com/drive/v3/files?${params}`); driveFiles.push(...page.files); pageToken = page.nextPageToken;
+  } while (pageToken);
+  const filesById = new Map(driveFiles.map(file => [file.id, file]));
   const duplicates = after.length - new Set(after.map(item => item.id)).size;
-  integrity = { duplicates, created: saves.length, missing: [], mismatches: [], pending: [] };
+  integrity = { duplicates, created: saves.length, missing: [], mismatches: [], pending: [], brokenAttachments: [] };
   for (const save of saves) {
     const item = after.find(item => item.id === save.id);
     if (!item) { if (save.state === 'confirmed') integrity.missing.push(save.id); else integrity.pending.push(save.id); continue; }
     if (item.ownerUid !== save.uid || (save.state === 'confirmed' && save.editState !== 'pending' && item.title !== save.expectedTitle) || item.media.length !== 1) integrity.mismatches.push(save.id);
+    for (const file of item.media) {
+      const actual = filesById.get(file.fileId);
+      if (!actual || Number(actual.size) !== 1000000 || actual.appProperties?.submissionId !== item.id) integrity.brokenAttachments.push(file.fileId);
+    }
     if (save.editState === 'pending') integrity.pending.push(save.id);
     save.reconciled = true;
   }
@@ -113,6 +128,8 @@ const operations = Object.fromEntries([...new Set(samples.map(sample => sample.o
 }));
 const report = { runId, checkpoint: config.checkpoint, sourceCommit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(), sourceDirty: !!execFileSync('git', ['status', '--porcelain'], { encoding: 'utf8' }).trim(), target, dataset, users, scenario, startedAt, elapsedMs, stopped, stopReason, completedCycles: completedUsers, requestsPerSecond: samples.length / (elapsedMs / 1000), googleRequests: samples.reduce((n, s) => n + s.googleRequests, 0), redisRequests: samples.reduce((n, s) => n + s.redisRequests, 0), quotaResponses: samples.reduce((n, s) => n + s.quotaResponses, 0), maxRssBytes: Math.max(0, ...samples.map(s => s.rssBytes)), operations, integrity, samples, saves,
   limitations: ['API-driven authenticated workload; browser rendering excluded.', 'Firebase Admin SDK network calls and provider billing usage are not included in upstream header counts.', 'GET retries are included in Google request counts; individual retry counts are not yet separated.', 'Interrupted or unscheduled work is not a completed user cycle. No latency acceptance target has been applied.'] };
+report.appSourceCommit = health.sourceCommit || (config.checkpoint === 'M03-A' ? '748ff21df03ff0ab70a6f3f998f001d3bac6d006' : null);
+report.transferBytes = samples.filter(sample => ['download', 'upload-transfer'].includes(sample.operation)).reduce((n, sample) => n + sample.bytes, 0);
 mkdirSync('output/m03', { recursive: true }); writeFileSync(`output/m03/${runId}.json`, JSON.stringify(report, null, 2));
 console.log(JSON.stringify({ report: `output/m03/${runId}.json`, operations, stopped, stopReason, integrity }));
-if (stopped || integrity.reconciliationFailed || integrity.duplicates || integrity.missing?.length || integrity.mismatches?.length || integrity.pending?.length) process.exitCode = 1;
+if (stopped || Object.values(operations).some(operation => operation.errors) || (scenario === 'burst' && completedUsers < users) || integrity.reconciliationFailed || integrity.duplicates || integrity.missing?.length || integrity.mismatches?.length || integrity.pending?.length || integrity.brokenAttachments?.length) process.exitCode = 1;

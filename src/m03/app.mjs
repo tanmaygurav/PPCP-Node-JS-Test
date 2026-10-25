@@ -25,7 +25,7 @@ export function createM03Handler(config, store, auth, coordination) {
   return async (req, res) => {
     const url = new URL(req.url, config.origin), path = url.searchParams.has('route') ? `/api/${url.searchParams.get('route')}` : url.pathname;
     const send = (status, data) => { res.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' }); res.end(JSON.stringify(data)); };
-    if (path === '/api/health') return send(200, { ok: true, milestone: config.checkpoint });
+    if (path === '/api/health') return send(200, { ok: true, milestone: config.checkpoint, sourceCommit: process.env.VERCEL_GIT_COMMIT_SHA || null });
     const match = path.match(/^\/api\/submissions\/([\w-]{1,100})(?:\/(edit-uploads|edits))?$/);
     const creation = path === '/api/submissions' && req.method === 'POST';
     if (config.checkpoint === 'M03-A' || (!match && !creation) || (req.method !== 'POST' && !(req.method === 'GET' && !match[2]))) return baseline(req, res);
@@ -39,9 +39,8 @@ export function createM03Handler(config, store, auth, coordination) {
         const validated = validateSubmission({ ...data, email: identity.email, name: profile.name, studentId: profile.studentId, program: profile.program });
         const result = await createOnce(store, coordination, { id: ticket.submissionId, uid: identity.uid, operationId: data.operationId, requestHash: digest(data) }, async () => {
           if (!(await store.activeDomains()).includes(validated.domain)) throw new AppError(400, 'Choose an active domain.');
-          const files = await store.verifyUploads(ticket.submissionId, ticket.files);
-          return store.appendProtected(ticket.submissionId, { ...validated, ownerUid: identity.uid }, files, data.operationId);
-        });
+          return store.verifyUploads(ticket.submissionId, ticket.files);
+        }, files => store.appendProtected(ticket.submissionId, { ...validated, ownerUid: identity.uid }, files, data.operationId));
         return send(result.alreadySaved ? 200 : 201, { ...result, item: visible(result.item) });
       }
       const item = await store.find(match[1]);

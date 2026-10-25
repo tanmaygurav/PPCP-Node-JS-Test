@@ -72,3 +72,8 @@ Record: date/time (IST), milestone/app tag, harness commit/tag, local/deployed o
 - Five offline coordination tests pass: lost response reconciliation, duplicate requests, stale edits/payload reuse, ownership, uncertain write blocking. One initial timestamp-collision test failed and was corrected; explicit last-save-operation markers were added for unambiguous reconciliation.
 - React editing build passes. Further verification, capacity measurements and release freeze remain pending.
 
+- Local and Vercel M03-B live functional suites each passed all eight groups (real private Drive files, replacement cleanup, edits after remarks, duplicate retry, stale conflicts, cross-account/ticket isolation, disabled account, invalid/missing sessions).
+- Twelve M03 offline cases, three Chromium draft/mobile checks and three real Redis cross-client checks passed. M01 offline 18/18 and browser mock 5/5 passed; M02 unit/API 10/10 and Auth Emulator/Chromium 6/6 passed. Sandbox loopback initially failed; reruns with local network access passed.
+- First Vercel build failed due to an incorrect `node:fs` import in the new deployment wrapper; corrected to `node:path`, and both checkpoint builds passed. The failed build remains in deployment history.
+- M03-A source 748ff21 frozen as `m03-a-submission-baseline-v0.1.0` / `milestone/m03-a-submission-baseline`; canonical URL, deployment branch, source SHA and saved Production branch verified.
+

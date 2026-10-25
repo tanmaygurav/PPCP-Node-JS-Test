@@ -109,12 +109,13 @@ function App() {
           await api('auth/logout', {}); await signOut(auth); setMe(null); setItems([]); setDetail(null); setMode('login');
         })}>Sign out</button></div>
         <div className={styles.columns}><section className={styles.card}><h2>Share a pain point</h2><form onSubmit={submit}>
+          <fieldset disabled={busy || !!pendingSubmission.current}>
           <label>Title<input name="title" required maxLength={300}/></label>
           <label>Domain<select name="domain" required><option value="">Choose a domain</option>{domains.map(domain => <option key={domain}>{domain}</option>)}</select></label>
           <label>What is the problem?<textarea name="description" required maxLength={20000} rows={5}/></label>
           <label>Possible solution<textarea name="solution" maxLength={10000} rows={3}/></label>
           <label>Attachments<input name="attachments" type="file" multiple accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.ppt,.pptx"/></label>
-          <small>Up to 10 files · 5 MB per file · 20 MB total</small><button disabled={busy}>{busy ? 'Saving…' : 'Submit pain point'}</button>
+          <small>Up to 10 files · 5 MB per file · 20 MB total</small></fieldset><button disabled={busy}>{busy ? 'Saving…' : pendingSubmission.current ? 'Check or retry this submission' : 'Submit pain point'}</button>
         </form></section><section className={styles.card}><h2>{me.profile.role === 'student' ? 'Your pain points' : 'Review pain points'}</h2>
           <button disabled={busy} onClick={() => run(loadPortal)}>Refresh</button>
           {!items.length && <p>No pain points yet.</p>}<ul className={styles.list}>{items.map(item => <li key={item.id}><button disabled={busy} onClick={() => run(() => open(item))}>{item.title}</button><small>{item.domain} · {item.name}</small></li>)}</ul>
