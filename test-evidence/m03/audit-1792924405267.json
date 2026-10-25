@@ -1,0 +1,12 @@
+{
+  "checkedAt": "2026-10-25T10:33:25.251Z",
+  "checkpoint": "M03-B",
+  "records": 1214,
+  "seeds": 1200,
+  "duplicateIds": 0,
+  "brokenReferences": [],
+  "invalidLimits": [],
+  "mismatchedSaves": [],
+  "pendingRecordReservations": 0,
+  "queuedCleanup": 0
+}

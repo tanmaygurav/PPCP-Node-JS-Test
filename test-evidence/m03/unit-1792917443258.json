@@ -1,0 +1,76 @@
+{
+  "sourceCommit": "04fab82bc5e07171f09311225d4da17ced44f757",
+  "node": "v24.22.1",
+  "results": [
+    {
+      "name": "lost successful response reconciles without a second write",
+      "status": "passed",
+      "ms": 3.1707
+    },
+    {
+      "name": "concurrent identical operations dispatch once",
+      "status": "passed",
+      "ms": 1.0153
+    },
+    {
+      "name": "stale edit and changed operation payload do not overwrite",
+      "status": "passed",
+      "ms": 0.3381
+    },
+    {
+      "name": "another owner cannot edit",
+      "status": "passed",
+      "ms": 0.2015
+    },
+    {
+      "name": "ambiguous write stays pending and blocks successors",
+      "status": "passed",
+      "ms": 0.4628
+    },
+    {
+      "name": "a failed pre-write read releases the record for a new operation",
+      "status": "passed",
+      "ms": 0.3127
+    },
+    {
+      "name": "failed update preparation cannot leave a dispatched write or change saved content",
+      "status": "passed",
+      "ms": 0.3339
+    },
+    {
+      "name": "new submissions are appended once under duplicate concurrent requests",
+      "status": "passed",
+      "ms": 3.0954
+    },
+    {
+      "name": "uncertain append response reconciles by the saved operation marker",
+      "status": "passed",
+      "ms": 0.4069
+    },
+    {
+      "name": "failed upload validation releases reservation without an append",
+      "status": "passed",
+      "ms": 0.4773
+    },
+    {
+      "name": "edit updates the same row and preserves identity, date, tag and remark tab",
+      "status": "passed",
+      "ms": 1.9252
+    },
+    {
+      "name": "attachment boundaries use decimal bytes and the resulting combined set",
+      "status": "passed",
+      "ms": 0.6556
+    },
+    {
+      "name": "cleanup refuses foreign folder or submission and does not trash current files blindly",
+      "status": "passed",
+      "ms": 0.4183
+    },
+    {
+      "name": "M03 config rejects preserved milestone resources",
+      "status": "passed",
+      "ms": 1.9833
+    }
+  ]
+}

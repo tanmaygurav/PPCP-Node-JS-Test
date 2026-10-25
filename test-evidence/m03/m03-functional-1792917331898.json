@@ -1,0 +1,51 @@
+{
+  "runId": "m03-functional-1792917331898",
+  "target": "https://ppcp-m03-b-test.vercel.app",
+  "checkpoint": "M03-B",
+  "results": [
+    {
+      "name": "B01 authenticated create with 1 MB attachment",
+      "status": "passed",
+      "ms": 7850
+    },
+    {
+      "name": "B02 staff remark and student ownership",
+      "status": "passed",
+      "ms": 6831
+    },
+    {
+      "name": "B03 edit after remark, replace file and preserve original identity/date",
+      "status": "passed",
+      "ms": 10574
+    },
+    {
+      "name": "B04 duplicate retry and retained remarks",
+      "status": "passed",
+      "ms": 8132
+    },
+    {
+      "name": "B05 competing edits reject the stale tab without overwriting",
+      "status": "passed",
+      "ms": 7917
+    },
+    {
+      "name": "B06 replacement ticket cannot be reused by another student or record",
+      "status": "passed",
+      "ms": 6240
+    },
+    {
+      "name": "B07 real disabled Firebase account is denied",
+      "status": "passed",
+      "ms": 2230
+    },
+    {
+      "name": "B08 invalid, missing credentials and foreign origins denied",
+      "status": "passed",
+      "ms": 135
+    }
+  ],
+  "submissionId": "cbeb53e9-d9ef-4d06-a10c-ba81c223cd89",
+  "originalFile": "1o4-SWMZdziU1_7z4Wm2gmJmwxwq8krOA",
+  "replacement": "1aqJOj-QfcjfgKEls5If8sbl3Zgahs6aC",
+  "complete": true
+}

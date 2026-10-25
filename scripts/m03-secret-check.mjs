@@ -2,7 +2,7 @@ import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { parseEnv } from 'node:util';
 import { execFileSync } from 'node:child_process';
 const secrets = [];
-for (const path of ['.env.m03-a.local', '.env.m03-b.local']) if (existsSync(path)) {
+for (const path of readdirSync('.').filter(file => file.startsWith('.env.m03-') && file.endsWith('.local'))) if (existsSync(path)) {
   const values = parseEnv(readFileSync(path, 'utf8'));
   for (const key of ['GOOGLE_CLIENT_SECRET', 'GOOGLE_REFRESH_TOKEN', 'M03_SIGNING_SECRET', 'UPSTASH_REDIS_REST_TOKEN']) if (values[key]) secrets.push(values[key]);
   if (values.GOOGLE_APPLICATION_CREDENTIALS && existsSync(values.GOOGLE_APPLICATION_CREDENTIALS)) {

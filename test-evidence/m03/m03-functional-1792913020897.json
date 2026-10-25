@@ -1,0 +1,51 @@
+{
+  "runId": "m03-functional-1792913020897",
+  "target": "http://localhost:3004",
+  "checkpoint": "M03-B",
+  "results": [
+    {
+      "name": "B01 authenticated create with 1 MB attachment",
+      "status": "passed",
+      "ms": 7982
+    },
+    {
+      "name": "B02 staff remark and student ownership",
+      "status": "passed",
+      "ms": 5235
+    },
+    {
+      "name": "B03 edit after remark, replace file and preserve original identity/date",
+      "status": "passed",
+      "ms": 10124
+    },
+    {
+      "name": "B04 duplicate retry and retained remarks",
+      "status": "passed",
+      "ms": 6993
+    },
+    {
+      "name": "B05 competing edits reject the stale tab without overwriting",
+      "status": "passed",
+      "ms": 7738
+    },
+    {
+      "name": "B06 replacement ticket cannot be reused by another student or record",
+      "status": "passed",
+      "ms": 5423
+    },
+    {
+      "name": "B07 real disabled Firebase account is denied",
+      "status": "passed",
+      "ms": 2105
+    },
+    {
+      "name": "B08 invalid and expired credentials denied",
+      "status": "passed",
+      "ms": 11
+    }
+  ],
+  "submissionId": "da6c1aa3-a642-4267-bb45-9185c865cef5",
+  "originalFile": "1yW-1YY234DvaoK4VGr1-hk8ToZP8natX",
+  "replacement": "1emTDGB6M8oT-NKvTddFPioacxDXV7vzt",
+  "complete": true
+}

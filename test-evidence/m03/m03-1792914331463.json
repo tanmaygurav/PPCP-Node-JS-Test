@@ -1,0 +1,655 @@
+{
+  "runId": "m03-1792914331463",
+  "checkpoint": "M03-A",
+  "sourceCommit": "748ff21df03ff0ab70a6f3f998f001d3bac6d006",
+  "sourceDirty": true,
+  "target": "https://ppcp-m03-a-test.vercel.app",
+  "dataset": 1200,
+  "users": 10,
+  "scenario": "burst",
+  "startedAt": "2026-10-25T07:45:41.573Z",
+  "elapsedMs": 14565.680499999999,
+  "stopped": false,
+  "stopReason": null,
+  "completedCycles": 9,
+  "requestsPerSecond": 3.432726675557658,
+  "googleRequests": 152,
+  "redisRequests": 0,
+  "quotaResponses": 3,
+  "maxRssBytes": 143380480,
+  "operations": {
+    "browse": {
+      "count": 10,
+      "errors": 0,
+      "medianMs": 1173.2,
+      "p95Ms": 1906.8,
+      "maxMs": 1906.8
+    },
+    "upload-session": {
+      "count": 10,
+      "errors": 0,
+      "medianMs": 1916.3,
+      "p95Ms": 2031.7,
+      "maxMs": 2031.7
+    },
+    "upload-transfer": {
+      "count": 10,
+      "errors": 0,
+      "medianMs": 1871.2,
+      "p95Ms": 2219.2,
+      "maxMs": 2219.2
+    },
+    "create": {
+      "count": 10,
+      "errors": 0,
+      "medianMs": 3123.8,
+      "p95Ms": 4833.2,
+      "maxMs": 4833.2
+    },
+    "download": {
+      "count": 10,
+      "errors": 1,
+      "medianMs": 2165.5,
+      "p95Ms": 2773.5,
+      "maxMs": 2773.5
+    }
+  },
+  "integrity": {
+    "duplicates": 0,
+    "created": 10,
+    "missing": [],
+    "mismatches": [],
+    "pending": [],
+    "brokenAttachments": []
+  },
+  "samples": [
+    {
+      "operation": "browse",
+      "ms": 1239,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 136327168
+    },
+    {
+      "operation": "browse",
+      "ms": 1160.8,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 136347648
+    },
+    {
+      "operation": "browse",
+      "ms": 1166.5,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 136728576
+    },
+    {
+      "operation": "browse",
+      "ms": 1173.2,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 136740864
+    },
+    {
+      "operation": "browse",
+      "ms": 1207.8,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 135933952
+    },
+    {
+      "operation": "upload-session",
+      "ms": 2031.7,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 135933952
+    },
+    {
+      "operation": "upload-session",
+      "ms": 1936.8,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 135933952
+    },
+    {
+      "operation": "browse",
+      "ms": 1160.9,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 136052736
+    },
+    {
+      "operation": "upload-session",
+      "ms": 1902.3,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 136052736
+    },
+    {
+      "operation": "browse",
+      "ms": 1150.5,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 137129984
+    },
+    {
+      "operation": "upload-session",
+      "ms": 1977.8,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 137129984
+    },
+    {
+      "operation": "browse",
+      "ms": 1906.8,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 138752000
+    },
+    {
+      "operation": "upload-session",
+      "ms": 1795.7,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 139022336
+    },
+    {
+      "operation": "browse",
+      "ms": 1180.4,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 142536704
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 1934.8,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "upload-session",
+      "ms": 1916.3,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 139776000
+    },
+    {
+      "operation": "browse",
+      "ms": 1173.4,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 140582912
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 1734.7,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 2219.2,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "upload-session",
+      "ms": 1895.3,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 141664256
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 1932.4,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "upload-session",
+      "ms": 1925,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 141664256
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 1922.2,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "upload-session",
+      "ms": 1917.4,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 140582912
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 1877,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "upload-session",
+      "ms": 1852.1,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 140582912
+    },
+    {
+      "operation": "create",
+      "ms": 3195.8,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 7,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 142471168
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 1871.2,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 1733.6,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "create",
+      "ms": 3100.7,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 7,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 142471168
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 1863.3,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 1809.7,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "create",
+      "ms": 3123.8,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 7,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 141754368
+    },
+    {
+      "operation": "create",
+      "ms": 3048,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 7,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 141754368
+    },
+    {
+      "operation": "create",
+      "ms": 4833.2,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 8,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 121937920
+    },
+    {
+      "operation": "download",
+      "ms": 2515.6,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 123826176
+    },
+    {
+      "operation": "download",
+      "ms": 2177.6,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 124907520
+    },
+    {
+      "operation": "create",
+      "ms": 3895.3,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 7,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 143372288
+    },
+    {
+      "operation": "create",
+      "ms": 3107.8,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 7,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 143372288
+    },
+    {
+      "operation": "create",
+      "ms": 3244.4,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 7,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 128372736
+    },
+    {
+      "operation": "download",
+      "ms": 2167.1,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 128372736
+    },
+    {
+      "operation": "download",
+      "ms": 2163.8,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 128372736
+    },
+    {
+      "operation": "create",
+      "ms": 3195.4,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 7,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 128372736
+    },
+    {
+      "operation": "create",
+      "ms": 3060.7,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 7,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 141484032
+    },
+    {
+      "operation": "download",
+      "ms": 2165.5,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 142290944
+    },
+    {
+      "operation": "download",
+      "ms": 2113.3,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 142299136
+    },
+    {
+      "operation": "download",
+      "ms": 2211.7,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 143380480
+    },
+    {
+      "operation": "download",
+      "ms": 2129.9,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 143380480
+    },
+    {
+      "operation": "download",
+      "ms": 2773.5,
+      "status": 503,
+      "bytes": 204,
+      "googleRequests": 4,
+      "redisRequests": 0,
+      "quotaResponses": 3,
+      "rssBytes": 128688128
+    },
+    {
+      "operation": "download",
+      "ms": 2162.2,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 141492224
+    }
+  ],
+  "saves": [
+    {
+      "id": "78c6e1fe-98e5-448c-961b-82726ccd30c3",
+      "uid": "m03-25084fa9c8-0",
+      "operationId": "ccd7a077-7990-4f2a-8378-4771b719bc22",
+      "expectedTitle": "m03-1792914331463 synthetic 0/0",
+      "state": "confirmed",
+      "reconciled": true
+    },
+    {
+      "id": "b22ad540-51c8-48a4-806b-bf1802d03397",
+      "uid": "m03-25084fa9c8-2",
+      "operationId": "04a13a0f-5e95-44d4-8125-0703ddeed339",
+      "expectedTitle": "m03-1792914331463 synthetic 2/0",
+      "state": "confirmed",
+      "reconciled": true
+    },
+    {
+      "id": "fe44ca90-7d00-46c1-a2f9-d2ff9e8aa786",
+      "uid": "m03-25084fa9c8-1",
+      "operationId": "ca40da2d-5dcf-441d-aaf3-6792faba228e",
+      "expectedTitle": "m03-1792914331463 synthetic 1/0",
+      "state": "confirmed",
+      "reconciled": true
+    },
+    {
+      "id": "047793a2-b004-4ff9-84ae-882d834b4a81",
+      "uid": "m03-25084fa9c8-3",
+      "operationId": "b61ac2e0-5de0-4dbc-8db1-fc41c1466b3c",
+      "expectedTitle": "m03-1792914331463 synthetic 3/0",
+      "state": "confirmed",
+      "reconciled": true
+    },
+    {
+      "id": "9a749a9c-3982-4fe2-a13d-2694178a3cfb",
+      "uid": "m03-25084fa9c8-4",
+      "operationId": "b0708013-8256-4afc-8863-264ed0fcdd0f",
+      "expectedTitle": "m03-1792914331463 synthetic 4/0",
+      "state": "confirmed",
+      "reconciled": true
+    },
+    {
+      "id": "5fba0b85-7dd8-41d4-a1ae-db122c9c1b6e",
+      "uid": "m03-25084fa9c8-5",
+      "operationId": "3064d289-cdec-4c36-a5b2-18ef00d1aaf9",
+      "expectedTitle": "m03-1792914331463 synthetic 5/0",
+      "state": "confirmed",
+      "reconciled": true
+    },
+    {
+      "id": "54afa425-bd18-41b0-80d3-52f1248e21c3",
+      "uid": "m03-25084fa9c8-7",
+      "operationId": "028934f2-239f-4038-a7cb-131ea2fe6d73",
+      "expectedTitle": "m03-1792914331463 synthetic 7/0",
+      "state": "confirmed",
+      "reconciled": true
+    },
+    {
+      "id": "8483ea41-1b0d-41da-bd61-743f3425b8e8",
+      "uid": "m03-25084fa9c8-6",
+      "operationId": "397d0f47-69ec-4ffb-83bb-e7922572d64d",
+      "expectedTitle": "m03-1792914331463 synthetic 6/0",
+      "state": "confirmed",
+      "reconciled": true
+    },
+    {
+      "id": "f07f6fa5-3d48-4afe-80ca-15d92da8e997",
+      "uid": "m03-25084fa9c8-8",
+      "operationId": "f99140a0-8474-4a85-8362-ac12c540e930",
+      "expectedTitle": "m03-1792914331463 synthetic 8/0",
+      "state": "confirmed",
+      "reconciled": true
+    },
+    {
+      "id": "fcd36053-40af-43ac-9962-b5d38730ac17",
+      "uid": "m03-25084fa9c8-9",
+      "operationId": "21c8efcf-70d4-4790-a0f6-9c271ca3ce2d",
+      "expectedTitle": "m03-1792914331463 synthetic 9/0",
+      "state": "confirmed",
+      "reconciled": true
+    }
+  ],
+  "limitations": [
+    "API-driven authenticated workload; browser rendering excluded.",
+    "Firebase Admin SDK network calls and provider billing usage are not included in upstream header counts.",
+    "GET retries are included in Google request counts; individual retry counts are not yet separated.",
+    "Interrupted or unscheduled work is not a completed user cycle. No latency acceptance target has been applied."
+  ]
+}

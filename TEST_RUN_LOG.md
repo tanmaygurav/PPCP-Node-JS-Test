@@ -77,3 +77,10 @@ Record: date/time (IST), milestone/app tag, harness commit/tag, local/deployed o
 - First Vercel build failed due to an incorrect `node:fs` import in the new deployment wrapper; corrected to `node:path`, and both checkpoint builds passed. The failed build remains in deployment history.
 - M03-A source 748ff21 frozen as `m03-a-submission-baseline-v0.1.0` / `milestone/m03-a-submission-baseline`; canonical URL, deployment branch, source SHA and saved Production branch verified.
 
+- Final verification: fourteen M03 unit cases, three browser cases, four shared-Redis cases, eight deployed functional groups, six actual file-boundary/interruption groups and two actual lost-HTTP-response groups passed. Final read-only M01 checks (3) and M02 health/auth checks (1) passed after load work ended.
+- A completed both 1,200/3,000 seed matrices. Five-user bursts passed, ten was variable, and larger bursts/classroom runs hit Sheets quota stops. No acknowledged record was missing/duplicated and no tested saved reference was broken.
+- Owner approved narrowing B to reliability plus a small comparison, then database evaluation. B one-user flow passed (edit 3.51 s); five-user flow saved all five records but only two edits completed, with three known pre-write quota rejections and no unresolved operation. Larger B matrix intentionally deferred.
+- Both canonical URLs, immutable source tags, deployed branches and saved Production branch pins verified. A source 748ff21; B source 04fab82. See M03_RESULTS.md, DB_OPTIONS.md and test-evidence/m03. Separate local dataset variants preserve reruns without relabeling larger Sheets.
+
+- Final read-only B audit: 1,214 records (1,200 seeds), zero duplicate IDs, broken current references, limit violations, mismatched saves, pending record reservations or queued cleanup. Orphaned/abandoned test uploads are retained, not silently deleted. Independent local A/1,200 and B/3,000 fixtures were seeded for future reproduction; no extra Vercel projects or larger B runs were created.
+

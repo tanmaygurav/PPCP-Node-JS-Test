@@ -1,0 +1,48 @@
+{
+  "milestone": "M02",
+  "schemaVersion": 2,
+  "suite": "emulator",
+  "timestamp": "2026-10-25T07:45:07.740Z",
+  "node": "v24.22.1",
+  "runnerCommit": "748ff21df03ff0ab70a6f3f998f001d3bac6d006",
+  "runnerDirty": true,
+  "steps": [
+    {
+      "id": "M02-E01",
+      "purpose": "M02-E01 real emulator registration rejects unverified users and allows emailed verification",
+      "status": "passed",
+      "durationMs": 99.9767
+    },
+    {
+      "id": "M02-E02",
+      "purpose": "M02-E02 real emulator tokens reject foreign domains, tampering and expiration",
+      "status": "passed",
+      "durationMs": 26.8448
+    },
+    {
+      "id": "M02-E03",
+      "purpose": "M02-E03 real emulator identities enforce ownership and staff permissions",
+      "status": "passed",
+      "durationMs": 38.8231
+    },
+    {
+      "id": "M02-E04",
+      "purpose": "M02-E04 real emulator logout invalidates a copied server session",
+      "status": "passed",
+      "durationMs": 1130.5385
+    },
+    {
+      "id": "M02-E05",
+      "purpose": "M02-E05 real emulator password reset replaces the old password",
+      "status": "passed",
+      "durationMs": 16.7057
+    },
+    {
+      "id": "M02-E06",
+      "purpose": "M02-E06 Chromium registration, verification, profile, submission, remark and logout",
+      "status": "passed",
+      "durationMs": 1280.6622
+    }
+  ],
+  "status": "passed"
+}

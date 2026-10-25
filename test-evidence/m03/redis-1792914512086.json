@@ -1,0 +1,17 @@
+{
+  "namespace": "m03-b-coordination-test-1792914511884",
+  "results": [
+    {
+      "name": "R01 separate Redis clients serialize the same record",
+      "status": "passed"
+    },
+    {
+      "name": "R02 another instance reconciles without repeating the write",
+      "status": "passed"
+    },
+    {
+      "name": "R03 committed cleanup survives across Redis clients",
+      "status": "passed"
+    }
+  ]
+}

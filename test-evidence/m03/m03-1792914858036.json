@@ -1,0 +1,648 @@
+{
+  "runId": "m03-1792914858036",
+  "checkpoint": "M03-A",
+  "sourceCommit": "8c8a2c99be43815bd0e0f1360ac00ba9f5b5c456",
+  "sourceDirty": false,
+  "target": "https://ppcp-m03-a-test.vercel.app",
+  "dataset": 1200,
+  "users": 60,
+  "scenario": "classroom",
+  "startedAt": "2026-10-25T07:55:17.554Z",
+  "elapsedMs": 34504.35539999999,
+  "stopped": true,
+  "stopReason": "ten upstream quota responses within 30 seconds",
+  "completedCycles": 0,
+  "requestsPerSecond": 1.738910908621119,
+  "googleRequests": 128,
+  "redisRequests": 0,
+  "quotaResponses": 21,
+  "maxRssBytes": 153780224,
+  "operations": {
+    "browse": {
+      "count": 60,
+      "errors": 7,
+      "medianMs": 1201.9,
+      "p95Ms": 2072.4,
+      "maxMs": 2430.5
+    }
+  },
+  "integrity": {
+    "duplicates": 0,
+    "created": 0,
+    "missing": [],
+    "mismatches": [],
+    "pending": [],
+    "brokenAttachments": []
+  },
+  "samples": [
+    {
+      "operation": "browse",
+      "ms": 1423.7,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 148905984
+    },
+    {
+      "operation": "browse",
+      "ms": 1357.2,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 148905984
+    },
+    {
+      "operation": "browse",
+      "ms": 1154.8,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 148905984
+    },
+    {
+      "operation": "browse",
+      "ms": 1381,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 149712896
+    },
+    {
+      "operation": "browse",
+      "ms": 1207.9,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 150794240
+    },
+    {
+      "operation": "browse",
+      "ms": 1166,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 151605248
+    },
+    {
+      "operation": "browse",
+      "ms": 1182,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 149729280
+    },
+    {
+      "operation": "browse",
+      "ms": 1201.9,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 126455808
+    },
+    {
+      "operation": "browse",
+      "ms": 1205.2,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 129601536
+    },
+    {
+      "operation": "browse",
+      "ms": 1735.8,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 150810624
+    },
+    {
+      "operation": "browse",
+      "ms": 1250.7,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 149147648
+    },
+    {
+      "operation": "browse",
+      "ms": 1229.6,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 149954560
+    },
+    {
+      "operation": "browse",
+      "ms": 1219.1,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 151035904
+    },
+    {
+      "operation": "browse",
+      "ms": 1138.1,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 151846912
+    },
+    {
+      "operation": "browse",
+      "ms": 1131.6,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 152928256
+    },
+    {
+      "operation": "browse",
+      "ms": 1268.3,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 150118400
+    },
+    {
+      "operation": "browse",
+      "ms": 1181.8,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 151199744
+    },
+    {
+      "operation": "browse",
+      "ms": 1613.7,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 152010752
+    },
+    {
+      "operation": "browse",
+      "ms": 1176.3,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 150122496
+    },
+    {
+      "operation": "browse",
+      "ms": 1139.4,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 129601536
+    },
+    {
+      "operation": "browse",
+      "ms": 1104.3,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 132571136
+    },
+    {
+      "operation": "browse",
+      "ms": 1194.1,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 136896512
+    },
+    {
+      "operation": "browse",
+      "ms": 1120.3,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 151203840
+    },
+    {
+      "operation": "browse",
+      "ms": 1226.3,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 152014848
+    },
+    {
+      "operation": "browse",
+      "ms": 1161.3,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 150159360
+    },
+    {
+      "operation": "browse",
+      "ms": 1101.1,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 137736192
+    },
+    {
+      "operation": "browse",
+      "ms": 1140,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 141348864
+    },
+    {
+      "operation": "browse",
+      "ms": 1208.3,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 142426112
+    },
+    {
+      "operation": "browse",
+      "ms": 1918.2,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 144318464
+    },
+    {
+      "operation": "browse",
+      "ms": 1136.5,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 151240704
+    },
+    {
+      "operation": "browse",
+      "ms": 1410.5,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 145399808
+    },
+    {
+      "operation": "browse",
+      "ms": 1259.3,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 152051712
+    },
+    {
+      "operation": "browse",
+      "ms": 1150.8,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 150384640
+    },
+    {
+      "operation": "browse",
+      "ms": 1137.1,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 151465984
+    },
+    {
+      "operation": "browse",
+      "ms": 1500,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 152276992
+    },
+    {
+      "operation": "browse",
+      "ms": 1168.8,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 149725184
+    },
+    {
+      "operation": "browse",
+      "ms": 1229.4,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 150405120
+    },
+    {
+      "operation": "browse",
+      "ms": 1176.6,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 153780224
+    },
+    {
+      "operation": "browse",
+      "ms": 1151.8,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 149372928
+    },
+    {
+      "operation": "browse",
+      "ms": 1100.1,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 151486464
+    },
+    {
+      "operation": "browse",
+      "ms": 1465.3,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 152297472
+    },
+    {
+      "operation": "browse",
+      "ms": 1260.8,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 150405120
+    },
+    {
+      "operation": "browse",
+      "ms": 1202.2,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 151486464
+    },
+    {
+      "operation": "browse",
+      "ms": 1150.3,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 150454272
+    },
+    {
+      "operation": "browse",
+      "ms": 1302.2,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 152297472
+    },
+    {
+      "operation": "browse",
+      "ms": 1161.5,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 151265280
+    },
+    {
+      "operation": "browse",
+      "ms": 1167.6,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 153378816
+    },
+    {
+      "operation": "browse",
+      "ms": 1122.8,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 149659648
+    },
+    {
+      "operation": "browse",
+      "ms": 1140,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 150740992
+    },
+    {
+      "operation": "browse",
+      "ms": 1267,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 151822336
+    },
+    {
+      "operation": "browse",
+      "ms": 1146.5,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 149917696
+    },
+    {
+      "operation": "browse",
+      "ms": 1129.3,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 151265280
+    },
+    {
+      "operation": "browse",
+      "ms": 1137.1,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 152346624
+    },
+    {
+      "operation": "browse",
+      "ms": 2063.3,
+      "status": 503,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 3,
+      "rssBytes": 149598208
+    },
+    {
+      "operation": "browse",
+      "ms": 2042.8,
+      "status": 503,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 3,
+      "rssBytes": 149598208
+    },
+    {
+      "operation": "browse",
+      "ms": 2244.7,
+      "status": 503,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 3,
+      "rssBytes": 149598208
+    },
+    {
+      "operation": "browse",
+      "ms": 2083.7,
+      "status": 503,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 3,
+      "rssBytes": 149598208
+    },
+    {
+      "operation": "browse",
+      "ms": 2430.5,
+      "status": 503,
+      "bytes": 0,
+      "googleRequests": 4,
+      "redisRequests": 0,
+      "quotaResponses": 3,
+      "rssBytes": 149598208
+    },
+    {
+      "operation": "browse",
+      "ms": 2049.4,
+      "status": 503,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 3,
+      "rssBytes": 149598208
+    },
+    {
+      "operation": "browse",
+      "ms": 2072.4,
+      "status": 503,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 3,
+      "rssBytes": 149598208
+    }
+  ],
+  "saves": [],
+  "limitations": [
+    "API-driven authenticated workload; browser rendering excluded.",
+    "Firebase Admin SDK network calls and provider billing usage are not included in upstream header counts.",
+    "GET retries are included in Google request counts; individual retry counts are not yet separated.",
+    "Interrupted or unscheduled work is not a completed user cycle. No latency acceptance target has been applied."
+  ],
+  "appSourceCommit": "748ff21df03ff0ab70a6f3f998f001d3bac6d006",
+  "transferBytes": 0
+}

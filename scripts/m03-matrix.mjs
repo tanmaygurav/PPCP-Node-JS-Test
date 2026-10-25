@@ -4,7 +4,7 @@ const checkpoint = process.env.M03_CHECKPOINT;
 if (!['M03-A', 'M03-B'].includes(checkpoint) || !process.argv.includes('--write')) throw new Error('Set M03_CHECKPOINT and pass --write.');
 const dataset = Number(process.argv.find(arg => arg.startsWith('--dataset='))?.slice(10) || 1200);
 if (![1200, 3000].includes(dataset)) throw new Error('Approved dataset required.');
-const target = `https://ppcp-m03-${checkpoint.slice(-1).toLowerCase()}-test.vercel.app`;
+const target = process.argv.find(arg => arg.startsWith('--target='))?.slice(9) || `https://ppcp-m03-${checkpoint.slice(-1).toLowerCase()}-test.vercel.app`;
 const rows = [], runId = `matrix-${checkpoint}-${dataset}-${Date.now()}`;
 const wait = async seconds => { for (let remaining = seconds; remaining > 0; remaining -= 15) { console.log(`Quota isolation cooldown: ${remaining} seconds remaining.`); await new Promise(resolve => setTimeout(resolve, Math.min(15, remaining) * 1000)); } };
 for (const [users, scenario] of [[5, 'burst'], [10, 'burst'], [20, 'burst'], [60, 'burst'], [60, 'classroom']]) {

@@ -1,0 +1,32 @@
+{
+  "runId": "m03-boundaries-1792917518188",
+  "target": "https://ppcp-m03-b-test.vercel.app",
+  "results": [
+    {
+      "name": "F01 metadata rejects 5 MB plus one byte and 11 files",
+      "status": "passed"
+    },
+    {
+      "name": "F02 actual 20 MB attachment set is accepted",
+      "status": "passed"
+    },
+    {
+      "name": "F03 actual 5 MB private file streams through Vercel",
+      "status": "passed"
+    },
+    {
+      "name": "F04 retained plus new file above total limit is rejected without changing saved content",
+      "status": "passed"
+    },
+    {
+      "name": "F05 incomplete replacement upload cannot change existing content",
+      "status": "passed"
+    },
+    {
+      "name": "F06 actual 10-file resulting set is accepted after removal",
+      "status": "passed"
+    }
+  ],
+  "submissionId": "715b8c4f-1d73-42e0-a2ec-eb358da43f57",
+  "complete": true
+}

@@ -1,0 +1,30 @@
+{
+  "checkedAt": "2026-10-25T07:34:29.539Z",
+  "checkpoint": "M03-B",
+  "vercelPlan": "hobby",
+  "firebaseBillingReadStatus": 403,
+  "firebaseBillingEnabled": null,
+  "driveStorageQuota": {
+    "limit": "16106127360",
+    "usage": "11318017426",
+    "usageInDrive": "5951604571",
+    "usageInDriveTrash": "1000000"
+  },
+  "redis": {
+    "reachable": true,
+    "keys": 8,
+    "provisionedPlan": "free",
+    "autoUpgradeRequested": false,
+    "evictionRequested": false,
+    "monthlyCommandAllowance": 500000,
+    "monthlyBandwidthBytes": 10000000000,
+    "liveProviderUsageUnavailable": true
+  },
+  "publishedAllowances": {
+    "sheetsReadPerMinutePerUserProject": 60,
+    "sheetsWritePerMinutePerUserProject": 60,
+    "sheetsReadPerMinutePerProject": 300,
+    "sheetsWritePerMinutePerProject": 300
+  },
+  "paidUpgradesEnabledByThisMilestone": false
+}

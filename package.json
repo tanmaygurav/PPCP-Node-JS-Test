@@ -10,7 +10,7 @@
     "build:m03": "node check-m03.mjs && vite build --config vite.m03.config.mjs",
     "start:m03": "node server-m03.mjs",
     "m03:resources": "node scripts/m03-resources.mjs",
-    "test:m03": "node --test test-m03/*.test.mjs",
+    "test:m03": "node scripts/m03-unit.mjs",
     "build:m02": "node check-m02.mjs && vite build --config vite.m02.config.mjs",
     "start:m02": "node server-m02.mjs",
     "m02:resources": "node scripts/m02-resources.mjs",

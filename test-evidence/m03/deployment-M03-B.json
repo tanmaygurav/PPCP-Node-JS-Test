@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-10-25T10:19:38.879Z",
+  "checkpoint": "M03-B",
+  "projectId": "prj_LZL4nesFDJRUkwWxcJOtjyyKY9ha",
+  "url": "https://ppcp-m03-b-test.vercel.app",
+  "deploymentId": "dpl_DYe35u8biaFgdS4nKtgovVJB66FE",
+  "sourceCommit": "04fab82bc5e07171f09311225d4da17ced44f757",
+  "deploymentBranch": "milestone/m03-b-editing",
+  "productionBranch": "milestone/m03-b-editing",
+  "expectedBranch": "milestone/m03-b-editing",
+  "ready": true,
+  "regions": [
+    "bom1"
+  ],
+  "frozen": true
+}

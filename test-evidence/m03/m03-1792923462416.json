@@ -1,0 +1,174 @@
+{
+  "runId": "m03-1792923462416",
+  "checkpoint": "M03-B",
+  "sourceCommit": "04fab82bc5e07171f09311225d4da17ced44f757",
+  "sourceDirty": true,
+  "target": "https://ppcp-m03-b-test.vercel.app",
+  "dataset": 1200,
+  "users": 1,
+  "scenario": "burst",
+  "startedAt": "2026-10-25T10:17:44.975Z",
+  "elapsedMs": 14491.907,
+  "stopped": false,
+  "stopReason": null,
+  "completedCycles": 1,
+  "requestsPerSecond": 0.41402418605087654,
+  "googleRequests": 23,
+  "redisRequests": 8,
+  "quotaResponses": 0,
+  "maxRssBytes": 113537024,
+  "operations": {
+    "browse": {
+      "count": 1,
+      "errors": 0,
+      "medianMs": 1611.3,
+      "p95Ms": 1611.3,
+      "maxMs": 1611.3
+    },
+    "upload-session": {
+      "count": 1,
+      "errors": 0,
+      "medianMs": 2024.3,
+      "p95Ms": 2024.3,
+      "maxMs": 2024.3
+    },
+    "upload-transfer": {
+      "count": 1,
+      "errors": 0,
+      "medianMs": 2071.1,
+      "p95Ms": 2071.1,
+      "maxMs": 2071.1
+    },
+    "create": {
+      "count": 1,
+      "errors": 0,
+      "medianMs": 2822.6,
+      "p95Ms": 2822.6,
+      "maxMs": 2822.6
+    },
+    "download": {
+      "count": 1,
+      "errors": 0,
+      "medianMs": 2448.1,
+      "p95Ms": 2448.1,
+      "maxMs": 2448.1
+    },
+    "edit": {
+      "count": 1,
+      "errors": 0,
+      "medianMs": 3509.7,
+      "p95Ms": 3509.7,
+      "maxMs": 3509.7
+    }
+  },
+  "integrity": {
+    "duplicates": 0,
+    "created": 1,
+    "missing": [],
+    "mismatches": [],
+    "pending": [],
+    "rejectedBeforeWrite": [],
+    "brokenAttachments": []
+  },
+  "samples": [
+    {
+      "operation": "browse",
+      "ms": 1611.3,
+      "status": 200,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 103579648
+    },
+    {
+      "operation": "upload-session",
+      "ms": 2024.3,
+      "status": 201,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 104390656
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 2071.1,
+      "status": 200,
+      "failed": false,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "create",
+      "ms": 2822.6,
+      "status": 201,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 6,
+      "redisRequests": 2,
+      "quotaResponses": 0,
+      "rssBytes": 107888640
+    },
+    {
+      "operation": "download",
+      "ms": 2448.1,
+      "status": 200,
+      "failed": false,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 110583808
+    },
+    {
+      "operation": "edit",
+      "ms": 3509.7,
+      "status": 200,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 8,
+      "redisRequests": 6,
+      "quotaResponses": 0,
+      "rssBytes": 113537024
+    }
+  ],
+  "saves": [
+    {
+      "id": "47132396-7b73-4ce8-a260-a80a59685092",
+      "uid": "m03-25084fa9c8-0",
+      "operationId": "82e3965f-8152-4ec6-ab69-a6956670b5ea",
+      "expectedTitle": "m03-1792923462416 synthetic 0/0 edited",
+      "state": "confirmed",
+      "editOperationId": "11c1b96a-45cf-4343-afa1-6623de9dab6a",
+      "editState": "confirmed",
+      "lastEdited": "2026-10-25T10:17:57.073Z",
+      "reconciled": true
+    }
+  ],
+  "limitations": [
+    "API-driven authenticated workload; browser rendering excluded.",
+    "Firebase Admin SDK network calls and provider billing usage are not included in upstream header counts.",
+    "GET retries are included in Google request counts; individual retry counts are not yet separated.",
+    "Interrupted or unscheduled work is not a completed user cycle. No latency acceptance target has been applied."
+  ],
+  "appSourceCommit": "04fab82bc5e07171f09311225d4da17ced44f757",
+  "transferBytes": 2000000,
+  "harnessSha256": "e664648af48b0cf917be397dd8c2da03541dcb4eecd0fa9975473e28eebef305",
+  "rowsBefore": 1208,
+  "seedRowsBefore": 1200,
+  "successfulRequestsPerSecond": 0.41402418605087654,
+  "arrivals": [
+    {
+      "studentIndex": 0,
+      "offsetMs": 4.1
+    }
+  ],
+  "arrivalSpreadMs": 0,
+  "quotaDrivenReadRetriesLowerBound": 0
+}

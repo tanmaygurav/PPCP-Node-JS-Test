@@ -12,8 +12,8 @@ const harnessHash = createHash('sha256').update(readFileSync(new URL(import.meta
 const arg = (key, fallback) => process.argv.find(value => value.startsWith(`--${key}=`))?.slice(key.length + 3) || fallback;
 const users = Number(arg('users', '5')), scenario = arg('scenario', 'burst'), dataset = Number(arg('dataset', '1200'));
 const target = arg('target', `https://ppcp-m03-${config.checkpoint.slice(-1).toLowerCase()}-test.vercel.app`);
-const approved = [`https://ppcp-m03-${config.checkpoint.slice(-1).toLowerCase()}-test.vercel.app`, config.checkpoint === 'M03-A' ? 'http://localhost:3003' : 'http://localhost:3004'];
-if (!approved.includes(target) || ![5, 10, 20, 60].includes(users) || !['burst', 'classroom'].includes(scenario) || ![1200, 3000].includes(dataset)) throw new Error('Unapproved test parameters.');
+const approved = [`https://ppcp-m03-${config.checkpoint.slice(-1).toLowerCase()}-test.vercel.app`, `https://ppcp-m03-${config.checkpoint.slice(-1).toLowerCase()}-${dataset}-test.vercel.app`, config.checkpoint === 'M03-A' ? 'http://localhost:3003' : 'http://localhost:3004'];
+if (!approved.includes(target) || ![1, 5, 10, 20, 60].includes(users) || !['burst', 'classroom'].includes(scenario) || ![1200, 3000].includes(dataset)) throw new Error('Unapproved test parameters.');
 if (!process.argv.includes('--write')) throw new Error('Use --write to create labelled synthetic test records and 1 MB files.');
 const pool = JSON.parse(readFileSync('.local/m03-accounts.json', 'utf8')).accounts.slice(0, users);
 if (pool.length !== users || pool.some(account => !account.uid.startsWith('m03-') || account.role !== 'student')) throw new Error('Synthetic student pool required.');
@@ -22,8 +22,8 @@ const healthResponse = await fetch(`${target}/api/health`, { signal: AbortSignal
 if (!healthResponse.ok) throw new Error('Checkpoint health check failed.');
 const health = await healthResponse.json();
 if (health.milestone !== config.checkpoint) throw new Error('Deployed checkpoint mismatch.');
-if (before.filter(item => item.id.startsWith('m03-seed-')).length < dataset) throw new Error('Seed the selected dataset first.');
-const runId = `m03-${Date.now()}`, samples = [], saves = [];
+if (before.filter(item => item.id.startsWith('m03-seed-')).length !== dataset) throw new Error('Seed count differs from the selected dataset. Use its preserved resource environment; never relabel a larger fixture.');
+const runId = `m03-${Date.now()}`, samples = [], saves = [], arrivals = [];
 let stopped = false, stopReason = null, consecutive = 0, quotaTimes = [], completedUsers = 0;
 const stop = reason => { if (!stopped) console.log(`Circuit breaker: ${reason}. No new requests will be scheduled.`); stopped = true; stopReason ||= reason; };
 function record(operation, start, response, bytes = 0, valid = true) {
@@ -39,19 +39,19 @@ function record(operation, start, response, bytes = 0, valid = true) {
 }
 async function call(account, operation, path, data) {
   if (stopped) throw new Error('Scheduling stopped');
-  const start = performance.now(); let response;
+  const start = performance.now(); let response, recorded = false;
   try {
     response = await fetch(`${target}/api/${path}`, { method: data === undefined ? 'GET' : 'POST', headers: { cookie: account.cookie || '', origin: target, 'Content-Type': 'application/json' }, body: data === undefined ? undefined : JSON.stringify(data), signal: AbortSignal.timeout(65000) });
     if (operation === 'download') {
       const bytes = new Uint8Array(await response.arrayBuffer());
       const valid = bytes.length === 1000000 && createHash('sha256').update(bytes).digest('hex') === attachmentHash;
-      record(operation, start, response, bytes.length, valid); if (!response.ok || !valid) throw new Error('Download failed or checksum mismatch'); return bytes;
+      record(operation, start, response, bytes.length, valid); recorded = true; if (!response.ok || !valid) throw new Error('Download failed or checksum mismatch'); return bytes;
     }
-    const result = await response.json(); record(operation, start, response);
+    const result = await response.json(); record(operation, start, response); recorded = true;
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     if (operation === 'session') account.cookie = response.headers.get('set-cookie')?.split(';')[0];
     return result;
-  } catch (error) { if (!response) record(operation, start, null); throw error; }
+  } catch (error) { if (!recorded) record(operation, start, response, 0, false); throw error; }
 }
 // Establish authentication before the arrival window. Passwords/tokens/cookies
 // remain in memory or ignored fixtures and never enter evidence JSON.
@@ -67,6 +67,7 @@ const attachment = new Uint8Array(1000000); attachment.set(new TextEncoder().enc
 const attachmentHash = createHash('sha256').update(attachment).digest('hex');
 async function student(account, index) {
   await sleep(users === 1 ? 0 : index * (5000 / users));
+  arrivals.push({ studentIndex: index, offsetMs: +(performance.now() - start).toFixed(1) });
   let cycle = 0;
   do {
     if (stopped) return;
@@ -75,13 +76,13 @@ async function student(account, index) {
       if (scenario === 'classroom') await sleep(15000 + Math.random() * 15000);
       if (stopped || (duration && performance.now() - start > duration)) return;
       const upload = await call(account, 'upload-session', 'upload-sessions', { files: [{ name: `${runId}-${index}-${cycle}.pdf`, size: attachment.length }] });
-      const uploadStart = performance.now(); let response;
+      const uploadStart = performance.now(); let response, recorded = false;
       try {
         if (stopped) return;
         response = await fetch(upload.uploads[0].uploadUrl, { method: 'PUT', headers: { 'Content-Type': 'application/pdf' }, body: attachment, signal: AbortSignal.timeout(60000) });
-        await response.arrayBuffer(); record('upload-transfer', uploadStart, response, attachment.length);
+        await response.arrayBuffer(); record('upload-transfer', uploadStart, response, attachment.length); recorded = true;
         if (!response.ok) throw new Error('Upload failed');
-      } catch (error) { if (!response) record('upload-transfer', uploadStart, null); throw error; }
+      } catch (error) { if (!recorded) record('upload-transfer', uploadStart, response, attachment.length, false); throw error; }
       if (stopped) return;
       const payload = { title: `${runId} synthetic ${index}/${cycle}`, domain: 'Education', description: 'Synthetic capacity observation.', solution: 'Synthetic improvement.', ticket: upload.ticket, operationId: randomUUID() };
       const saved = { id: upload.submissionId, uid: account.uid, operationId: payload.operationId, expectedTitle: payload.title, state: 'pending' }; saves.push(saved);
@@ -168,6 +169,9 @@ report.transferBytes = samples.filter(sample => ['download', 'upload-transfer'].
 report.sourceCommit = toolingCommit; report.sourceDirty = toolingDirty; report.harnessSha256 = harnessHash;
 report.rowsBefore = before.length; report.seedRowsBefore = before.filter(item => item.id.startsWith('m03-seed-')).length;
 report.successfulRequestsPerSecond = samples.filter(sample => !sample.failed).length / (elapsedMs / 1000);
+report.arrivals = arrivals;
+report.arrivalSpreadMs = arrivals.length ? Math.max(...arrivals.map(row => row.offsetMs)) - Math.min(...arrivals.map(row => row.offsetMs)) : 0;
+report.quotaDrivenReadRetriesLowerBound = samples.reduce((n, sample) => n + (sample.quotaResponses >= 3 ? 2 : !sample.failed ? sample.quotaResponses : 0), 0);
 mkdirSync('output/m03', { recursive: true }); writeFileSync(`output/m03/${runId}.json`, JSON.stringify(report, null, 2));
 console.log(JSON.stringify({ report: `output/m03/${runId}.json`, operations, stopped, stopReason, integrity }));
 if (stopped || Object.values(operations).some(operation => operation.errors) || (scenario === 'burst' && completedUsers < users) || integrity.reconciliationFailed || integrity.duplicates || integrity.missing?.length || integrity.mismatches?.length || integrity.pending?.length || integrity.brokenAttachments?.length) process.exitCode = 1;

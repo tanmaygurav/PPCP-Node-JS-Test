@@ -1,0 +1,9 @@
+{
+  "checkpointA": "M02 schema unchanged: Responses A:S, Owner UID in S",
+  "checkpointB": { "Responses": { "S": "Owner UID", "T": "Last edited", "U": "Last save operation" } },
+  "editing": "Current content only; original ID, owner, date and separate remarks preserved",
+  "attachments": { "maxFiles": 10, "maxBytesPerFile": 5000000, "maxBytesTotal": 20000000 },
+  "coordination": "Redis operation hashes, timestamps and file cleanup metadata only; no prior content history",
+  "seedFixture": { "ids": "m03-seed-00000 onward", "counts": [1200, 3000], "students": 60, "faculty": 1, "admin": 1, "passwordManifest": "Ignored .local/m03-accounts.json; never commit" },
+  "preservation": { "A": "m03-a-submission-baseline-v0.1.0", "B": "m03-b-editing-v0.1.0", "tools": "m03-reliability-tools-v0.1.0" }
+}

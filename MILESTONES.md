@@ -57,3 +57,10 @@ The existing Sheet and Media folder are dedicated to M01. New incompatible schem
 3. Create a new annotated app tag and milestone branch. Never rewrite old refs. Provision its own stable deployment and schema-specific test resources.
 4. Add test IDs without recycling previous IDs; document changed assertions or interface versions in TEST_CATALOG.md. Tag the compatible harness.
 5. Append dated results to TEST_RUN_LOG.md and retain sanitized run manifests. GitHub artifacts expire after 90 days; archive important reports to your own storage before expiry.
+# M03 — preserved editing and reliability; Sheets capacity limited
+
+A: `m03-a-submission-baseline-v0.1.0`, branch `milestone/m03-a-submission-baseline`, source `748ff21`, [stable baseline](https://ppcp-m03-a-test.vercel.app).
+
+B: `m03-b-editing-v0.1.0`, branch `milestone/m03-b-editing`, source `04fab82`, [stable editing test](https://ppcp-m03-b-test.vercel.app).
+
+Both saved Production branch pins and deployed source were verified. M01 and M02 remain unchanged. The owner narrowed B after A exposed Sheets quotas: reliability and one/five-user comparison completed; B's larger matrix deferred. These are preserved functional checkpoints, not a classroom capacity certification. Final harness/docs tag: `m03-reliability-tools-v0.1.0`. See M03_RESULTS.md, M03_SETUP.md and DB_OPTIONS.md.

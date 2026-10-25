@@ -1,0 +1,17 @@
+{
+  "results": [
+    {
+      "name": "UI01 conflict and reload preserve the student text draft",
+      "status": "passed"
+    },
+    {
+      "name": "UI02 lost response retries the same operation and preserves remarks",
+      "status": "passed"
+    },
+    {
+      "name": "UI03 mobile viewport does not overflow horizontally",
+      "status": "passed"
+    }
+  ],
+  "network": "mocked; no Google/Firebase writes"
+}

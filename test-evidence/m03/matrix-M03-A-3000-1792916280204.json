@@ -1,0 +1,37 @@
+{
+  "checkpoint": "M03-A",
+  "dataset": 3000,
+  "runId": "matrix-M03-A-3000-1792916280204",
+  "rows": [
+    {
+      "users": 5,
+      "scenario": "burst",
+      "startedAt": "2026-10-25T08:19:05.267Z",
+      "exitCode": 0
+    },
+    {
+      "users": 10,
+      "scenario": "burst",
+      "startedAt": "2026-10-25T08:20:33.440Z",
+      "exitCode": 0
+    },
+    {
+      "users": 20,
+      "scenario": "burst",
+      "startedAt": "2026-10-25T08:22:06.094Z",
+      "exitCode": 1
+    },
+    {
+      "users": 60,
+      "scenario": "burst",
+      "startedAt": "2026-10-25T08:24:49.717Z",
+      "exitCode": 1
+    },
+    {
+      "users": 60,
+      "scenario": "classroom",
+      "startedAt": "2026-10-25T08:28:14.262Z",
+      "exitCode": 1
+    }
+  ]
+}

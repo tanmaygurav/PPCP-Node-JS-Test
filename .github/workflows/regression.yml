@@ -26,10 +26,13 @@ jobs:
       - run: npm run test:m02:emulator
       - run: npm run test:m03
       - run: npm run build:m03
+      - run: node scripts/m03-browser.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: offline-regression-${{ github.run_id }}-${{ github.run_attempt }}
-          path: output/test-runs/*.json
+          path: |
+            output/test-runs/*.json
+            output/m03/*.json
           retention-days: 90
           if-no-files-found: warn

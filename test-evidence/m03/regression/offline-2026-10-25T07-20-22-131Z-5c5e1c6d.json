@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "runId": "2026-10-25T07-20-22-131Z-5c5e1c6d",
+  "kind": "offline",
+  "milestone": "M01",
+  "runnerCommit": "458de3c318556fb10466ed4bc96b53d0fd345337",
+  "runnerDirty": true,
+  "expectedAppCommit": "7f1e82ef11edcc7b4e36c1e193035951b79e2d21",
+  "actualDeploymentCommit": null,
+  "target": "offline",
+  "environment": "offline",
+  "node": "v24.22.1",
+  "writeEnabled": false,
+  "fixtureVersion": 1,
+  "startedAt": "2026-10-25T07:20:22.216Z",
+  "status": "passed",
+  "steps": [
+    {
+      "id": "M01-A01",
+      "purpose": "M01-A01 API requires an access key and blocks cross-origin mutations",
+      "status": "passed",
+      "durationMs": 51.7579
+    },
+    {
+      "id": "M01-A02",
+      "purpose": "M01-A02 upload plan -> submission -> detail -> remark -> repeat save reuses same ID",
+      "status": "passed",
+      "durationMs": 28.1067
+    },
+    {
+      "id": "M01-A03",
+      "purpose": "M01-A03 attachment verification failure does not write a Sheet row",
+      "status": "passed",
+      "durationMs": 10.9773
+    },
+    {
+      "id": "M01-A04",
+      "purpose": "M01-A04 domain, JSON shape, file limits, and ticket validation run on server",
+      "status": "passed",
+      "durationMs": 13.9081
+    },
+    {
+      "id": "M01-A05",
+      "purpose": "M01-A05 Vercel rewrite query and logout use the same handler",
+      "status": "passed",
+      "durationMs": 11.6478
+    },
+    {
+      "id": "M01-U01",
+      "purpose": "M01-U01 attachment boundaries use decimal MB and enforce total and file count",
+      "status": "passed",
+      "durationMs": 1.8807
+    },
+    {
+      "id": "M01-U02",
+      "purpose": "M01-U02 file type is derived from extension and executable, macro, path names are rejected",
+      "status": "passed",
+      "durationMs": 0.2187
+    },
+    {
+      "id": "M01-U03",
+      "purpose": "M01-U03 response mapping preserves exactly 18 columns, puts description in R and preserves literal formula text",
+      "status": "passed",
+      "durationMs": 0.3787
+    },
+    {
+      "id": "M01-U04",
+      "purpose": "M01-U04 signed tickets reject tampering, expiry, and use as a different credential type",
+      "status": "passed",
+      "durationMs": 1.5541
+    },
+    {
+      "id": "M01-U05",
+      "purpose": "M01-U05 submission metadata rejects missing fields",
+      "status": "passed",
+      "durationMs": 0.2009
+    },
+    {
+      "id": "M01-G01",
+      "purpose": "M01-G01 token refresh is coalesced and bearer credentials stay server-side",
+      "status": "passed",
+      "durationMs": 28.3218
+    },
+    {
+      "id": "M01-G02",
+      "purpose": "M01-G02 append uses RAW and exact A:R mapping; rejects row-number formula sheets",
+      "status": "passed",
+      "durationMs": 3.3885
+    },
+    {
+      "id": "M01-G03",
+      "purpose": "M01-G03 resumable creation uses generated file ID, folder, size, and app properties without exposing token",
+      "status": "passed",
+      "durationMs": 2.1003
+    },
+    {
+      "id": "M01-G04",
+      "purpose": "M01-G04 Drive verification rejects wrong folder, size, ownership marker, trashed and incomplete files",
+      "status": "passed",
+      "durationMs": 1.3754
+    },
+    {
+      "id": "M01-G05",
+      "purpose": "M01-G05 ambiguous write failures are never automatically retried",
+      "status": "passed",
+      "durationMs": 1.1542
+    },
+    {
+      "id": "TOOL-U01",
+      "purpose": "TOOL-U01 target selection is explicit and remote HTTP/credential URLs are rejected",
+      "status": "passed",
+      "durationMs": 1.233
+    },
+    {
+      "id": "TOOL-U02",
+      "purpose": "TOOL-U02 deployed tests cannot silently reuse a local key",
+      "status": "passed",
+      "durationMs": 0.4676
+    },
+    {
+      "id": "TOOL-U03",
+      "purpose": "TOOL-U03 writes are opt-in and report serialization excludes raw errors and credentials",
+      "status": "passed",
+      "durationMs": 106.4115
+    }
+  ],
+  "artifacts": {
+    "submissionId": null,
+    "files": [],
+    "remark": null
+  },
+  "cleanup": "Retained. Use only this manifest for manual cleanup. An ambiguous timeout does not prove no write occurred.",
+  "total": 18,
+  "finishedAt": "2026-10-25T07:20:22.869Z"
+}

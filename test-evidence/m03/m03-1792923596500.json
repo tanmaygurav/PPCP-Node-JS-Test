@@ -1,0 +1,502 @@
+{
+  "runId": "m03-1792923596500",
+  "checkpoint": "M03-B",
+  "sourceCommit": "04fab82bc5e07171f09311225d4da17ced44f757",
+  "sourceDirty": true,
+  "target": "https://ppcp-m03-b-test.vercel.app",
+  "dataset": 1200,
+  "users": 5,
+  "scenario": "burst",
+  "startedAt": "2026-10-25T10:20:02.021Z",
+  "elapsedMs": 16906.4721,
+  "stopped": false,
+  "stopReason": null,
+  "completedCycles": 2,
+  "requestsPerSecond": 1.7744683706070177,
+  "googleRequests": 108,
+  "redisRequests": 31,
+  "quotaResponses": 9,
+  "maxRssBytes": 139522048,
+  "operations": {
+    "browse": {
+      "count": 5,
+      "errors": 0,
+      "medianMs": 1310.3,
+      "p95Ms": 1995.9,
+      "maxMs": 1995.9
+    },
+    "upload-session": {
+      "count": 5,
+      "errors": 0,
+      "medianMs": 1910.9,
+      "p95Ms": 2038.9,
+      "maxMs": 2038.9
+    },
+    "upload-transfer": {
+      "count": 5,
+      "errors": 0,
+      "medianMs": 1893,
+      "p95Ms": 1934.4,
+      "maxMs": 1934.4
+    },
+    "create": {
+      "count": 5,
+      "errors": 0,
+      "medianMs": 2698.8,
+      "p95Ms": 3194.3,
+      "maxMs": 3194.3
+    },
+    "download": {
+      "count": 5,
+      "errors": 0,
+      "medianMs": 2187.1,
+      "p95Ms": 2297.6,
+      "maxMs": 2297.6
+    },
+    "edit": {
+      "count": 5,
+      "errors": 3,
+      "medianMs": 3785.8,
+      "p95Ms": 4668.2,
+      "maxMs": 4668.2
+    }
+  },
+  "integrity": {
+    "duplicates": 0,
+    "created": 5,
+    "missing": [],
+    "mismatches": [],
+    "pending": [],
+    "rejectedBeforeWrite": [
+      "95a14d52-f92a-4e7e-9c9f-044f0cb39495",
+      "90324504-62e9-44a3-9c04-46ec03cc516b",
+      "f5b5848c-3e60-41cc-ab78-e9a9fce8ed71"
+    ],
+    "brokenAttachments": []
+  },
+  "samples": [
+    {
+      "operation": "browse",
+      "ms": 1995.9,
+      "status": 200,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 114614272
+    },
+    {
+      "operation": "browse",
+      "ms": 1170,
+      "status": 200,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 116273152
+    },
+    {
+      "operation": "browse",
+      "ms": 1543,
+      "status": 200,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 116703232
+    },
+    {
+      "operation": "upload-session",
+      "ms": 2024.8,
+      "status": 201,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 116703232
+    },
+    {
+      "operation": "browse",
+      "ms": 1150,
+      "status": 200,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 116834304
+    },
+    {
+      "operation": "upload-session",
+      "ms": 2038.9,
+      "status": 201,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 116834304
+    },
+    {
+      "operation": "browse",
+      "ms": 1310.3,
+      "status": 200,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 122511360
+    },
+    {
+      "operation": "upload-session",
+      "ms": 1910.9,
+      "status": 201,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 121135104
+    },
+    {
+      "operation": "upload-session",
+      "ms": 1781.7,
+      "status": 201,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 121135104
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 1934.4,
+      "status": 200,
+      "failed": false,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 1893,
+      "status": 200,
+      "failed": false,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "upload-session",
+      "ms": 1857.4,
+      "status": 201,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 123863040
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 1901.7,
+      "status": 200,
+      "failed": false,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 1785.9,
+      "status": 200,
+      "failed": false,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "create",
+      "ms": 2663.9,
+      "status": 201,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 6,
+      "redisRequests": 2,
+      "quotaResponses": 0,
+      "rssBytes": 124608512
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 1771.2,
+      "status": 200,
+      "failed": false,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "create",
+      "ms": 3194.3,
+      "status": 201,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 6,
+      "redisRequests": 2,
+      "quotaResponses": 0,
+      "rssBytes": 127361024
+    },
+    {
+      "operation": "create",
+      "ms": 2698.8,
+      "status": 201,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 6,
+      "redisRequests": 2,
+      "quotaResponses": 0,
+      "rssBytes": 126717952
+    },
+    {
+      "operation": "create",
+      "ms": 2679,
+      "status": 201,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 6,
+      "redisRequests": 2,
+      "quotaResponses": 0,
+      "rssBytes": 134828032
+    },
+    {
+      "operation": "download",
+      "ms": 2187.1,
+      "status": 200,
+      "failed": false,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 132149248
+    },
+    {
+      "operation": "download",
+      "ms": 2239.1,
+      "status": 200,
+      "failed": false,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 132956160
+    },
+    {
+      "operation": "create",
+      "ms": 2760.4,
+      "status": 201,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 6,
+      "redisRequests": 2,
+      "quotaResponses": 0,
+      "rssBytes": 134586368
+    },
+    {
+      "operation": "download",
+      "ms": 2132.6,
+      "status": 200,
+      "failed": false,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 134586368
+    },
+    {
+      "operation": "download",
+      "ms": 2297.6,
+      "status": 200,
+      "failed": false,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 136749056
+    },
+    {
+      "operation": "download",
+      "ms": 2095.7,
+      "status": 200,
+      "failed": false,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 138027008
+    },
+    {
+      "operation": "edit",
+      "ms": 3743,
+      "status": 200,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 8,
+      "redisRequests": 6,
+      "quotaResponses": 0,
+      "rssBytes": 138440704
+    },
+    {
+      "operation": "edit",
+      "ms": 3785.8,
+      "status": 200,
+      "failed": false,
+      "bytes": 0,
+      "googleRequests": 8,
+      "redisRequests": 6,
+      "quotaResponses": 0,
+      "rssBytes": 139522048
+    },
+    {
+      "operation": "edit",
+      "ms": 3004.5,
+      "status": 503,
+      "failed": true,
+      "bytes": 0,
+      "googleRequests": 5,
+      "redisRequests": 3,
+      "quotaResponses": 3,
+      "rssBytes": 139522048
+    },
+    {
+      "operation": "edit",
+      "ms": 4668.2,
+      "status": 503,
+      "failed": true,
+      "bytes": 0,
+      "googleRequests": 9,
+      "redisRequests": 3,
+      "quotaResponses": 3,
+      "rssBytes": 139522048
+    },
+    {
+      "operation": "edit",
+      "ms": 4197.4,
+      "status": 503,
+      "failed": true,
+      "bytes": 0,
+      "googleRequests": 8,
+      "redisRequests": 3,
+      "quotaResponses": 3,
+      "rssBytes": 139522048
+    }
+  ],
+  "saves": [
+    {
+      "id": "e32b043a-abba-42e9-b70b-5a44f8647920",
+      "uid": "m03-25084fa9c8-0",
+      "operationId": "443e0de7-ac84-42bd-8597-0b379af9af42",
+      "expectedTitle": "m03-1792923596500 synthetic 0/0 edited",
+      "state": "confirmed",
+      "editOperationId": "172f05c8-d8dd-455d-92c1-a36ef2060377",
+      "editState": "confirmed",
+      "lastEdited": "2026-10-25T10:20:14.749Z",
+      "reconciled": true
+    },
+    {
+      "id": "208d57e6-40c8-4e33-8959-5f89ea601383",
+      "uid": "m03-25084fa9c8-1",
+      "operationId": "5107b2d6-b4f0-41d9-8dc5-67c013fee502",
+      "expectedTitle": "m03-1792923596500 synthetic 1/0 edited",
+      "state": "confirmed",
+      "editOperationId": "49f46ca9-f6ad-4f63-b987-acb82f6c8b66",
+      "editState": "confirmed",
+      "lastEdited": "2026-10-25T10:20:14.189Z",
+      "reconciled": true
+    },
+    {
+      "id": "95a14d52-f92a-4e7e-9c9f-044f0cb39495",
+      "uid": "m03-25084fa9c8-2",
+      "operationId": "7c0a5a5c-7149-457b-a0ad-65d68cdb9f24",
+      "expectedTitle": "m03-1792923596500 synthetic 2/0",
+      "state": "confirmed",
+      "editOperationId": "9a605a78-0cfa-46c8-b6c5-091af9022de7",
+      "editState": "pending",
+      "editReconciliation": "rejected",
+      "reconciled": true
+    },
+    {
+      "id": "90324504-62e9-44a3-9c04-46ec03cc516b",
+      "uid": "m03-25084fa9c8-3",
+      "operationId": "5e3356bf-b033-42c7-be00-409e1bcec7ba",
+      "expectedTitle": "m03-1792923596500 synthetic 3/0",
+      "state": "confirmed",
+      "editOperationId": "db0de6d1-dd61-44af-85ad-db6f78868fb8",
+      "editState": "pending",
+      "editReconciliation": "rejected",
+      "reconciled": true
+    },
+    {
+      "id": "f5b5848c-3e60-41cc-ab78-e9a9fce8ed71",
+      "uid": "m03-25084fa9c8-4",
+      "operationId": "0742a45d-49fd-4d24-a599-2d8700314be4",
+      "expectedTitle": "m03-1792923596500 synthetic 4/0",
+      "state": "confirmed",
+      "editOperationId": "84b94046-a142-47bd-81ac-271623e72bdd",
+      "editState": "pending",
+      "editReconciliation": "rejected",
+      "reconciled": true
+    }
+  ],
+  "limitations": [
+    "API-driven authenticated workload; browser rendering excluded.",
+    "Firebase Admin SDK network calls and provider billing usage are not included in upstream header counts.",
+    "GET retries are included in Google request counts; individual retry counts are not yet separated.",
+    "Interrupted or unscheduled work is not a completed user cycle. No latency acceptance target has been applied."
+  ],
+  "appSourceCommit": "04fab82bc5e07171f09311225d4da17ced44f757",
+  "transferBytes": 10000000,
+  "harnessSha256": "e664648af48b0cf917be397dd8c2da03541dcb4eecd0fa9975473e28eebef305",
+  "rowsBefore": 1209,
+  "seedRowsBefore": 1200,
+  "successfulRequestsPerSecond": 1.5970215335463158,
+  "arrivals": [
+    {
+      "studentIndex": 0,
+      "offsetMs": 7.7
+    },
+    {
+      "studentIndex": 1,
+      "offsetMs": 1017.5
+    },
+    {
+      "studentIndex": 2,
+      "offsetMs": 2002.9
+    },
+    {
+      "studentIndex": 3,
+      "offsetMs": 3014.7
+    },
+    {
+      "studentIndex": 4,
+      "offsetMs": 4010.3
+    }
+  ],
+  "arrivalSpreadMs": 4002.6000000000004,
+  "quotaDrivenReadRetriesLowerBound": 6
+}

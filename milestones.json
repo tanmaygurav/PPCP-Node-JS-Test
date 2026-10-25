@@ -1,4 +1,16 @@
 {
+  "M03-A": {
+    "name": "Submission-only capacity baseline", "status": "frozen-baseline-sheets-capacity-limited",
+    "appCommit": "748ff21df03ff0ab70a6f3f998f001d3bac6d006", "tag": "m03-a-submission-baseline-v0.1.0", "branch": "milestone/m03-a-submission-baseline",
+    "url": "https://ppcp-m03-a-test.vercel.app", "spreadsheetId": "14jNrpdslyrm-jTB9vJ-SNW1-Rs_lckwXIiK2HPpeKjw", "folderId": "1Elgmj7cCydeGpf2qOmvzFyzfGjWwQeFf", "currentSeedCount": 3000,
+    "results": "M03_RESULTS.md", "toolingTag": "m03-reliability-tools-v0.1.0"
+  },
+  "M03-B": {
+    "name": "Editing and safe saves", "status": "frozen-functional-scope-narrowed-by-owner-not-capacity-certified",
+    "appCommit": "04fab82bc5e07171f09311225d4da17ced44f757", "tag": "m03-b-editing-v0.1.0", "branch": "milestone/m03-b-editing",
+    "url": "https://ppcp-m03-b-test.vercel.app", "spreadsheetId": "1uytXq2OqBQwL0CmZwhTvKLGDxhRpsK7lCpNJnvz67lo", "folderId": "1dXZzRW3o08Is2wo02XlQxvhBiSLOHwGe", "currentSeedCount": 1200,
+    "results": "M03_RESULTS.md", "toolingTag": "m03-reliability-tools-v0.1.0", "deferred": "10/20/60-user and 3000-row B matrix; evaluate replacement DB first"
+  },
   "M01": {
     "name": "Google integration baseline",
     "appCommit": "7f1e82ef11edcc7b4e36c1e193035951b79e2d21",

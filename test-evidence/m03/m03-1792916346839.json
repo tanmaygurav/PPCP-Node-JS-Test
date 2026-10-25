@@ -1,0 +1,367 @@
+{
+  "runId": "m03-1792916346839",
+  "checkpoint": "M03-A",
+  "sourceCommit": "8c8a2c99be43815bd0e0f1360ac00ba9f5b5c456",
+  "sourceDirty": true,
+  "target": "https://ppcp-m03-a-test.vercel.app",
+  "dataset": 3000,
+  "users": 5,
+  "scenario": "burst",
+  "startedAt": "2026-10-25T08:19:12.245Z",
+  "elapsedMs": 14605.4862,
+  "stopped": false,
+  "stopReason": null,
+  "completedCycles": 5,
+  "requestsPerSecond": 1.7116855719599393,
+  "googleRequests": 76,
+  "redisRequests": 0,
+  "quotaResponses": 0,
+  "maxRssBytes": 135041024,
+  "operations": {
+    "browse": {
+      "count": 5,
+      "errors": 0,
+      "medianMs": 1291.4,
+      "p95Ms": 1746.2,
+      "maxMs": 1746.2
+    },
+    "upload-session": {
+      "count": 5,
+      "errors": 0,
+      "medianMs": 1961.6,
+      "p95Ms": 2357.8,
+      "maxMs": 2357.8
+    },
+    "upload-transfer": {
+      "count": 5,
+      "errors": 0,
+      "medianMs": 1920.9,
+      "p95Ms": 2047,
+      "maxMs": 2047
+    },
+    "create": {
+      "count": 5,
+      "errors": 0,
+      "medianMs": 3290.9,
+      "p95Ms": 3512.5,
+      "maxMs": 3512.5
+    },
+    "download": {
+      "count": 5,
+      "errors": 0,
+      "medianMs": 2238.2,
+      "p95Ms": 2740.8,
+      "maxMs": 2740.8
+    }
+  },
+  "integrity": {
+    "duplicates": 0,
+    "created": 5,
+    "missing": [],
+    "mismatches": [],
+    "pending": [],
+    "brokenAttachments": []
+  },
+  "samples": [
+    {
+      "operation": "browse",
+      "ms": 1746.2,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 123281408
+    },
+    {
+      "operation": "browse",
+      "ms": 1254.8,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 123822080
+    },
+    {
+      "operation": "browse",
+      "ms": 1291.4,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 126255104
+    },
+    {
+      "operation": "upload-session",
+      "ms": 1973.5,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 127066112
+    },
+    {
+      "operation": "browse",
+      "ms": 1305.4,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 129499136
+    },
+    {
+      "operation": "upload-session",
+      "ms": 2357.8,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 129499136
+    },
+    {
+      "operation": "upload-session",
+      "ms": 1905.7,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 129769472
+    },
+    {
+      "operation": "browse",
+      "ms": 1275.5,
+      "status": 200,
+      "bytes": 0,
+      "googleRequests": 2,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 129769472
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 2047,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "upload-session",
+      "ms": 1961.6,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 130363392
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 1999.2,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 1920.9,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "upload-session",
+      "ms": 1903.4,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 130920448
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 1919.1,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "create",
+      "ms": 3248.8,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 7,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 130920448
+    },
+    {
+      "operation": "upload-transfer",
+      "ms": 1881.1,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 0,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 0
+    },
+    {
+      "operation": "create",
+      "ms": 3194,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 7,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 130920448
+    },
+    {
+      "operation": "create",
+      "ms": 3512.5,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 7,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 131518464
+    },
+    {
+      "operation": "create",
+      "ms": 3290.9,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 7,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 133951488
+    },
+    {
+      "operation": "download",
+      "ms": 2595.7,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 133951488
+    },
+    {
+      "operation": "create",
+      "ms": 3305.7,
+      "status": 201,
+      "bytes": 0,
+      "googleRequests": 7,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 134230016
+    },
+    {
+      "operation": "download",
+      "ms": 2740.8,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 134230016
+    },
+    {
+      "operation": "download",
+      "ms": 2194.7,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 135041024
+    },
+    {
+      "operation": "download",
+      "ms": 2236.9,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 135041024
+    },
+    {
+      "operation": "download",
+      "ms": 2238.2,
+      "status": 200,
+      "bytes": 1000000,
+      "googleRequests": 3,
+      "redisRequests": 0,
+      "quotaResponses": 0,
+      "rssBytes": 135041024
+    }
+  ],
+  "saves": [
+    {
+      "id": "6a596341-0a22-4d9d-a9d7-4fbfd040ca85",
+      "uid": "m03-25084fa9c8-0",
+      "operationId": "7bdf9e2e-7334-4a9e-a8e2-97a140410f78",
+      "expectedTitle": "m03-1792916346839 synthetic 0/0",
+      "state": "confirmed",
+      "reconciled": true
+    },
+    {
+      "id": "0f0bcacb-ea6d-4bb6-b064-7ebef68a7f1a",
+      "uid": "m03-25084fa9c8-1",
+      "operationId": "88309b15-5f88-495c-bd26-2732bf0787f6",
+      "expectedTitle": "m03-1792916346839 synthetic 1/0",
+      "state": "confirmed",
+      "reconciled": true
+    },
+    {
+      "id": "d542e8b7-1345-4f99-a100-de6447dbd88d",
+      "uid": "m03-25084fa9c8-2",
+      "operationId": "9d86d24e-0a1b-4db2-b847-005fc1047aa1",
+      "expectedTitle": "m03-1792916346839 synthetic 2/0",
+      "state": "confirmed",
+      "reconciled": true
+    },
+    {
+      "id": "e6c6f5fa-262f-4439-849e-9e4d75883eba",
+      "uid": "m03-25084fa9c8-3",
+      "operationId": "190dcc36-4d00-4621-9aa4-839387e48bc9",
+      "expectedTitle": "m03-1792916346839 synthetic 3/0",
+      "state": "confirmed",
+      "reconciled": true
+    },
+    {
+      "id": "fb277f6e-acfb-414d-b0c6-fce9147cf3fd",
+      "uid": "m03-25084fa9c8-4",
+      "operationId": "7f1e9908-5162-4e64-b941-427e374ca757",
+      "expectedTitle": "m03-1792916346839 synthetic 4/0",
+      "state": "confirmed",
+      "reconciled": true
+    }
+  ],
+  "limitations": [
+    "API-driven authenticated workload; browser rendering excluded.",
+    "Firebase Admin SDK network calls and provider billing usage are not included in upstream header counts.",
+    "GET retries are included in Google request counts; individual retry counts are not yet separated.",
+    "Interrupted or unscheduled work is not a completed user cycle. No latency acceptance target has been applied."
+  ],
+  "appSourceCommit": "748ff21df03ff0ab70a6f3f998f001d3bac6d006",
+  "transferBytes": 10000000
+}
