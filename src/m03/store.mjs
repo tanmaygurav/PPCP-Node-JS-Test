@@ -3,7 +3,6 @@ import { AppError, parseResponse, responseRow, validateFiles, validateSubmission
 
 export class M03Store extends M02Store {
   async appendProtected(id, data, files, operationId) {
-    await this.checkResponseHeaders();
     const row = [...responseRow(id, data, files.map(file => ({ filename: file.name, fileId: file.id, size: file.size, mimeType: file.mimeType }))), data.ownerUid, '', operationId];
     await this.request(this.sheetUrl("'Responses'!A:U", ':append?valueInputOption=RAW&insertDataOption=INSERT_ROWS'), { method: 'POST', body: JSON.stringify({ values: [row] }) });
     return { ...parseResponse(row), ownerUid: data.ownerUid, lastEdited: '', lastSaveOperation: operationId };
@@ -18,7 +17,7 @@ export class M03Store extends M02Store {
     if (new Set(files.map(file => file.id)).size !== files.length) throw new AppError(400, 'Duplicate attachments are not allowed.');
     await this.verifyUploads(item.id, files);
   }
-  async updateExisting(item, changes, files, timestamp, operationId) {
+  async prepareUpdate(item, changes, files, timestamp, operationId) {
     const headers = await this.values("'Responses'!S1:U1");
     if (headers[0]?.join('|') !== 'Owner UID|Last edited|Last save operation') throw new AppError(409, 'M03 Responses schema mismatch.');
     const range = `'Responses'!A${item.rowNumber}:U${item.rowNumber}`;
@@ -30,8 +29,14 @@ export class M03Store extends M02Store {
     row[17] = changes.description; row[19] = timestamp;
     row[20] = operationId;
     row[10] = JSON.stringify(files.map(file => ({ filename: file.name, fileId: file.id, size: file.size, mimeType: file.mimeType })));
+    return { range, row };
+  }
+  async commitUpdate({ range, row }) {
     await this.request(this.sheetUrl(range, '?valueInputOption=RAW'), { method: 'PUT', body: JSON.stringify({ values: [row] }) });
     return { ...parseResponse(row), ownerUid: row[18], lastEdited: row[19], lastSaveOperation: row[20] };
+  }
+  async updateExisting(...args) {
+    return this.commitUpdate(await this.prepareUpdate(...args));
   }
   async trashAttachment(submissionId, fileId) {
     const url = `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}`;

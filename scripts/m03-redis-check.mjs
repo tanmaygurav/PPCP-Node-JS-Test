@@ -20,8 +20,11 @@ try {
   const resumed = await new SafeEditor(store, b).resume(first.id, first.uid, first.operationId, first.requestHash); assert.equal(resumed.alreadySaved, true); assert.equal(writes, 1);
   results.push({ name: 'R02 another instance reconciles without repeating the write', status: 'passed' });
   assert.equal(await a.command(['HLEN', `${namespace}:cleanup`]), 1);
+  const failed = await b.retryCleanup({ ...store, async trashAttachment() { throw new Error('Synthetic transient Drive failure'); } });
+  assert.deepEqual(failed, { completed: 0, failed: 1 }); assert.equal(await a.command(['HLEN', `${namespace}:cleanup`]), 1);
+  results.push({ name: 'R03 cleanup failure remains queued for retry', status: 'passed' });
   const cleaned = await b.retryCleanup(store); assert.deepEqual(cleaned, { completed: 1, failed: 0 });
-  results.push({ name: 'R03 committed cleanup survives across Redis clients', status: 'passed' });
+  results.push({ name: 'R04 committed cleanup survives across Redis clients and retries', status: 'passed' });
 } catch (error) { completeWrite(); results.push({ name: 'shared Redis verification', status: 'failed', error: error.name }); process.exitCode = 1; }
 finally {
   // Exact synthetic keys only; never scan, flush or delete a pilot reservation.

@@ -85,30 +85,33 @@ export class SafeEditor {
     if (reservation.state === 'complete') return { item: await this.store.find(id), alreadySaved: true };
     // Only the process that created the reservation may dispatch a write. A
     // repeated request reads the target timestamp; it never repeats the write.
-    const item = await this.store.find(id);
-    if (!item || item.ownerUid !== uid) {
-      await this.coordination.finish(id, operationId, { ...reservation, state: 'failed', status: 404, message: 'Submission not found.' });
-      throw new AppError(404, 'Submission not found.');
+    if (!fresh) {
+      const current = await this.store.find(id);
+      if (current?.ownerUid === uid && current.lastEdited === reservation.timestamp && current.lastSaveOperation === operationId) {
+        await this.coordination.finish(id, operationId, { ...reservation, state: 'complete' });
+        return { item: current, alreadySaved: true };
+      }
+      throw new AppError(409, 'Save outcome is pending reconciliation. Keep your draft and retry this operation later.');
     }
-    if (!fresh && item.lastEdited === reservation.timestamp && item.lastSaveOperation === operationId) {
-      await this.coordination.finish(id, operationId, { ...reservation, state: 'complete' });
-      return { item, alreadySaved: true };
-    }
-    // Dispatch claim is atomic and remains durable even if the HTTP response is lost.
-    const claim = await this.coordination.command(['SET', `${this.coordination.keys(id, operationId)[0]}:dispatched`, '1', 'NX']);
-    if (!claim) throw new AppError(409, 'Save outcome is pending reconciliation. Keep your draft and retry this operation later.');
+    let item, prepared;
     try {
+      item = await this.store.find(id);
+      if (!item || item.ownerUid !== uid) throw new AppError(404, 'Submission not found.');
       if ((item.lastEdited || '') !== expectedLastEdited) throw new AppError(409, 'This pain point changed in another tab. Keep your draft and reload the saved version.');
       await this.store.validateEdit(item, changes, files);
+      if (this.store.prepareUpdate) prepared = await this.store.prepareUpdate(item, changes, files, reservation.timestamp, operationId);
     } catch (error) {
       await this.coordination.finish(id, operationId, { ...reservation, state: 'failed', status: error.status || 502, message: error instanceof AppError ? error.message : 'Validation failed.' });
       throw error;
     }
+    // Dispatch claim is atomic and remains durable even if the HTTP response is lost.
+    const claim = await this.coordination.command(['SET', `${this.coordination.keys(id, operationId)[0]}:dispatched`, '1', 'NX']);
+    if (!claim) throw new AppError(409, 'Save outcome is pending reconciliation. Keep your draft and retry this operation later.');
     // From this point any failure is ambiguous. Keep the reservation indefinitely;
     // reconciliation may confirm the timestamp but must not redispatch this PUT.
     const pending = { ...reservation, submissionId: id, cleanup: item.media.filter(old => !files.some(file => file.id === old.fileId)).map(file => file.fileId) };
     await this.coordination.command(['SET', this.coordination.keys(id, operationId)[0], JSON.stringify(pending)]);
-    const saved = await this.store.updateExisting(item, changes, files, reservation.timestamp, operationId);
+    const saved = prepared ? await this.store.commitUpdate(prepared) : await this.store.updateExisting(item, changes, files, reservation.timestamp, operationId);
     await this.coordination.finish(id, operationId, { ...pending, state: 'complete' });
     return { item: saved, alreadySaved: false };
   }

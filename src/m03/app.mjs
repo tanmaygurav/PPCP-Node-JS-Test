@@ -38,6 +38,7 @@ export function createM03Handler(config, store, auth, coordination) {
         if (ticket.uid !== identity.uid) throw new AppError(403, 'Upload belongs to another account.');
         const validated = validateSubmission({ ...data, email: identity.email, name: profile.name, studentId: profile.studentId, program: profile.program });
         const result = await createOnce(store, coordination, { id: ticket.submissionId, uid: identity.uid, operationId: data.operationId, requestHash: digest(data) }, async () => {
+          await store.checkResponseHeaders();
           if (!(await store.activeDomains()).includes(validated.domain)) throw new AppError(400, 'Choose an active domain.');
           return store.verifyUploads(ticket.submissionId, ticket.files);
         }, files => store.appendProtected(ticket.submissionId, { ...validated, ownerUid: identity.uid }, files, data.operationId));

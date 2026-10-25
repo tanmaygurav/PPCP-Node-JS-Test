@@ -36,3 +36,17 @@ test('ambiguous write stays pending and blocks successors', async () => {
   await assert.rejects(f.editor.save(f.input), /pending reconciliation/);
   await assert.rejects(f.editor.save({ ...f.input, operationId: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb' }), /Another save is pending/);
 });
+test('a failed pre-write read releases the record for a new operation', async () => {
+  const f = fixture(), find = f.store.find;
+  f.store.find = async () => { throw new Error('Synthetic quota failure before writing'); };
+  await assert.rejects(f.editor.save(f.input)); assert.equal(f.writes(), 0);
+  f.store.find = find;
+  await f.editor.save({ ...f.input, operationId: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb' }); assert.equal(f.writes(), 1);
+});
+test('failed update preparation cannot leave a dispatched write or change saved content', async () => {
+  const f = fixture();
+  f.store.prepareUpdate = async () => { throw new Error('Synthetic header read failure'); };
+  await assert.rejects(f.editor.save(f.input)); assert.equal(f.writes(), 0);
+  delete f.store.prepareUpdate;
+  await f.editor.save({ ...f.input, operationId: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb' }); assert.equal(f.writes(), 1);
+});

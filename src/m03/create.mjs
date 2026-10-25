@@ -6,11 +6,19 @@ export async function createOnce(store, coordination, { id, uid, operationId, re
   if (operation.state === 'busy') throw new AppError(409, 'A save is pending for this submission.');
   if (operation.uid !== uid || operation.requestHash !== requestHash) throw new AppError(409, 'Operation ID already belongs to another save.');
   if (operation.state === 'failed') throw new AppError(operation.status, operation.message);
-  const existing = await store.find(id);
+  let existing;
+  try { existing = await store.find(id); }
+  catch (error) {
+    if (fresh) await coordination.finish(id, operationId, { ...operation, state: 'failed', status: error.status || 502, message: 'Could not read submissions. No append was dispatched.' });
+    throw error;
+  }
   if (existing) {
     if (existing.ownerUid !== uid) throw new AppError(404, 'Submission not found.');
     if (operation.state !== 'complete') {
-      if (existing.lastSaveOperation !== operationId) throw new AppError(409, 'Submission already exists under another save.');
+      if (existing.lastSaveOperation !== operationId) {
+        if (fresh) await coordination.finish(id, operationId, { ...operation, state: 'failed', status: 409, message: 'Submission already exists under another save.' });
+        throw new AppError(409, 'Submission already exists under another save.');
+      }
       await coordination.finish(id, operationId, { ...operation, state: 'complete' });
     }
     return { item: existing, alreadySaved: true };

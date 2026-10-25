@@ -1,10 +1,13 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
-import { randomUUID } from 'node:crypto';
+import { randomUUID, createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { loadM03Env, m03Config } from '../src/m03/config.mjs';
 import { M03Store } from '../src/m03/store.mjs';
 
 loadM03Env(); const config = m03Config();
+const toolingCommit = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+const toolingDirty = !!execFileSync('git', ['status', '--porcelain'], { encoding: 'utf8' }).trim();
+const harnessHash = createHash('sha256').update(readFileSync(new URL(import.meta.url))).digest('hex');
 const arg = (key, fallback) => process.argv.find(value => value.startsWith(`--${key}=`))?.slice(key.length + 3) || fallback;
 const users = Number(arg('users', '5')), scenario = arg('scenario', 'burst'), dataset = Number(arg('dataset', '1200'));
 const target = arg('target', `https://ppcp-m03-${config.checkpoint.slice(-1).toLowerCase()}-test.vercel.app`);
@@ -22,13 +25,13 @@ if (before.filter(item => item.id.startsWith('m03-seed-')).length < dataset) thr
 const runId = `m03-${Date.now()}`, samples = [], saves = [];
 let stopped = false, stopReason = null, consecutive = 0, quotaTimes = [], completedUsers = 0;
 const stop = reason => { if (!stopped) console.log(`Circuit breaker: ${reason}. No new requests will be scheduled.`); stopped = true; stopReason ||= reason; };
-function record(operation, start, response, bytes = 0) {
-  const quota = Number(response?.headers.get('x-m03-quota-responses') || 0);
+function record(operation, start, response, bytes = 0, valid = true) {
+  const quota = Number(response?.headers.get('x-m03-quota-responses') || (response?.status === 429 ? 1 : 0));
   for (let i = 0; i < quota; i++) quotaTimes.push(Date.now());
   quotaTimes = quotaTimes.filter(time => Date.now() - time <= 30000);
-  const ok = response?.ok || false;
+  const ok = !!response?.ok && valid;
   consecutive = ok ? 0 : consecutive + 1;
-  samples.push({ operation, ms: +(performance.now() - start).toFixed(1), status: response?.status || 0, bytes,
+  samples.push({ operation, ms: +(performance.now() - start).toFixed(1), status: response?.status || 0, failed: !ok, bytes,
     googleRequests: Number(response?.headers.get('x-m03-google-requests') || 0), redisRequests: Number(response?.headers.get('x-m03-redis-requests') || 0), quotaResponses: quota, rssBytes: Number(response?.headers.get('x-m03-rss-bytes') || 0) });
   if (consecutive >= 10) stop('ten consecutive unexpected failures');
   if (quotaTimes.length >= 10) stop('ten upstream quota responses within 30 seconds');
@@ -38,7 +41,11 @@ async function call(account, operation, path, data) {
   const start = performance.now(); let response;
   try {
     response = await fetch(`${target}/api/${path}`, { method: data === undefined ? 'GET' : 'POST', headers: { cookie: account.cookie || '', origin: target, 'Content-Type': 'application/json' }, body: data === undefined ? undefined : JSON.stringify(data), signal: AbortSignal.timeout(65000) });
-    if (operation === 'download') { const bytes = new Uint8Array(await response.arrayBuffer()); record(operation, start, response, bytes.length); if (!response.ok || bytes.length !== 1000000) throw new Error('Download failed or size mismatch'); return bytes; }
+    if (operation === 'download') {
+      const bytes = new Uint8Array(await response.arrayBuffer());
+      const valid = bytes.length === 1000000 && createHash('sha256').update(bytes).digest('hex') === attachmentHash;
+      record(operation, start, response, bytes.length, valid); if (!response.ok || !valid) throw new Error('Download failed or checksum mismatch'); return bytes;
+    }
     const result = await response.json(); record(operation, start, response);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     if (operation === 'session') account.cookie = response.headers.get('set-cookie')?.split(';')[0];
@@ -56,6 +63,7 @@ samples.length = 0; consecutive = 0;
 const startedAt = new Date().toISOString(), start = performance.now(), duration = scenario === 'classroom' ? 600000 : 0;
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 const attachment = new Uint8Array(1000000); attachment.set(new TextEncoder().encode('%PDF-1.4\n% Synthetic M03 capacity fixture\n'));
+const attachmentHash = createHash('sha256').update(attachment).digest('hex');
 async function student(account, index) {
   await sleep(users === 1 ? 0 : index * (5000 / users));
   let cycle = 0;
@@ -93,7 +101,7 @@ async function student(account, index) {
     } catch { if (scenario !== 'classroom') return; await sleep(15000 + Math.random() * 15000); }
   } while (!stopped && duration && performance.now() - start < duration);
 }
-const progress = setInterval(() => console.log(JSON.stringify({ runId, seconds: Math.round((performance.now() - start) / 1000), requests: samples.length, errors: samples.filter(sample => sample.status >= 400 || !sample.status).length, completedCycles: completedUsers, stopped })), 15000);
+const progress = setInterval(() => console.log(JSON.stringify({ runId, seconds: Math.round((performance.now() - start) / 1000), requests: samples.length, errors: samples.filter(sample => sample.failed).length, completedCycles: completedUsers, stopped })), 15000);
 await Promise.all(pool.map(student)); clearInterval(progress);
 const elapsedMs = performance.now() - start;
 // Let the shared per-minute Sheets quota refill before read-only reconciliation.
@@ -125,12 +133,15 @@ try {
 const percentile = (list, p) => list[Math.min(list.length - 1, Math.ceil(list.length * p) - 1)] || 0;
 const operations = Object.fromEntries([...new Set(samples.map(sample => sample.operation))].map(operation => {
   const rows = samples.filter(sample => sample.operation === operation), times = rows.map(row => row.ms).sort((a, b) => a - b);
-  return [operation, { count: rows.length, errors: rows.filter(row => !row.status || row.status >= 400).length, medianMs: percentile(times, .5), p95Ms: percentile(times, .95), maxMs: times.at(-1) }];
+  return [operation, { count: rows.length, errors: rows.filter(row => row.failed).length, medianMs: percentile(times, .5), p95Ms: percentile(times, .95), maxMs: times.at(-1) }];
 }));
 const report = { runId, checkpoint: config.checkpoint, sourceCommit: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(), sourceDirty: !!execFileSync('git', ['status', '--porcelain'], { encoding: 'utf8' }).trim(), target, dataset, users, scenario, startedAt, elapsedMs, stopped, stopReason, completedCycles: completedUsers, requestsPerSecond: samples.length / (elapsedMs / 1000), googleRequests: samples.reduce((n, s) => n + s.googleRequests, 0), redisRequests: samples.reduce((n, s) => n + s.redisRequests, 0), quotaResponses: samples.reduce((n, s) => n + s.quotaResponses, 0), maxRssBytes: Math.max(0, ...samples.map(s => s.rssBytes)), operations, integrity, samples, saves,
   limitations: ['API-driven authenticated workload; browser rendering excluded.', 'Firebase Admin SDK network calls and provider billing usage are not included in upstream header counts.', 'GET retries are included in Google request counts; individual retry counts are not yet separated.', 'Interrupted or unscheduled work is not a completed user cycle. No latency acceptance target has been applied.'] };
 report.appSourceCommit = health.sourceCommit || (config.checkpoint === 'M03-A' ? '748ff21df03ff0ab70a6f3f998f001d3bac6d006' : null);
 report.transferBytes = samples.filter(sample => ['download', 'upload-transfer'].includes(sample.operation)).reduce((n, sample) => n + sample.bytes, 0);
+report.sourceCommit = toolingCommit; report.sourceDirty = toolingDirty; report.harnessSha256 = harnessHash;
+report.rowsBefore = before.length; report.seedRowsBefore = before.filter(item => item.id.startsWith('m03-seed-')).length;
+report.successfulRequestsPerSecond = samples.filter(sample => !sample.failed).length / (elapsedMs / 1000);
 mkdirSync('output/m03', { recursive: true }); writeFileSync(`output/m03/${runId}.json`, JSON.stringify(report, null, 2));
 console.log(JSON.stringify({ report: `output/m03/${runId}.json`, operations, stopped, stopReason, integrity }));
 if (stopped || Object.values(operations).some(operation => operation.errors) || (scenario === 'burst' && completedUsers < users) || integrity.reconciliationFailed || integrity.duplicates || integrity.missing?.length || integrity.mismatches?.length || integrity.pending?.length || integrity.brokenAttachments?.length) process.exitCode = 1;
