@@ -1,6 +1,7 @@
 .env*
 .local
 test
+test-m02
 scripts
 discovery-sheet-*.png
 output

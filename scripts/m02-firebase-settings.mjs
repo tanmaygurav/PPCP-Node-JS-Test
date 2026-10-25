@@ -8,7 +8,7 @@ const headers = { Authorization: `Bearer ${access_token}`, 'Content-Type': 'appl
 const response = await fetch(endpoint, { headers });
 if (!response.ok) throw new Error(`Firebase configuration read failed (HTTP ${response.status}).`);
 const current = await response.json();
-const authorizedDomains = [...new Set([...(current.authorizedDomains || []), 'localhost', 'ppcp-m02-auth-test.vercel.app'])];
+const authorizedDomains = [...new Set([...(current.authorizedDomains || []).filter(domain => domain !== 'ppcp-m02-auth-test.vercel.app'), 'localhost', 'ppcp-m02-auth-test-tanmays-projects-8434e035.vercel.app'])];
 console.log(JSON.stringify({ projectId: config.projectId, emailPasswordEnabled: current.signIn?.email?.enabled, authorizedDomains: current.authorizedDomains || [], missingDomains: authorizedDomains.filter(domain => !current.authorizedDomains?.includes(domain)) }));
 if (process.argv.includes('--apply')) {
   const updated = await fetch(`${endpoint}?updateMask=authorizedDomains`, { method: 'PATCH', headers, body: JSON.stringify({ authorizedDomains }) });

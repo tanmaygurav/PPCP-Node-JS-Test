@@ -7,7 +7,7 @@
     "node": "24.x"
   },
   "scripts": {
-    "build:m02": "node scripts/m02-check.mjs && vite build --config vite.m02.config.mjs",
+    "build:m02": "node check-m02.mjs && vite build --config vite.m02.config.mjs",
     "start:m02": "node server-m02.mjs",
     "m02:resources": "node scripts/m02-resources.mjs",
     "m02:role": "node scripts/m02-role.mjs",

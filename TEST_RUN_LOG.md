@@ -49,6 +49,7 @@ Tooling v1.0.1 is a CI compatibility correction: it uses a repository secret ins
 - Syntax and React production build passed. Production dependency audit: zero advisories. Full audit still reports five moderate advisories in Firebase CLI development dependencies; no forced major downgrade applied.
 - Separate Vercel project `ppcp-m02-auth-test` created; 12 sensitive variables configured directly from local files. Real deployed flow, organization inbox delivery/reset, manual mobile/two-account acceptance and final milestone freeze remain pending at this entry. Candidate evidence does not certify 60-user capacity or production readiness.
 - User-reported local M02-M01 acceptance: **success** for actual @welingkar.org registration, received verification email, verified access/profile completion, sign-out and password reset email/action. This is user-reported live mailbox evidence, separate from synthetic automated tests. Deployed mailbox flow remains pending.
+- Initial Vercel builds failed because the preserved `.vercelignore` excludes local scripts. Moved deployment syntax validation to root `check-m02.mjs`, referencing only shipped runtime files; local build passed. The short hostname was already assigned elsewhere, so the pilot uses its own assigned `ppcp-m02-auth-test-tanmays-projects-8434e035.vercel.app` hostname. Updated only M02's origin, live-test allowlist and Firebase authorized domains; did not reassign the unavailable hostname.
 
 ## Entry template
 
