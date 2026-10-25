@@ -123,3 +123,7 @@ M02 is isolated from M01. See [M02 setup and reconstruction](M02_SETUP.md) for N
 Live write tests create three synthetic `m02-test-...@welingkar.org` accounts marked verified by the administrator credential; **no email is sent**. They do not establish mailbox delivery or a real verification-link journey. Their UIDs are recorded for cleanup; Google Profiles rows, submission and tiny PNG remain inspectable. Do not turn those synthetic identities into real accounts. Manual tests use real inboxes; never record passwords, action codes, ID tokens or cookies in reports. All automated reports are sanitized JSON under output/test-runs.
 
 M02 is preserved as functional milestone `m02-firebase-auth-v0.1.0`; use tooling tag `m02-regression-tools-v1.0.1` for final acceptance and expanded live browser tests. Historical runtime/browser failures remain in the run log. Load capacity, migration and a device-specific manual matrix remain outside this functional acceptance.
+# M03 (in progress)
+
+See [M03_SETUP.md](M03_SETUP.md) for isolated resources, environment names, exact commands, fixtures, save/reconciliation semantics and capacity scenarios. Offline save-protection command: `npm run test:m03`. Live write/capacity command: `node scripts/m03-capacity.mjs --users=5 --dataset=1200 --scenario=burst --write` with `M03_CHECKPOINT` set explicitly. Passing M03 milestone preservation is pending; do not interpret scaffolding as a capacity result.
+

@@ -65,3 +65,10 @@ Tooling v1.0.1 is a CI compatibility correction: it uses a repository secret ins
 ## Entry template
 
 Record: date/time (IST), milestone/app tag, harness commit/tag, local/deployed origin, actual deployment commit if verified, test IDs, manual/automated, outcome, report filenames or archived evidence, created IDs, limitations and cleanup status. Never paste keys, tokens, cookies, raw OAuth callback URLs or upload-session URLs.
+# M03 implementation, 2026-10-25 (in progress)
+
+- Provisioned separate A/B Sheets, private Media folders and Vercel projects; M01/M02 resource IDs are rejected by M03 configuration.
+- Provisioned one free Redis coordinator after owner accepted marketplace terms. Auto-upgrade and eviction explicitly disabled; connected to B only.
+- Five offline coordination tests pass: lost response reconciliation, duplicate requests, stale edits/payload reuse, ownership, uncertain write blocking. One initial timestamp-collision test failed and was corrected; explicit last-save-operation markers were added for unambiguous reconciliation.
+- React editing build passes. Further verification, capacity measurements and release freeze remain pending.
+

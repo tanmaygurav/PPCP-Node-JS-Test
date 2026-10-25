@@ -2,6 +2,7 @@
 .local
 test
 test-m02
+test-m03
 scripts
 discovery-sheet-*.png
 output

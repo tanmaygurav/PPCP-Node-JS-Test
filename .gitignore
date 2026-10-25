@@ -12,5 +12,7 @@ output/
 playwright-report/
 test-results/
 dist-m02/
+dist-m03/
+dist-deployment/
 *-debug.log
 .firebase/
