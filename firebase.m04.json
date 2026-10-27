@@ -1,0 +1,4 @@
+{
+  "firestore": { "rules": "firestore.m04.rules", "indexes": "firestore.m04.indexes.json" },
+  "emulators": { "auth": { "host": "127.0.0.1", "port": 9104 }, "firestore": { "host": "127.0.0.1", "port": 8104 }, "ui": { "enabled": false }, "singleProjectMode": true }
+}

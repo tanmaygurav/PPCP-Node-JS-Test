@@ -7,6 +7,11 @@
     "node": "24.x"
   },
   "scripts": {
+    "build:m04": "node check-m04.mjs && vite build --config vite.m04.config.mjs",
+    "start:m04": "node server-m04.mjs",
+    "test:m04": "node --test test-m04/*.test.mjs",
+    "test:m04:emulator": "firebase emulators:exec --config firebase.m04.json --project demo-ppcp-m04 --only auth,firestore \"node scripts/m04-emulator.mjs\"",
+    "m04:cleanup": "node scripts/m04-cleanup.mjs",
     "build:m03": "node check-m03.mjs && vite build --config vite.m03.config.mjs",
     "start:m03": "node server-m03.mjs",
     "m03:resources": "node scripts/m03-resources.mjs",
@@ -36,6 +41,7 @@
     "vite": "^6.4.5"
   },
   "dependencies": {
+    "@google-cloud/firestore": "^8.0.0",
     "firebase": "13.1.0",
     "firebase-admin": "14.5.0",
     "react": "19.3.1",
@@ -43,6 +49,8 @@
   },
   "overrides": {
     "@grpc/grpc-js": "^1.13.6",
-    "jwks-rsa": { "jose": "5.10.0" }
+    "jwks-rsa": {
+      "jose": "5.10.0"
+    }
   }
 }

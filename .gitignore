@@ -13,6 +13,8 @@ playwright-report/
 test-results/
 dist-m02/
 dist-m03/
+dist-m04/
+!.env.m04.example
 dist-deployment/
 *-debug.log
 .firebase/

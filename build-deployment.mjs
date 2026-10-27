@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { cpSync, rmSync } from 'node:fs';
 import { resolve } from 'node:path';
-const milestone = process.env.M03_CHECKPOINT ? 'm03' : 'm02';
+const milestone = process.env.PPCP_MILESTONE === 'M04' ? 'm04' : process.env.M03_CHECKPOINT ? 'm03' : 'm02';
 execFileSync(process.execPath, [`check-${milestone}.mjs`], { stdio: 'inherit' });
 execFileSync(process.execPath, ['node_modules/vite/bin/vite.js', 'build', '--config', `vite.${milestone}.config.mjs`], { stdio: 'inherit' });
 // This fixed, workspace-local generated directory is never a source artifact.
