@@ -1,11 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { files, displayId, institutional, facets, digest } from '../src/m04/domain.mjs';
-import { allowedIdentity } from '../src/m04/auth.mjs';
+import { allowedIdentity, authenticate } from '../src/m04/auth.mjs';
 import { m04Config } from '../src/m04/config.mjs';
 import { listSpec } from '../src/m04/query.mjs';
 import { formatEnv } from '../src/m04/envfile.mjs';
 import { parseEnv } from 'node:util';
+test('revoked session cannot return a profile even when its signature is valid', async () => {
+  const auth = { verifySessionCookie: async (_token, checkRevoked) => { if (checkRevoked) throw new Error('Revoked'); return { uid: 'student', email: 's@welingkar.org', email_verified: true }; } };
+  await assert.rejects(authenticate({ headers: { cookie: 'ppcp_m04=signed-token' } }, auth, async () => ({ role: 'admin' })), { status: 401 });
+});
 test('local dotenv keeps service-account JSON and private-key newlines intact', () => {
   const value = JSON.stringify({ project_id: 'ppcp-m04-test', private_key: 'fake\nfake\n' });
   const parsed = parseEnv(formatEnv({ M04_FIREBASE_SERVICE_ACCOUNT_JSON: value }));

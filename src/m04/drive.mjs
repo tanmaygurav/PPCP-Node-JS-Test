@@ -25,8 +25,10 @@ export class M04Drive extends GoogleStore {
     let actual = await this.verify(file, ownerUid, submissionId, uploadId);
     const anyone = actual.permissions?.find(p => p.type === 'anyone');
     if (anyone && (anyone.role !== 'reader' || anyone.allowFileDiscovery !== false)) throw new AppError(409, 'Attachment has unexpected public permissions.');
-    if (!anyone) await this.request(`${DRIVE}/files/${encodeURIComponent(file.id)}/permissions`, { method: 'POST', body: JSON.stringify({ type: 'anyone', role: 'reader', allowFileDiscovery: false }) });
-    actual = await this.metadata(file.id);
+    if (!anyone) {
+      const granted = await this.request(`${DRIVE}/files/${encodeURIComponent(file.id)}/permissions?fields=id,type,role,allowFileDiscovery`, { method: 'POST', body: JSON.stringify({ type: 'anyone', role: 'reader', allowFileDiscovery: false }) });
+      actual = { ...actual, permissions: [...(actual.permissions || []), granted] };
+    }
     if (!actual.permissions?.some(p => p.type === 'anyone' && p.role === 'reader' && p.allowFileDiscovery === false) || !actual.webViewLink) throw new AppError(502, 'Drive link sharing could not be verified.');
     const link = new URL(actual.webViewLink);
     if (link.protocol !== 'https:' || !['drive.google.com', 'docs.google.com'].includes(link.hostname)) throw new AppError(502, 'Unexpected Drive view link.');

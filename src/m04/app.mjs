@@ -35,10 +35,12 @@ export function createM04Handler(config, store, auth) {
         const token = await auth.createSessionCookie(data.idToken, { expiresIn: SESSION_SECONDS * 1000 });
         res.setHeader('Set-Cookie', sessionCookie(config, token)); return send(res, 200, { ok: true });
       }
-      const identity = await measured('auth', () => authenticate(req, auth));
-      if (path === '/api/auth/logout' && method === 'POST') { await auth.revokeRefreshTokens(identity.uid); res.setHeader('Set-Cookie', sessionCookie(config, '', 0)); return send(res, 200, { ok: true }); }
-      if (path === '/api/profile' && method === 'POST') return send(res, 200, { profile: await store.register(identity, await body(req)) });
-      const profile = await measured('profile', () => store.profile(identity.uid));
+      if (method === 'POST' && ['/api/auth/logout', '/api/profile'].includes(path)) {
+        const identity = await measured('auth', () => authenticate(req, auth));
+        if (path === '/api/auth/logout') { await auth.revokeRefreshTokens(identity.uid); res.setHeader('Set-Cookie', sessionCookie(config, '', 0)); return send(res, 200, { ok: true }); }
+        return send(res, 200, { profile: await store.register(identity, await body(req)) });
+      }
+      const { identity, profile } = await measured('access', () => authenticate(req, auth, uid => measured('profile', () => store.profile(uid))));
       if (profile && (profile.email !== identity.email || profile.status !== 'active')) throw new AppError(403, 'Account access is disabled or email changed.');
       if (path === '/api/me' && method === 'GET') return send(res, 200, { identity, profile });
       if (!profile) throw new AppError(403, 'Complete your profile first.');

@@ -16,9 +16,17 @@ export function allowedIdentity(identity) {
 }
 export const SESSION_SECONDS = 3600;
 export function sessionCookie(config, value, age = SESSION_SECONDS) { return `ppcp_m04=${value}; HttpOnly; SameSite=Strict; Path=/; Max-Age=${age}${config.origin.startsWith('https:') ? '; Secure' : ''}`; }
-export async function authenticate(req, auth) {
+export async function authenticate(req, auth, readProfile) {
   const token = (req.headers.cookie || '').split(';').map(x => x.trim()).find(x => x.startsWith('ppcp_m04='))?.slice(9);
   if (!token) throw new AppError(401, 'Please sign in.');
-  let decoded; try { decoded = await auth.verifySessionCookie(token, true); } catch { throw new AppError(401, 'Session expired or disabled. Sign in again.'); }
-  return allowedIdentity(decoded);
+  let decoded; try { decoded = await auth.verifySessionCookie(token, false); } catch { throw new AppError(401, 'Session expired or disabled. Sign in again.'); }
+  const identity = allowedIdentity(decoded);
+  if (!readProfile) {
+    try { return allowedIdentity(await auth.verifySessionCookie(token, true)); } catch { throw new AppError(401, 'Session expired or disabled. Sign in again.'); }
+  }
+  // Only a cryptographically verified institutional UID may start this read.
+  // The SDK still checks revocation/disabled state before any response is sent.
+  const revocation = auth.verifySessionCookie(token, true).catch(() => { throw new AppError(401, 'Session expired or disabled. Sign in again.'); });
+  const [checked, profile] = await Promise.all([revocation, readProfile(identity.uid)]);
+  return { identity: allowedIdentity(checked), profile };
 }
