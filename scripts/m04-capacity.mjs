@@ -23,7 +23,7 @@ try {
     const current = samples.slice(stageStart), p95 = list => { const values = list.map(row => row.ms).sort((a, b) => a - b); return values.length ? values[Math.ceil(values.length * .95) - 1] : null; };
     const readP95 = p95(current.filter(row => row.method === 'GET' && (row.path === 'submissions' || /^submissions\/[\w-]+$/.test(row.path))).filter(row => row.status === 200));
     const saveP95 = p95(current.filter(row => row.method === 'POST' && (row.path === 'submissions' || row.path.endsWith('/edits'))));
-    const stage = { users, completed: results.filter(r => r.status === 'fulfilled').length, failures: results.filter(r => r.status === 'rejected').length, readP95ms: readP95, editP95ms: saveP95 };
+    const stage = { users, completed: results.filter(r => r.status === 'fulfilled').length, failures: results.filter(r => r.status === 'rejected').length, readP95ms: readP95, saveP95ms: saveP95 };
     console.log(JSON.stringify(stage)); passedStages.push(stage);
     if (failures.length || current.some(row => row.status === 429 || row.status === 503)) throw new Error('Stopped before the next stage after request/integrity failure or quota pressure.');
     if ((readP95 || 0) > 2000 || (saveP95 || 0) > 3000) throw new Error('Stopped before the next stage because latency targets did not pass.');

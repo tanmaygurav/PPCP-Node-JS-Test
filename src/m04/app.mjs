@@ -13,6 +13,12 @@ function send(res, code, data) { res.writeHead(code, { 'Content-Type': 'applicat
 export function createM04Handler(config, store, auth) {
   return async (req, res) => {
     const requestId = randomUUID(); res.setHeader('X-Request-ID', requestId); res.setHeader('Cache-Control', 'no-store'); res.setHeader('X-Content-Type-Options', 'nosniff');
+    const timings = [];
+    const measured = async (name, operation) => {
+      const started = performance.now();
+      try { return await operation(); }
+      finally { timings.push(`${name};dur=${(performance.now() - started).toFixed(1)}`); res.setHeader('Server-Timing', timings.join(', ')); }
+    };
     try {
       const url = new URL(req.url, config.origin), path = url.searchParams.has('route') ? `/api/${url.searchParams.get('route')}` : url.pathname, method = req.method;
       if (!['GET', 'POST'].includes(method)) throw new AppError(405, 'Method not allowed.');
@@ -29,23 +35,23 @@ export function createM04Handler(config, store, auth) {
         const token = await auth.createSessionCookie(data.idToken, { expiresIn: SESSION_SECONDS * 1000 });
         res.setHeader('Set-Cookie', sessionCookie(config, token)); return send(res, 200, { ok: true });
       }
-      const identity = await authenticate(req, auth);
+      const identity = await measured('auth', () => authenticate(req, auth));
       if (path === '/api/auth/logout' && method === 'POST') { await auth.revokeRefreshTokens(identity.uid); res.setHeader('Set-Cookie', sessionCookie(config, '', 0)); return send(res, 200, { ok: true }); }
       if (path === '/api/profile' && method === 'POST') return send(res, 200, { profile: await store.register(identity, await body(req)) });
-      const profile = await store.profile(identity.uid);
+      const profile = await measured('profile', () => store.profile(identity.uid));
       if (profile && (profile.email !== identity.email || profile.status !== 'active')) throw new AppError(403, 'Account access is disabled or email changed.');
       if (path === '/api/me' && method === 'GET') return send(res, 200, { identity, profile });
       if (!profile) throw new AppError(403, 'Complete your profile first.');
       requireRole(profile, ['student', 'faculty', 'admin']);
       if (path === '/api/domains' && method === 'GET') return send(res, 200, { domains: await store.domains() });
-      if (path === '/api/submissions' && method === 'GET') return send(res, 200, await store.list(profile, url.searchParams));
+      if (path === '/api/submissions' && method === 'GET') return send(res, 200, await measured('query', () => store.list(profile, url.searchParams)));
       if (path === '/api/submissions' && method === 'POST') return send(res, 200, await store.save(profile, await body(req)));
       if (path === '/api/upload-sessions' && method === 'POST') return send(res, 201, await store.prepare(profile, await body(req)));
       const operation = path.match(/^\/api\/operations\/([\w-]{1,100})$/);
       if (operation && method === 'GET') return send(res, 200, await store.receipt(profile, operation[1]));
       const match = path.match(/^\/api\/submissions\/([\w-]{1,100})(?:\/(edits|lock|unlock|remarks))?$/);
       if (match) {
-        if (!match[2] && method === 'GET') return send(res, 200, { item: await store.find(profile, match[1]) });
+        if (!match[2] && method === 'GET') return send(res, 200, { item: await measured('query', () => store.find(profile, match[1])) });
         if (match[2] === 'remarks' && method === 'GET') return send(res, 200, await store.remarks(profile, match[1], url.searchParams));
         if (method === 'POST' && match[2]) { const data = await body(req); return send(res, 200, match[2] === 'edits' ? await store.save(profile, data, match[1]) : await store.mutate(profile, match[1], match[2], data)); }
       }

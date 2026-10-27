@@ -48,7 +48,7 @@ export async function client(context, account, samples = []) {
     const started = performance.now(); let response;
     try { response = await fetch(`${origin}/api/${path}`, { method: data === undefined ? 'GET' : 'POST', headers: { Origin: origin, Cookie: cookie, ...(data === undefined ? {} : { 'Content-Type': 'application/json' }) }, ...(data === undefined ? {} : { body: JSON.stringify(data) }), signal: AbortSignal.timeout(65000), redirect: 'error' }); }
     catch { samples.push({ path: path.split('?')[0], ms: performance.now() - started, status: 'network-error' }); throw new Error('API response interrupted; rerun with the same operation ID.'); }
-    samples.push({ path: path.split('?')[0], method: data === undefined ? 'GET' : 'POST', ms: performance.now() - started, status: response.status });
+    samples.push({ path: path.split('?')[0], method: data === undefined ? 'GET' : 'POST', ms: performance.now() - started, status: response.status, serverTiming: response.headers.get('server-timing') });
     if (response.headers.get('set-cookie')) cookie = response.headers.get('set-cookie').split(';')[0];
     let value; try { value = await response.json(); } catch { throw new Error('API returned a non-JSON response.'); }
     if (expected ? response.status !== expected : !response.ok) throw new Error(`API ${path.split('?')[0]} returned ${response.status}; expected ${expected || 'success'}.`);

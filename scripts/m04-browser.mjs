@@ -25,7 +25,8 @@ const server = createServer(async (req, res) => {
   if (!file.startsWith(root + sep)) { res.writeHead(404); return res.end(); }
   try { const bytes = await readFile(file); res.writeHead(200, { 'Content-Type': ({ '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css' })[extname(file)] || 'application/octet-stream' }); res.end(bytes); } catch { res.writeHead(404); res.end(); }
 });
-await new Promise(resolve => server.listen(3005, '127.0.0.1', resolve));
+await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+config.origin = `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch({ headless: true }), results = [], errors = [];
 await mkdir('output/m04', { recursive: true });
 try {

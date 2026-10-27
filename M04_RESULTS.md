@@ -5,7 +5,7 @@ Status: implemented candidate; **not yet a live-accepted or frozen event release
 ## Verified locally
 
 - M04 production React build and server syntax checks pass on Node 24.22.1.
-- Fourteen API/domain/store tests passed against local Firebase Auth/Firestore emulators, including twenty concurrent transactional ID allocations, exact retry reconciliation, changed-payload rejection, ownership, failed edits, attachment boundaries, lock/save races, remarks, last-admin protection and deactivated access.
+- Fifteen API/domain/store tests passed against local Firebase Auth/Firestore emulators, including dotenv credential serialization, twenty concurrent transactional ID allocations, exact retry reconciliation, changed-payload rejection, ownership, failed edits, attachment boundaries, lock/save races, remarks, last-admin protection and deactivated access.
 - Actual browser → Node API → Auth/Firestore emulator rehearsal passed: lost create HTTP response/retry, student create/edit/lock, faculty using the second institutional domain reviewing/remarking/unlocking, and admin disabling a faculty user whose existing session then receives 403. No browser script errors were observed.
 - Desktop student/admin and 390px faculty detail layouts were rendered and screenshots inspected. No horizontal overflow in the tested mobile faculty view.
 - Query combinations and cursor separation ran against the emulator. Forty-seven composite index definitions are committed; deployed index readiness is **not** established by emulator success.
@@ -14,8 +14,8 @@ Status: implemented candidate; **not yet a live-accepted or frozen event release
 
 ## New resources
 
-- Separate Vercel project created: `ppcp-m04-event-poc`, project ID `prj_qGTt8zK98qN9Ue8WH23sTKEANwS4`, existing team `team_abf9xIKj95Kv5Rei3QPOU6Gb`. Node 24; Mumbai configured. No deployment or working URL is claimed yet.
-- Owner is creating the new Firebase/GCP project, OAuth client and private Drive folder. No legacy Firebase project, Drive folder or OAuth credential is used by M04.
+- Separate Vercel project: `ppcp-m04-event-poc`, project ID `prj_qGTt8zK98qN9Ue8WH23sTKEANwS4`, existing team `team_abf9xIKj95Kv5Rei3QPOU6Gb`. Node 24, Mumbai. Candidate URL: https://ppcp-m04-event-poc.vercel.app.
+- Owner-created Firebase/GCP project, OAuth client and private Drive folder are connected. No legacy Firebase project, Drive folder or OAuth credential is used by M04.
 
 ## Connected-resource checks
 
@@ -30,6 +30,8 @@ Status: implemented candidate; **not yet a live-accepted or frozen event release
 
 ## Pending acceptance
 
+The original checklist below predates the connected-resource and deployment checks; completed checks are recorded above and below. Higher-load acceptance, second-domain inbox/reset testing, organizer rehearsal and release freeze remain pending.
+
 - Connect owner-created resources; verify billing remains disabled, rules are deployed and composite indexes are ready.
 - Verify real Firebase registration/verification/reset delivery for both institutional domains and bootstrap the intended administrator.
 - Complete actual Drive sharing, anonymous direct-view, replacement/interruption and exact-byte boundary tests using the new resources.
@@ -43,3 +45,15 @@ Local sanitized reports/screenshots are in ignored `output/m04`; preserved regre
 Emulator fixtures have synthetic verified accounts and no real Drive transfers. Offline Drive adapters exercise rejection paths but are not evidence of Google permissions or throughput. Browser rehearsal does not establish real inbox delivery. Provider billing/document operations require separate console verification; API sample counts alone are insufficient.
 
 Two early browser rehearsals stopped on test-harness dropdown selectors; those selectors were corrected and the end-to-end rehearsal rerun successfully. The failures are not presented as accepted runs. No release tag has been created.
+
+## Mumbai candidate deployment
+
+- Branch `codex/m04-event-poc` is pushed to GitHub. READY deployment `dpl_HMF76c6Qkth4Ao1N8VccTZahkzn6` resolves from the canonical alias to source `c9cd6a803d6269df73ba8311f5375ca01c4003ad`, branch `codex/m04-event-poc`, region `bom1`. This is a candidate, not a frozen milestone.
+- Public health/auth-config endpoints return HTTP 200 with M04 and the new Firebase project. The canonical hostname is authorized in Firebase; no deployment protection settings were disabled.
+- Deployed real-provider functional suite passed: `output/m04/live-1793102247628.json`.
+- First deployed five-user probe overlapped functional testing: 5/5 completed, zero request failures, read p95 2,641 ms (target missed), save p95 2,581 ms. Report `output/m04/capacity-1793102227000.json`; not treated as isolated capacity evidence.
+- Subsequent isolated five-user run: 5/5 completed, zero failures, read p95 552 ms, create/edit save p95 2,441 ms, excluding direct transfer. Report `output/m04/capacity-1793102332189.json`. This small warm-deployment observation does not certify higher loads or eliminate cold-start risk.
+- Owner confirmed administrator sign-in and Manage users on the hosted app.
+- The next staged run again missed the five-user prerequisite on reads (2,327 ms p95), despite 5/5 completed and zero request failures; save p95 2,852 ms. Twenty users were provisioned but the twenty-user stage did not run. Report `output/m04/capacity-1793102712645.json`.
+- Static live audit passed across 25 current submissions: unique sequences/readable IDs, attachment limits, complete pagination for all four sort modes, and matching active-admin counts. Report `output/m04/audit-1793102946315.json`.
+- Candidate improvement uses Firestore REST in production and retains credential-free emulator gRPC. API Server-Timing now separates auth, profile and read-query work. This change still requires deployed verification; earlier latency failures remain recorded.

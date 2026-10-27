@@ -1,11 +1,14 @@
 import { cert, getApps, initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
-import { getFirestore } from 'firebase-admin/firestore';
+import { initializeFirestore } from 'firebase-admin/firestore';
 import { AppError, institutional, normalize } from './domain.mjs';
 export function services(config) {
   const name = `m04-${config.projectId}`;
   const app = getApps().find(app => app.name === name) || initializeApp({ projectId: config.projectId, ...(config.serviceAccount ? { credential: cert(JSON.parse(config.serviceAccount)) } : {}) }, name);
-  return { auth: getAuth(app), db: getFirestore(app) };
+  // REST avoids initializing a gRPC channel on each new serverless instance.
+  // Transactions, indexes and per-request authorization remain unchanged.
+  // The emulator uses gRPC so its credential-free mode cannot fall back to ADC.
+  return { auth: getAuth(app), db: initializeFirestore(app, { preferRest: !config.emulator }) };
 }
 export function allowedIdentity(identity) {
   if (!institutional(identity.email) || !identity.email_verified) throw new AppError(403, 'Verify your @welingkar.org or @welingkarmail.org email.');
