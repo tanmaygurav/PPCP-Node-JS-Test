@@ -11,7 +11,7 @@ for (const path of files) { await mkdir(resolve(root, path, '..'), { recursive: 
 await writeFile(resolve(root, 'vite.config.mjs'), `export default { root: ${JSON.stringify(resolve(root, 'm04-web'))}, build: { outDir: ${JSON.stringify(resolve(root, 'dist'))}, emptyOutDir: true } };`);
 execFileSync(process.execPath, ['node_modules/vite/bin/vite.js', 'build', '--config', resolve(root, 'vite.config.mjs')], { stdio: 'inherit' });
 // Rehearse only the temporary frontend redirects. No deployed configuration changes.
-const redirects = ['/submissions/:path*', '/admin/:path*'].map(source => ({ source, destination: '/', permanent: false }));
+const redirects = ['/submissions/:path*', '/admin/:path*'].map(source => ({ source, destination: '/', statusCode: 302 }));
 await writeFile(resolve(root, 'temporary-redirects.json'), JSON.stringify({ redirects }, null, 2));
 const server = createServer(async (req, res) => {
   const path = new URL(req.url, 'http://localhost').pathname;

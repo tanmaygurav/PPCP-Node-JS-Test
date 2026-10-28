@@ -1,0 +1,14 @@
+{
+  "environment": "emulators",
+  "results": [
+    "lost HTTP save response reconciles through operation receipt",
+    "direct URLs, refresh, new tabs, intended URL through sign-in, forbidden admin, dirty draft/files cancellation, filter/page/scroll Back/Forward and expired cursor recovery",
+    "student create/edit/lock via real Auth + Node + Firestore emulators",
+    "intended protected URL survives sign-in and first profile completion",
+    "staff/locked edit redirects and generic foreign submission rejection",
+    "second-domain faculty review/remark/unlock and mobile layout",
+    "admin disables faculty; existing session denied on next API request",
+    "all four event themes persist site-wide across anonymous, student and admin views; admin-only mutation; mobile overflow and text contrast checks pass"
+  ],
+  "browserErrors": []
+}

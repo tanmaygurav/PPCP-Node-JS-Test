@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-28",
+  "source": "89dbb70ab40cfacf4278fc0b6bbd2b9eb527b3f0",
+  "branch": "codex/m04-url-routing",
+  "projectId": "prj_qGTt8zK98qN9Ue8WH23sTKEANwS4",
+  "productionDeployment": "dpl_HRcyUjLUGMTihZqjjg8Wok9FbAb1",
+  "previewDeployment": "dpl_AZ6M9Jf5e5fCikpHbbiT8Asy31m6",
+  "baselineDeployment": "dpl_DTWHqfbfRrveYDpL1CGs6MB5SNet",
+  "baselineTag": "m04-routing-baseline-v0.1.0",
+  "canonicalOrigin": "https://ppcp-m04-event-poc.vercel.app",
+  "productionTracking": "codex/m04-url-routing",
+  "automaticGitDeployments": false,
+  "emulatorChecks": { "passed": 20, "failed": 0, "firstAttempt": "Existing concurrent-create emulator test hit transaction timeout; repeat passed without source changes." },
+  "offlineChecks": { "M01": 17, "M02": 10, "M03": 14 },
+  "preservedStableOriginsReadOnly": { "M01": 200, "M02": 200, "M03A": 200, "M03B": 200 },
+  "rollbackRehearsal": "Exact tagged baseline build; explicit 302 frontend redirects; root, API and assets pass locally.",
+  "ownerManualNavigation": "pending",
+  "capacityCertified": false
+}

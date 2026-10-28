@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "origin": "https://ppcp-m04-event-poc-git-codex-m-b84ac9-tanmays-projects-8434e035.vercel.app",
+  "title": "M04 routing baa86fdc",
+  "displayId": "PP042",
+  "checks": [
+    "direct new URL survives sign-in; cancelled navigation retains selected file; unresolved save blocks navigation and reconciles once",
+    "deep-link refresh/new tab and anonymous direct Drive viewing",
+    "create/edit/lock/remark/unlock regression retains attachment and event theme; locked/staff edit redirects",
+    "hosted indexed pagination preserves query/page/scroll through Back/Forward; copied query starts page one",
+    "administrator route access and student rejection",
+    "PP039 unchanged (read-only comparison)"
+  ],
+  "browserErrors": 0
+}

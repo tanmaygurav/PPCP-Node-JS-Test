@@ -2,7 +2,8 @@ import { loadM04Env, m04Config } from '../src/m04/config.mjs';
 import { services } from '../src/m04/auth.mjs';
 loadM04Env(); const config = m04Config(), { auth, db } = services(config);
 if (config.projectId !== 'ppcp-m04-redesign' || config.emulator) throw new Error('Approved M04 project only.');
-const domain = 'ppcp-m04-event-poc.vercel.app';
+const domain = process.argv.find(arg => arg.startsWith('--domain='))?.slice(9) || 'ppcp-m04-event-poc.vercel.app';
+if (domain !== 'ppcp-m04-event-poc.vercel.app' && !/^ppcp-m04-event-poc-git-[a-z0-9-]+-tanmays-projects-8434e035\.vercel\.app$/.test(domain)) throw new Error('Only the approved M04 canonical or branch Preview hostname is allowed.');
 try {
   const { access_token } = await auth.app.options.credential.getAccessToken();
   const url = `https://identitytoolkit.googleapis.com/admin/v2/projects/${config.projectId}/config`, headers = { Authorization: `Bearer ${access_token}`, 'Content-Type': 'application/json' };

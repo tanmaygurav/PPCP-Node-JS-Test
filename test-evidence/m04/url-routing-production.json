@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "origin": "https://ppcp-m04-event-poc.vercel.app",
+  "title": "M04 routing b80675b7",
+  "displayId": "PP043",
+  "checks": [
+    "direct new URL survives sign-in; cancelled navigation retains selected file; unresolved save blocks navigation and reconciles once",
+    "deep-link refresh/new tab and anonymous direct Drive viewing",
+    "create/edit/lock/remark/unlock regression retains attachment and event theme; locked/staff edit redirects",
+    "hosted indexed pagination preserves query/page/scroll through Back/Forward; copied query starts page one",
+    "administrator route access and student rejection",
+    "PP039 unchanged (read-only comparison)"
+  ],
+  "browserErrors": 0
+}
