@@ -28,6 +28,30 @@ test('registration ignores role injection; bootstrap occurs only once', async ()
   await store.changeUser(admin, admin.uid, { role: 'student', status: 'active', operationId: randomUUID() });
   assert.equal((await store.register({ uid: 'admin', email: admin.email }, { name: 'A', program: 'A', studentId: 'A' })).role, 'student');
 });
+test('site-wide appearance is admin controlled, versioned and retry safe', async () => {
+  const { store, student, faculty, admin } = await fixture();
+  assert.deepEqual(await store.appearance(), { theme: 'innovation', version: 0, updatedAt: null });
+  const data = { theme: 'festival', expectedVersion: 0, operationId: randomUUID() };
+  await assert.rejects(store.changeAppearance(student, data), { status: 403 });
+  await assert.rejects(store.changeAppearance(faculty, data), { status: 403 });
+  await assert.rejects(store.changeAppearance({ ...student, role: 'admin' }, data), { status: 403 });
+  await assert.rejects(store.changeAppearance(admin, { ...data, theme: 'custom-css' }), { status: 400 });
+  const first = await store.changeAppearance(admin, data), saved = await store.appearance();
+  assert.equal(saved.theme, 'festival'); assert.equal(saved.version, 1); assert(saved.updatedAt);
+  assert.deepEqual(await store.changeAppearance(admin, data), first);
+  assert.deepEqual(await store.appearance(), saved);
+  await assert.rejects(store.changeAppearance(admin, { ...data, theme: 'classic' }), { status: 409 });
+  await assert.rejects(store.changeAppearance(admin, { ...data, operationId: randomUUID() }), { status: 409 });
+  await store.ref('users', admin.uid).update({ status: 'disabled' });
+  await assert.rejects(store.changeAppearance(admin, { theme: 'conference', expectedVersion: 1, operationId: randomUUID() }), { status: 403 });
+});
+test('concurrent administrators cannot silently overwrite an event theme', async () => {
+  const { store, admin } = await fixture();
+  const results = await Promise.allSettled(['festival', 'conference'].map(theme => store.changeAppearance(admin, { theme, expectedVersion: 0, operationId: randomUUID() })));
+  assert.equal(results.filter(result => result.status === 'fulfilled').length, 1);
+  assert.equal(results.find(result => result.status === 'rejected').reason.status, 409);
+  assert.equal((await store.appearance()).version, 1);
+});
 test('20 concurrent creates receive unique immutable numeric and readable IDs', async () => {
   const { create, store, student } = await fixture(); const results = await Promise.all(Array.from({ length: 20 }, () => create()));
   assert.equal(new Set(results.map(r => r.displayId)).size, 20);

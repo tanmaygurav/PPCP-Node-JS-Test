@@ -95,6 +95,16 @@ Dry-run identifies expired pending uploads and eligible removed-file cleanup. Ap
 
 ## Deployment and release gate
 
+### Site-wide event appearance
+
+Administrators can open **Event theme**, choose **Innovation**, **Festival**, **Conference**, or **Classic**, preview the palette and click **Apply to website**. Innovation is the initial default. The selection is stored in the new project's `settings/appearance` document and applies to login, student, faculty and administrator pages. Existing open pages refresh the theme when they receive focus; a page refresh also loads it. There is no personal theme override or continuous polling.
+
+`GET /api/appearance` exposes only the theme, version and update timestamp so signed-out pages can use the event styling. `POST /api/admin/appearance` requires an active administrator, operation ID and expected version. Transactions reject stale changes and reuse receipts on exact retries. Only the four preset IDs are accepted; no arbitrary CSS or historical settings are stored. Existing browser-deny Firestore rules also protect settings from direct writes.
+
+`node scripts/m04-theme-live.mjs --target=https://YOUR-M04-HOST --write` verifies admin-only persistence and the anonymous mobile page under deployed CSP, then restores the original palette if no administrator changed it during the test. Emulator/browser verification covers all four palettes, contrast, mobile overflow and cross-role refresh behavior.
+
+### Release gate
+
 Use only the separate `ppcp-m04-event-poc` Vercel project in the existing Hobby team. Set Node 24, Mumbai functions, build `node build-deployment.mjs`, output `dist-deployment`, and `PPCP_MILESTONE=M04`. Copy only the new `M04_*` values through secure environment configuration. Set `M04_APP_ORIGIN` to the exact stable HTTPS origin and authorize that hostname in the new Firebase project.
 
 Do not change M01–M03 projects, branch tracking, aliases or environment variables. `vercel.json` disables automatic Git deployments for the two M04 branches so pushing them does not trigger previews across the preserved projects sharing this repository. Deploy M04 explicitly to its separate project. See [Vercel Git configuration](https://vercel.com/docs/project-configuration/git-configuration).

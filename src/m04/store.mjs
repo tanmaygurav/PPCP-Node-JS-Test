@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { AppError, canRead, digest, displayId, facets, files, identifier, institutional, normalize, requireRole, submission, text, version } from './domain.mjs';
 import { sign, verify } from '../security.mjs';
 import { listSpec } from './query.mjs';
+import { DEFAULT_THEME, isEventTheme } from '../../shared/m04-themes.mjs';
 
 export class M04Store {
   constructor(config, db, drive) { this.config = config; this.db = db; this.drive = drive; }
@@ -27,6 +28,27 @@ export class M04Store {
     requireRole(actual, roles); return actual;
   }
   async domains() { return (await this.db.collection('domains').where('active', '==', true).orderBy('name').limit(100).get()).docs.map(doc => doc.data().name); }
+  async appearance() {
+    const saved = (await this.ref('settings', 'appearance').get()).data();
+    return { theme: isEventTheme(saved?.theme) ? saved.theme : DEFAULT_THEME, version: Number.isSafeInteger(saved?.version) && saved.version >= 0 ? saved.version : 0, updatedAt: typeof saved?.updatedAt === 'string' ? saved.updatedAt : null };
+  }
+  async changeAppearance(profile, data) {
+    requireRole(profile, ['admin']);
+    if (!isEventTheme(data.theme)) throw new AppError(400, 'Choose one of the available event themes.');
+    if (!Number.isSafeInteger(data.expectedVersion) || data.expectedVersion < 0) throw new AppError(400, 'Reload the saved theme before applying a change.');
+    const opRef = this.receiptRef(profile.uid, data.operationId), hash = digest({ kind: 'appearance', theme: data.theme, expectedVersion: data.expectedVersion });
+    return this.db.runTransaction(async tx => {
+      await this.current(tx, profile, ['admin']);
+      const prior = (await tx.get(opRef)).data();
+      if (prior) { if (prior.digest !== hash) throw new AppError(409, 'Operation content changed.'); return prior; }
+      const ref = this.ref('settings', 'appearance'), saved = (await tx.get(ref)).data(), currentVersion = saved?.version || 0;
+      if (currentVersion !== data.expectedVersion) throw new AppError(409, 'The event theme changed. Reload the saved theme before applying.');
+      const now = new Date().toISOString(), nextVersion = currentVersion + 1;
+      tx.set(ref, { theme: data.theme, version: nextVersion, updatedAt: now });
+      const receipt = { status: 'committed', kind: 'appearance', version: nextVersion, digest: hash, committedAt: now };
+      tx.create(opRef, receipt); return receipt;
+    });
+  }
   async find(profile, id) { const item = (await this.ref('submissions', id).get()).data(); if (!canRead(profile, item)) throw new AppError(404, 'Submission not found.'); return item; }
   receiptRef(uid, op) { return this.ref('operations', digest([uid, identifier(op, 'operation ID')])); }
   async receipt(profile, op) { const value = (await this.receiptRef(profile.uid, op).get()).data(); return value || { status: 'not-observed' }; }

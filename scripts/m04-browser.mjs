@@ -53,6 +53,41 @@ try {
   const admin = await login('admin', { width: 1280, height: 900 }); await admin.page.getByRole('button', { name: 'Manage users', exact: true }).click(); await admin.page.getByLabel('Exact email').fill(identities.faculty.email); await admin.page.getByRole('button', { name: 'Find user', exact: true }).click(); await admin.page.getByLabel('Access', { exact: true }).selectOption('disabled'); await admin.page.getByRole('button', { name: 'Save access', exact: true }).click(); await admin.page.getByText('Account access updated.', { exact: true }).waitFor();
   await faculty.page.getByRole('button', { name: 'Refresh saved version', exact: true }).click(); await faculty.page.getByText('Account access is disabled or email changed.', { exact: true }).waitFor(); results.push('admin disables faculty; existing session denied on next API request');
   await admin.page.screenshot({ path: 'output/m04/admin-desktop.png', fullPage: true }); assert.deepEqual(errors, []);
+  assert.equal(await page.getByRole('button', { name: 'Event theme', exact: true }).count(), 0);
+  assert.equal(await faculty.page.getByRole('button', { name: 'Event theme', exact: true }).count(), 0);
+  await admin.page.getByRole('button', { name: 'Event theme', exact: true }).click();
+  for (const theme of ['innovation', 'festival', 'conference', 'classic']) {
+    await admin.page.getByLabel('Event theme', { exact: true }).selectOption(theme);
+    const apply = admin.page.getByRole('button', { name: 'Apply to website', exact: true });
+    if (await apply.isEnabled()) await apply.click();
+    await admin.page.waitForFunction(expected => document.documentElement.dataset.theme === expected, theme);
+    const colours = await admin.page.evaluate(() => { const css = getComputedStyle(document.documentElement); return Object.fromEntries(['primary', 'page', 'ink', 'muted', 'hero-end', 'accent'].map(name => [name, css.getPropertyValue(`--${name}`).trim()])); });
+    const luminance = hex => { const rgb = hex.slice(1).match(/../g).map(value => parseInt(value, 16) / 255).map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4); return .2126 * rgb[0] + .7152 * rgb[1] + .0722 * rgb[2]; };
+    const contrast = (a, b) => { const values = [luminance(a), luminance(b)].sort((x, y) => y - x); return (values[0] + .05) / (values[1] + .05); };
+    assert(contrast(colours.primary, '#ffffff') >= 4.5, `${theme} primary button contrast`);
+    assert(contrast(colours.ink, colours.page) >= 4.5, `${theme} body contrast`);
+    assert(contrast(colours.muted, colours.page) >= 4.5, `${theme} secondary text contrast`);
+    assert(contrast(colours.accent, colours['hero-end']) >= 4.5, `${theme} hero accent contrast`);
+    await admin.page.setViewportSize({ width: 1280, height: 1000 });
+    await admin.page.screenshot({ path: `output/m04/theme-${theme}-desktop.png`, fullPage: true });
+    await admin.page.setViewportSize({ width: 390, height: 844 });
+    assert(await admin.page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${theme} mobile overflow`);
+    await admin.page.screenshot({ path: `output/m04/theme-${theme}-mobile.png`, fullPage: true });
+    const anonymous = await browser.newContext({ viewport: { width: 390, height: 844 } }), loginPage = await anonymous.newPage();
+    await loginPage.goto(config.origin); await loginPage.waitForFunction(expected => document.documentElement.dataset.theme === expected, theme);
+    assert.equal(await loginPage.getByRole('button', { name: 'Event theme', exact: true }).count(), 0);
+    await loginPage.screenshot({ path: `output/m04/theme-${theme}-login.png`, fullPage: true });
+    await anonymous.close();
+    await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+    await page.waitForFunction(expected => document.documentElement.dataset.theme === expected, theme);
+  }
+  await admin.page.reload(); await admin.page.waitForFunction(() => document.documentElement.dataset.theme === 'classic');
+  await admin.page.getByRole('button', { name: 'Event theme', exact: true }).click();
+  await admin.page.getByLabel('Event theme', { exact: true }).selectOption('innovation'); await admin.page.getByRole('button', { name: 'Apply to website', exact: true }).click();
+  await admin.page.waitForFunction(() => document.documentElement.dataset.theme === 'innovation');
+  const denied = await student.context.request.post(`${config.origin}/api/admin/appearance`, { headers: { Origin: config.origin }, data: { theme: 'festival', expectedVersion: (await store.appearance()).version, operationId: randomUUID() } });
+  assert.equal(denied.status(), 403); assert.equal((await store.appearance()).theme, 'innovation');
+  results.push('all four event themes persist site-wide across anonymous, student and admin views; admin-only mutation; mobile overflow and text contrast checks pass');
   console.log(JSON.stringify({ passed: results, browserErrors: errors.length }));
 } catch (error) {
   for (const [i, context] of browser.contexts().entries()) for (const page of context.pages()) await page.screenshot({ path: `output/m04/failure-${i}.png`, fullPage: true });

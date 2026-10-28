@@ -29,6 +29,7 @@ export function createM04Handler(config, store, auth) {
       // Authentication may reject before initialization finishes. Valid requests
       // still await and report initialization failures through the normal path.
       void databaseReady.catch(() => {});
+      if (path === '/api/appearance' && method === 'GET') { await databaseReady; return send(res, 200, { appearance: await store.appearance() }); }
       if (path === '/api/auth/session' && method === 'POST') {
         const data = await body(req); let decoded;
         try { decoded = await auth.verifyIdToken(text(data.idToken, 'ID token', 20000), true); } catch { throw new AppError(401, 'Sign in again.'); }
@@ -51,6 +52,11 @@ export function createM04Handler(config, store, auth) {
       if (path === '/api/me' && method === 'GET') return send(res, 200, { identity, profile });
       if (!profile) throw new AppError(403, 'Complete your profile first.');
       requireRole(profile, ['student', 'faculty', 'admin']);
+      if (path === '/api/admin/appearance' && method === 'POST') {
+        requireRole(profile, ['admin']);
+        const receipt = await store.changeAppearance(profile, await body(req));
+        return send(res, 200, { ...receipt, appearance: await store.appearance() });
+      }
       if (path === '/api/domains' && method === 'GET') return send(res, 200, { domains: await store.domains() });
       if (path === '/api/submissions' && method === 'GET') return send(res, 200, await measured('query', () => store.list(profile, url.searchParams)));
       if (path === '/api/submissions' && method === 'POST') return send(res, 200, await store.save(profile, await body(req)));

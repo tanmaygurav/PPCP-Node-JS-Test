@@ -1,0 +1,11 @@
+{
+  "environment": "emulators",
+  "results": [
+    "lost HTTP save response reconciles through operation receipt",
+    "student create/edit/lock via real Auth + Node + Firestore emulators",
+    "second-domain faculty review/remark/unlock and mobile layout",
+    "admin disables faculty; existing session denied on next API request",
+    "all four event themes persist site-wide across anonymous, student and admin views; admin-only mutation; mobile overflow and text contrast checks pass"
+  ],
+  "browserErrors": []
+}
