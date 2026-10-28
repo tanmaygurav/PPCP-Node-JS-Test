@@ -15,8 +15,8 @@ try {
   await page.getByLabel('Institutional email').fill(pool.students[0].email);
   await page.getByLabel('Password', { exact: true }).fill(pool.students[0].password);
   await page.getByRole('button', { name: 'Sign in', exact: true }).click();
-  await page.getByRole('button', { name: 'My submissions', exact: true }).waitFor();
-  await page.getByRole('button', { name: 'New submission', exact: true }).click();
+  await page.getByRole('link', { name: 'My submissions', exact: true }).waitFor();
+  await page.getByRole('link', { name: 'New submission', exact: true }).click();
   const title = `M04 live browser ${randomUUID().slice(0, 8)}`;
   await page.getByLabel('Title', { exact: true }).fill(title);
   await page.getByLabel('Domain', { exact: true }).selectOption('Education');
@@ -43,12 +43,12 @@ try {
   const popup = await popupPromise; await popup.waitForLoadState('domcontentloaded');
   assert(['drive.google.com', 'docs.google.com'].includes(new URL(popup.url()).hostname));
   await popup.screenshot({ path: 'output/m04/drive-live-browser.png', fullPage: true }); await popup.close(); checks.push('attachment opens directly in a separate anonymous Drive tab');
-  await page.getByRole('button', { name: 'Edit submission', exact: true }).click();
+  await page.getByRole('link', { name: 'Edit submission', exact: true }).click();
   await page.getByLabel('Title', { exact: true }).fill(`${title} edited`);
   await page.getByRole('button', { name: 'Save submission', exact: true }).click();
   await page.getByRole('heading', { name: `${title} edited`, exact: true }).waitFor();
   await page.getByRole('button', { name: 'Lock submission', exact: true }).click();
-  await page.getByRole('button', { name: 'Edit submission', exact: true }).waitFor({ state: 'detached' });
+  await page.getByRole('link', { name: 'Edit submission', exact: true }).waitFor({ state: 'detached' });
   const saved = (await records.docs[0].ref.get()).data(); assert(saved.locked); assert.equal(saved.media[0].id, record.media[0].id); assert.equal(saved.version, 3);
   checks.push('browser edit retains uploaded attachment and lock blocks further edits');
   assert.deepEqual(errors, []); await page.screenshot({ path: 'output/m04/student-live-browser.png', fullPage: true });

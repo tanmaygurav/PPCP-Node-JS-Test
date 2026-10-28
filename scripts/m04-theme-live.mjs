@@ -21,7 +21,7 @@ try {
   const anonymous = await browser.newContext({ viewport: { width: 390, height: 844 } }), page = await anonymous.newPage(), errors = [];
   page.on('pageerror', () => errors.push('Uncaught browser error'));
   await page.goto(context.origin); await page.waitForFunction(theme => document.documentElement.dataset.theme === theme, data.theme);
-  assert.equal(await page.getByRole('button', { name: 'Event theme', exact: true }).count(), 0);
+  assert.equal(await page.getByRole('link', { name: 'Event theme', exact: true }).count(), 0);
   assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)); assert.deepEqual(errors, []);
   await page.screenshot({ path: 'output/m04/theme-live-login.png', fullPage: true }); checks.push('anonymous mobile login applies the saved theme under deployed CSP without overflow');
   await browser.close(); browser = null;

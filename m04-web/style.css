@@ -68,6 +68,13 @@ button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
 button { cursor: pointer; font-size: 13px; font-weight: 650; line-height: 1.45; background: var(--primary); color: #fff; border: 1px solid var(--primary); border-radius: 9px; padding: 12px 18px; transition: background .16s ease, box-shadow .16s ease; }
 button:hover { background: var(--primary-dark); }
 button:disabled { opacity: .48; cursor: not-allowed; }
+.button-link { display: inline-flex; justify-content: center; align-items: center; text-decoration: none; font-size: 13px; font-weight: 650; background: var(--primary); color: #fff; border: 1px solid var(--primary); border-radius: 9px; padding: 12px 18px; }
+.button-link:hover { background: var(--primary-dark); }
+.button-link.secondary { background: #fff; color: var(--ink); border-color: #8290a4; }
+.button-link.secondary:hover { background: var(--primary-soft); color: var(--primary); }
+.back-link { display: inline-block; margin-top: 22px; font-size: 13px; }
+.navigation-guard { border: 1px solid var(--line); border-radius: 14px; padding: 26px; width: min(480px, calc(100vw - 32px)); color: var(--ink); }
+.navigation-guard::backdrop { background: #0b173080; }
 button:focus-visible, a:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
 .secondary { background: #fff; color: var(--ink); border-color: #8290a4; }
 .secondary:hover { background: var(--primary-soft); color: var(--primary); }
@@ -128,6 +135,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--focus); out
 nav, .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 nav { padding: 0 0 23px; margin-bottom: 2px; border-bottom: 1px solid var(--line); }
 nav button { padding: 11px 16px; border-radius: 9px; }
+nav .button-link { padding: 11px 16px; }
 .filter-panel { margin-top: 24px; padding: 22px; }
 .filters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px 16px; align-items: end; }
 .filters label { font-size: 11px; margin-bottom: 14px; }
@@ -137,6 +145,7 @@ nav button { padding: 11px 16px; border-radius: 9px; }
 .list-heading > span { font-size: 11px; }
 .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px; }
 .submission-card { text-align: left; display: block; background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: 13px; padding: 23px; font-weight: 400; overflow-wrap: anywhere; box-shadow: 0 3px 14px #172a4a03; }
+.submission-card { text-decoration: none; }
 .submission-card:hover { background: #fff; border-color: var(--primary); box-shadow: 0 8px 25px #172a4a0c; }
 .submission-card > div { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
 .submission-card h3 { font-size: 18px; margin: 18px 0 10px; letter-spacing: -.35px; }
@@ -230,6 +239,7 @@ legend { font-size: 12px; font-weight: 650; padding: 0 5px; }
   .hero-caption { font-size: 9px; }
   nav { gap: 8px; padding-bottom: 20px; }
   nav button { font-size: 11px; padding: 10px 11px; }
+  nav .button-link { font-size: 11px; padding: 10px 11px; }
   .filters { grid-template-columns: 1fr; }
   .panel, .submission-card { padding: 19px; }
   .actions button { flex-grow: 1; }
