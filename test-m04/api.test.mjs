@@ -5,11 +5,13 @@ import { createM04Handler } from '../src/m04/app.mjs';
 test('API enforces origin, sessions, domain, disabled profiles and fresh staff roles', async t => {
   let profile = { uid: 's', email: 's@welingkar.org', role: 'student', status: 'active' }, decoded = { uid: 's', email: profile.email, email_verified: true, auth_time: Date.now() / 1000 };
   const auth = { verifySessionCookie: async token => { if (token !== 'valid') throw new Error(); return decoded; }, verifyIdToken: async () => decoded, createSessionCookie: async () => 'valid', revokeRefreshTokens: async () => {}, getUserByEmail: async () => { throw Object.assign(new Error(), { code: 'auth/user-not-found' }); } };
-  const store = { profile: async () => profile, list: async user => ({ items: [], role: user.role }), domains: async () => ['Education'] };
+  let initialized = false;
+  const store = { initialize: async () => { initialized = false; await new Promise(resolve => setTimeout(resolve, 5)); initialized = true; }, profile: async () => { assert(initialized, 'Database must be initialized before profile access'); return profile; }, list: async user => ({ items: [], role: user.role }), domains: async () => ['Education'] };
   const config = { origin: 'http://127.0.0.1', web: {} }, server = createServer((req, res) => createM04Handler(config, store, auth)(req, res));
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve)); config.origin = `http://127.0.0.1:${server.address().port}`; t.after(() => server.close());
   const call = (path, options = {}) => fetch(config.origin + '/api/' + path, { ...options, headers: { cookie: 'ppcp_m04=valid', ...options.headers } });
   assert.equal((await call('health')).status, 200);
+  assert.equal((await call('auth/session', { method: 'POST', body: JSON.stringify({ idToken: 'firebase-id-token' }), headers: { origin: config.origin, 'content-type': 'application/json' } })).status, 200);
   assert.equal((await call('me', { headers: { cookie: 'ppcp_m04=bad' } })).status, 401);
   assert.equal((await call('profile', { method: 'POST', body: '{}', headers: { origin: 'https://evil.example', 'content-type': 'application/json' } })).status, 403);
   assert.equal((await call('admin/users?email=s@welingkar.org')).status, 403);

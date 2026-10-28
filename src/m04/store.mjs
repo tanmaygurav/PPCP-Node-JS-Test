@@ -1,5 +1,4 @@
 import { randomUUID } from 'node:crypto';
-import { FieldPath } from 'firebase-admin/firestore';
 import { AppError, canRead, digest, displayId, facets, files, identifier, institutional, normalize, requireRole, submission, text, version } from './domain.mjs';
 import { sign, verify } from '../security.mjs';
 import { listSpec } from './query.mjs';
@@ -114,7 +113,7 @@ export class M04Store {
   }
   async remarks(profile, id, params = new URLSearchParams()) {
     await this.find(profile, id);
-    let query = this.db.collection('remarks').where('submissionId', '==', id).orderBy('createdAt', 'asc').orderBy(FieldPath.documentId(), 'asc');
+    let query = this.db.collection('remarks').where('submissionId', '==', id).orderBy('createdAt', 'asc').orderBy('__name__', 'asc');
     if (params.get('cursor')) { const c = verify(this.config.secret, params.get('cursor'), 'm04-remarks'); if (c.id !== id || c.uid !== profile.uid) throw new AppError(400, 'Invalid remarks cursor.'); query = query.startAfter(c.time, c.doc); }
     const docs = (await query.limit(51).get()).docs, page = docs.slice(0, 50), last = page.at(-1);
     return { items: page.map(d => d.data()), nextCursor: docs.length > 50 ? sign(this.config.secret, { kind: 'm04-remarks', id, uid: profile.uid, time: last.data().createdAt, doc: last.id, exp: Date.now() + 3600000 }) : null };
@@ -122,7 +121,7 @@ export class M04Store {
   async list(profile, params) {
     const spec = listSpec(params, profile); let query = this.db.collection('submissions');
     for (const filter of spec.filters) query = query.where(...filter);
-    for (const [field, direction] of spec.order) query = query.orderBy(field === '__name__' ? FieldPath.documentId() : field, direction);
+    for (const [field, direction] of spec.order) query = query.orderBy(field, direction);
     if (params.get('cursor')) { const cursor = verify(this.config.secret, params.get('cursor'), 'm04-page'); if (cursor.fingerprint !== spec.fingerprint || !Array.isArray(cursor.values) || cursor.values.length !== spec.order.length) throw new AppError(400, 'Cursor does not match this query.'); query = query.startAfter(...cursor.values); }
     const docs = (await query.limit(spec.limit + 1).get()).docs, page = docs.slice(0, spec.limit), last = page.at(-1);
     const items = page.map(doc => { const { description, solution, media, ...summary } = doc.data(); return { ...summary, attachmentCount: media.length }; });

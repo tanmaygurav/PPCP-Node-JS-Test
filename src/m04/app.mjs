@@ -17,7 +17,7 @@ export function createM04Handler(config, store, auth) {
     const measured = async (name, operation) => {
       const started = performance.now();
       try { return await operation(); }
-      finally { timings.push(`${name};dur=${(performance.now() - started).toFixed(1)}`); res.setHeader('Server-Timing', timings.join(', ')); }
+      finally { timings.push(`${name};dur=${(performance.now() - started).toFixed(1)}`); if (!res.headersSent) res.setHeader('Server-Timing', timings.join(', ')); }
     };
     try {
       const url = new URL(req.url, config.origin), path = url.searchParams.has('route') ? `/api/${url.searchParams.get('route')}` : url.pathname, method = req.method;
@@ -25,11 +25,16 @@ export function createM04Handler(config, store, auth) {
       if (method === 'POST' && req.headers.origin !== config.origin) throw new AppError(403, 'Request origin is not allowed.');
       if (path === '/api/health' && method === 'GET') return send(res, 200, { ok: true, milestone: 'M04' });
       if (path === '/api/auth/config' && method === 'GET') return send(res, 200, { ...config.web, emulator: config.emulator ? `http://${config.emulator}` : null });
+      const databaseReady = path === '/api/auth/logout' ? Promise.resolve() : measured('database-init', () => store.initialize?.());
+      // Authentication may reject before initialization finishes. Valid requests
+      // still await and report initialization failures through the normal path.
+      void databaseReady.catch(() => {});
       if (path === '/api/auth/session' && method === 'POST') {
         const data = await body(req); let decoded;
         try { decoded = await auth.verifyIdToken(text(data.idToken, 'ID token', 20000), true); } catch { throw new AppError(401, 'Sign in again.'); }
         const identity = allowedIdentity(decoded);
         if (!Number.isFinite(decoded.auth_time) || Date.now() / 1000 - decoded.auth_time > 300) throw new AppError(401, 'A recent sign-in is required.');
+        await databaseReady;
         const profile = await store.profile(identity.uid);
         if (profile && (profile.status !== 'active' || profile.email !== identity.email)) throw new AppError(403, 'Account access is disabled or email changed.');
         const token = await auth.createSessionCookie(data.idToken, { expiresIn: SESSION_SECONDS * 1000 });
@@ -38,9 +43,10 @@ export function createM04Handler(config, store, auth) {
       if (method === 'POST' && ['/api/auth/logout', '/api/profile'].includes(path)) {
         const identity = await measured('auth', () => authenticate(req, auth));
         if (path === '/api/auth/logout') { await auth.revokeRefreshTokens(identity.uid); res.setHeader('Set-Cookie', sessionCookie(config, '', 0)); return send(res, 200, { ok: true }); }
+        await databaseReady;
         return send(res, 200, { profile: await store.register(identity, await body(req)) });
       }
-      const { identity, profile } = await measured('access', () => authenticate(req, auth, uid => measured('profile', () => store.profile(uid))));
+      const { identity, profile } = await measured('access', () => authenticate(req, auth, async uid => { await databaseReady; return measured('profile', () => store.profile(uid)); }));
       if (profile && (profile.email !== identity.email || profile.status !== 'active')) throw new AppError(403, 'Account access is disabled or email changed.');
       if (path === '/api/me' && method === 'GET') return send(res, 200, { identity, profile });
       if (!profile) throw new AppError(403, 'Complete your profile first.');

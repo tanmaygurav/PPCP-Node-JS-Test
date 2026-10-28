@@ -6,7 +6,12 @@ import { createM04Handler } from '../src/m04/app.mjs';
 let handler;
 export default async function api(req, res) {
   try {
-    if (!handler) { loadM04Env(); const config = m04Config(), { db, auth } = services(config); handler = createM04Handler(config, new M04Store(config, db, new M04Drive(config)), auth); }
+    if (!handler) {
+      loadM04Env(); const config = m04Config(), { database, auth } = services(config, { lazyFirestore: true });
+      const store = new M04Store(config, null, new M04Drive(config)); let ready;
+      store.initialize = () => ready ||= database().then(db => { store.db = db; });
+      handler = createM04Handler(config, store, auth);
+    }
     return await handler(req, res);
   } catch { res.writeHead(503, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ error: 'M04 configuration is unavailable. Contact the organizer.' })); }
 }
