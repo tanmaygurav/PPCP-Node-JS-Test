@@ -1,0 +1,12 @@
+{
+  "timestamp": "2026-10-28T10:00:53.083Z",
+  "node": "v24.22.1",
+  "passed": true,
+  "origin": "https://ppcp-m04-event-poc.vercel.app",
+  "checks": [
+    "student cannot change the site-wide event theme",
+    "admin selection persists and exact retry does not rewrite the setting",
+    "anonymous mobile login applies the saved theme under deployed CSP without overflow",
+    "original event palette restored after verification"
+  ]
+}

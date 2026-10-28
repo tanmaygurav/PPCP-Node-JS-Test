@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-10-28T10:01:19.733Z",
+  "node": "v24.22.1",
+  "passed": true,
+  "origin": "https://ppcp-m04-event-poc.vercel.app",
+  "displayId": "PP040",
+  "checks": [
+    "real browser Drive upload succeeds with deployed CORS/CSP",
+    "lost real save response reconciles to exactly one Firestore submission",
+    "attachment opens directly in a separate anonymous Drive tab",
+    "browser edit retains uploaded attachment and lock blocks further edits"
+  ],
+  "browserErrors": 0
+}
