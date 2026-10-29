@@ -2227,6 +2227,24 @@
           "order": "ASCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "uploads",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "fileCount",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "totalBytes",
+          "order": "ASCENDING"
+        }
+      ]
     }
   ],
   "fieldOverrides": [

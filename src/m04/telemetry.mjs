@@ -10,6 +10,7 @@ export function timingHeaders(res) {
   const context = storage.getStore(); if (!context || res.headersSent) return;
   res.setHeader('Server-Timing', [...Object.entries(context.spans).map(([name, value]) => `${name};dur=${value.ms.toFixed(1)}`), `handler;dur=${(performance.now() - context.start).toFixed(1)}`].join(', '));
   res.setHeader('X-M04-Observed-Ops',JSON.stringify(context.counts));
+  if(process.env.VERCEL_GIT_COMMIT_SHA)res.setHeader('X-M04-Source',process.env.VERCEL_GIT_COMMIT_SHA);
   const cpu=process.cpuUsage(context.cpuStart);res.setHeader('X-M04-CPU-Us',String(cpu.user+cpu.system));
 }
 export function withTelemetry(req, res, work) {

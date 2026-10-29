@@ -2,7 +2,7 @@ import { chromium } from 'playwright';
 import { browserProbe } from './m04-capacity-browser.mjs';
 import { readFileSync,writeFileSync,mkdirSync,existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
-import { randomUUID } from 'node:crypto';
+import { randomUUID,createHash } from 'node:crypto';
 import { monitorEventLoopDelay } from 'node:perf_hooks';
 import { environment,accountPool,client,endpoint } from './m04-test-support.mjs';
 import { Budget } from './m04-capacity-budget.mjs';
@@ -17,8 +17,9 @@ const headroom=JSON.parse(readFileSync('.local/m04-capacity-headroom.json','utf8
 const samples=[],reports=[],runIds=[],failures=[],source=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 const cpuStart=process.cpuUsage(),started=performance.now(),lag=monitorEventLoopDelay({resolution:20});lag.enable();let stop=false;
 mkdirSync('output/m04',{recursive:true});
+const harnessDigest=createHash('sha256').update(['scripts/m04-capacity-diagnostics.mjs','scripts/m04-test-support.mjs','scripts/m04-capacity-budget.mjs','scripts/m04-capacity-browser.mjs'].map(p=>readFileSync(p,'utf8')).join('\n')).digest('hex');
 const reportPath=`output/m04/capacity-diagnostics-${Date.now()}.json`;
-function persist(){writeFileSync(reportPath,JSON.stringify({source,origin:context.origin,startedAt:new Date(Date.now()-(performance.now()-started)).toISOString(),target:maximum,durationSeconds:seconds,smoke:process.argv.includes('--smoke'),capacityCertified:false,conditions:reports,runIds,failures,budget:{limits:budget.limits,estimated:budget.totals()},generator:{cpu:process.cpuUsage(cpuStart),elapsedMs:performance.now()-started,eventLoopP95ms:lag.percentile(95)/1e6,rssBytes:process.memoryUsage().rss},samples},null,2));}
+function persist(){writeFileSync(reportPath,JSON.stringify({source,harnessDigest,indexManifestDigest:createHash('sha256').update(readFileSync('firestore.m04.indexes.json')).digest('hex'),origin:context.origin,startedAt:new Date(Date.now()-(performance.now()-started)).toISOString(),target:maximum,durationSeconds:seconds,smoke:process.argv.includes('--smoke'),capacityCertified:false,conditions:reports,runIds,failures,budget:{limits:budget.limits,estimated:budget.totals()},generator:{cpu:process.cpuUsage(cpuStart),elapsedMs:performance.now()-started,eventLoopP95ms:lag.percentile(95)/1e6,rssBytes:process.memoryUsage().rss},samples},null,2));}
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 function stats(rows){const values=rows.filter(r=>typeof r.status==='number'&&r.status<400).map(r=>r.ms).sort((a,b)=>a-b),q=p=>values.length?values[Math.ceil(values.length*p)-1]:null;return{count:rows.length,success:values.length,failures:rows.filter(r=>typeof r.status!=='number'||r.status>=400).length,p50:q(.5),p95:q(.95),max:values.at(-1)||null};}
 function classify(rows){const groups={};for(const row of rows){const key=row.method+' '+row.endpoint;(groups[key]||=[]).push(row);}return Object.fromEntries(Object.entries(groups).map(([key,value])=>[key,stats(value)]));}
@@ -33,6 +34,7 @@ async function save(actor,runId,files=[],current=null){
     samples.push({endpoint:'workflow/save',method:'WORKFLOW',timestamp:new Date().toISOString(),ms:performance.now()-begin,status:200,bytes:files.reduce((n,f)=>n+f.size,0)});return item;
   }catch(error){stop=true;throw error;}
 }
+const ticker=setInterval(()=>console.log(JSON.stringify({phase:'running',activeRequests:context.inFlight||0,peak:context.peakInFlight||0,budget:budget.totals()})),30000);ticker.unref();
 let control,pool,browser;
 try{
   const requestedStaff=Math.max(4,Math.ceil(maximum*.12)+4),existing=existsSync('.local/m04-accounts.json')?JSON.parse(readFileSync('.local/m04-accounts.json','utf8')):null,needed=Math.max(0,maximum+1-(existing?.students?.length||0))+Math.max(0,requestedStaff-(existing?.capacityStaff?.length||0));budget.check(needed*4,needed*4);pool=await accountPool(context,maximum+1,true,requestedStaff);budget.record({reads:needed*4,writes:needed*4});
@@ -78,4 +80,4 @@ try{
   }
   if(JSON.stringify((await reference.docs[0].ref.get()).data())!==referenceBefore)throw new Error('INTEGRITY: PP039 changed during the test window.');
 }catch(error){failures.push(error.message);stop=true;console.error(error.message);}
-finally{if(control){budget.cleanup=true;for(const runId of runIds)try{await control.api(`admin/test-runs/${runId}/close`,{operationId:randomUUID()});}catch{failures.push('Run closure requires admin reconciliation: '+runId);}}lag.disable();persist();console.log('Sanitized report: '+reportPath);if(browser)await browser.close();await context.db.terminate();if(stop)process.exitCode=1;}
+finally{if(control){budget.cleanup=true;for(const runId of runIds)try{await control.api(`admin/test-runs/${runId}/close`,{operationId:randomUUID()});}catch{failures.push('Run closure requires admin reconciliation: '+runId);}}clearInterval(ticker);lag.disable();persist();console.log('Sanitized report: '+reportPath);if(browser)await browser.close();await context.db.terminate();if(stop)process.exitCode=1;}

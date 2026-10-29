@@ -42,3 +42,22 @@ test('cleanup protects PP039 and surviving references; abandoned/late uploads re
   await store.ref('submissions','protected-reference').set({id:'protected-reference',mediaIds:[late.uploads[0].id],media:[{id:late.uploads[0].id}]});assert.equal((await f.finish(job.jobId)).job.status,'retry-required');assert(!f.objects.get(late.uploads[0].id).trashed);
   await store.ref('submissions','protected-reference').delete();assert.equal((await f.finish(job.jobId)).job.status,'done');
 });
+test('run closure during Drive publication prevents commit; title/metadata spoofing is ineligible',async t=>{
+  const f=await fixture();if(f.db.terminate)t.after(()=>f.db.terminate());const {store,admin,student,real}=f,{runId}=await f.createRun();
+  const realOp=randomUUID(),realUpload=await store.prepare(real,{operationId:realOp,files:[],testRunId:runId});const forged=await store.save(real,{operationId:realOp,uploadId:realUpload.uploadId,title:'[LOAD TEST · spoof] Real content',domain:'Education',description:'Unmarked',testRunId:runId,isTestData:true});const unmarked=(await store.ref('submissions',forged.submissionId).get()).data();assert.equal(unmarked.testRunId,undefined);assert.equal(unmarked.isTestData,undefined);
+  await assert.rejects(store.tests.start(admin,{operationId:randomUUID(),runIds:[runId],submissionId:unmarked.id,confirmation:'DELETE TEST DATA'}),{status:403});
+  const publish=store.drive.publish;store.drive.publish=async(...args)=>{const result=await publish(...args);await store.tests.close(admin,runId,{operationId:randomUUID()});return result;};
+  const operationId=randomUUID(),upload=await store.prepare(student,{operationId,files:[{name:'race.pdf',size:10}]});await assert.rejects(store.save(student,{operationId,uploadId:upload.uploadId,title:'Late content',domain:'Education',description:'Race'}),{status:409});assert.equal((await store.ref('submissions',upload.submissionId).get()).data(),undefined);assert.equal((await store.ref('submissions',unmarked.id).get()).data().title,unmarked.title);
+});
+test('fresh admin access, missing files and Drive folder mismatches fail safely',async t=>{
+  const f=await fixture();if(f.db.terminate)t.after(()=>f.db.terminate());const {store,admin,student}=f,{runId}=await f.createRun(),saved=await f.save(student,[{name:'folder.pdf',size:10}]),file=saved.item.media[0];
+  const request={operationId:randomUUID(),runIds:[runId],confirmation:'DELETE TEST DATA'},job=await store.tests.start(admin,request);await store.ref('users',admin.uid).update({role:'faculty'});await assert.rejects(store.tests.start(admin,request),{status:403});await assert.rejects(store.tests.step(admin,job.jobId),{status:403});await store.ref('users',admin.uid).update({role:'admin',status:'disabled'});await assert.rejects(store.tests.step(admin,job.jobId),{status:403});await store.ref('users',admin.uid).update({status:'active'});
+  f.objects.get(file.id).parents=['other-folder'];assert.equal((await f.finish(job.jobId)).job.status,'retry-required');assert(!f.objects.get(file.id).trashed);f.objects.delete(file.id);assert.equal((await f.finish(job.jobId)).job.status,'done');
+});
+test('one cleanup job handles multiple closed runs without touching unmarked records',async t=>{
+  const f=await fixture();if(f.db.terminate)t.after(()=>f.db.terminate());const {store,admin}=f,first=await f.createRun(),a=await f.save();await store.tests.close(admin,first.runId,{operationId:randomUUID()});const second=await f.createRun(),b=await f.save(),real=await f.save(f.real);
+  const job=await store.tests.start(admin,{operationId:randomUUID(),runIds:[first.runId,second.runId],confirmation:'DELETE TEST DATA'});assert.equal((await f.finish(job.jobId)).job.status,'done');for(const item of[a.item,b.item])assert.equal((await store.ref('submissions',item.id).get()).data(),undefined);assert((await store.ref('submissions',real.item.id).get()).data());
+});
+test('test prefixes do not bypass ordinary field validation',async t=>{
+  const f=await fixture();if(f.db.terminate)t.after(()=>f.db.terminate());await f.createRun();await assert.rejects(f.store.prepare(f.student,{operationId:randomUUID(),files:{}}),{status:400});const operationId=randomUUID(),upload=await f.store.prepare(f.student,{operationId,files:[]});await assert.rejects(f.store.save(f.student,{operationId,uploadId:upload.uploadId,domain:'Education',description:'Missing title'}),{status:400});
+});

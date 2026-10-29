@@ -58,7 +58,7 @@ export class M04Store {
   async replay(profile, op, hash) { const receipt = (await this.receiptRef(profile.uid, op).get()).data(); if (receipt && receipt.digest !== hash) throw new AppError(409, 'Operation ID already used for different content.'); return receipt || null; }
   async prepare(profile, data) {
     requireRole(profile, ['student']);
-    const operationId = identifier(data.operationId), testRunId = await this.transaction(tx => testGate(this, tx, profile)), incoming = files((data.files || []).map(file => testRunId ? { ...file, name: `${testPrefix(testRunId)} ${file.name}` } : file)), retainedIds = data.retainedIds || [];
+    const operationId = identifier(data.operationId), testRunId = await this.transaction(tx => testGate(this, tx, profile)), incoming = files(files(data.files || []).map(file => testRunId ? { ...file, name: `${testPrefix(testRunId)} ${file.name}` } : file)), retainedIds = data.retainedIds || [];
     if (!Array.isArray(retainedIds) || retainedIds.some(id => typeof id !== 'string')) throw new AppError(400, 'Invalid retained files.');
     let item = null;
     if (data.submissionId) { item = await this.find(profile, data.submissionId); if (item.locked || item.version !== version(data.expectedVersion)) throw new AppError(409, 'Submission is locked or changed.'); }
@@ -92,7 +92,8 @@ export class M04Store {
     if (!upload || upload.ownerUid !== profile.uid || upload.operationId !== op || (id && upload.submissionId !== id) || (!id && upload.expectedVersion !== null) || upload.status !== 'pending' || upload.expiresAt < Date.now()) throw new AppError(409, 'Upload operation is unavailable.');
     const current = id ? await this.find(profile, id) : null;
     if (current && (current.locked || current.version !== version(data.expectedVersion) || upload.expectedVersion !== current.version)) throw new AppError(409, 'Submission is locked or changed. Keep your draft.');
-    const validated = submission(upload.testRunId ? { ...data, title: typeof data.title==='string' && data.title.startsWith(testPrefix(upload.testRunId)) ? data.title : `${testPrefix(upload.testRunId)} ${data.title}` } : data, profile), domainId = digest(normalize(validated.domain)), domainRef = this.ref('domains', domainId);
+    if(upload.testRunId)text(data.title,'Title',300);
+    const validated = submission(upload.testRunId ? { ...data, title: data.title.startsWith(testPrefix(upload.testRunId)) ? data.title : `${testPrefix(upload.testRunId)} ${data.title}` } : data, profile), domainId = digest(normalize(validated.domain)), domainRef = this.ref('domains', domainId);
     const retained = current ? current.media.filter(file => upload.retainedIds.includes(file.id)) : [];
     if (retained.length !== upload.retainedIds.length) throw new AppError(409, 'Saved attachments changed.');
     files([...retained, ...upload.files]);

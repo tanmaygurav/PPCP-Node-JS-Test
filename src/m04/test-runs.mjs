@@ -15,7 +15,7 @@ export class TestRuns {
   constructor(store) { this.store = store; }
   get db() { return this.store.db; }
   ref(name, id) { return this.store.ref(name, id); }
-  async admin(profile) { requireRole(await this.store.profile(profile.uid), ['admin']); }
+  async admin(profile) { const actual=await this.store.profile(profile.uid);if(!actual)throw new AppError(403,'Administrator access unavailable.');requireRole(actual, ['admin']); }
   async create(profile, data) {
     await this.admin(profile);
     if (!Array.isArray(data.members) || !data.members.length || data.members.length > 220 || new Set(data.members).size !== data.members.length) throw new AppError(400, 'Assign 1–220 distinct synthetic account UIDs.');

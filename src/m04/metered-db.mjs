@@ -14,5 +14,5 @@ export function meteredDB(db) {
       };
     }});
   }
-  return {collection:name=>wrap(db.collection(name)),runTransaction:work=>db.runTransaction(async tx=>{count('transactionAttempts');const proxy=new Proxy(tx,{get(target,key){if(key==='get')return async ref=>{count('reads');return snapshot(await target.get(ref));};if(['set','create','update','delete'].includes(key))return(...args)=>{count(key==='delete'?'deletes':'writes');target[key](...args);return proxy;};const value=target[key];return typeof value==='function'?value.bind(target):value;}});return work(proxy);})};
+  return {collection:name=>wrap(db.collection(name)),runTransaction:work=>{count('transactionExecutions');return db.runTransaction(async tx=>{count('transactionAttempts');const proxy=new Proxy(tx,{get(target,key){if(key==='get')return async ref=>{count('reads');return snapshot(await target.get(ref));};if(['set','create','update','delete'].includes(key))return(...args)=>{count(key==='delete'?'deletes':'writes');target[key](...args);return proxy;};const value=target[key];return typeof value==='function'?value.bind(target):value;}});return work(proxy);});}};
 }
