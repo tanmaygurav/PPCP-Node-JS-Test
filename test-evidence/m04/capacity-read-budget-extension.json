@@ -1,0 +1,42 @@
+{
+  "providerSnapshotAt": "2026-10-29T09:49:56Z",
+  "projectId": "ppcp-m04-redesign",
+  "providerFirestore": {
+    "read": 9200,
+    "write": 1400,
+    "delete": 94
+  },
+  "providerVercel": {
+    "source": "owner-reported team usage, last 30 days",
+    "checkedAt": "2026-10-29T09:49:56Z",
+    "invocationsUsed": 3900,
+    "invocationsLimit": 1000000,
+    "cpuUsedSeconds": 213,
+    "cpuLimitSeconds": 14400,
+    "memoryUsedGBHours": 1.1,
+    "memoryLimitGBHours": 360,
+    "transferUsedBytes": 43150000,
+    "transferLimitBytes": 100000000000,
+    "originUsedBytes": 11540000,
+    "originLimitBytes": 10000000000
+  },
+  "readAuthorization": {
+    "id": "owner-refresh-20261029-094956",
+    "authorizedAt": "2026-10-29T09:49:56Z",
+    "baselineLedgerReads": 9876,
+    "additionalReads": 10000,
+    "reason": "Owner explicitly requested refreshed read budget and continued incremental testing using updated Firestore and Vercel usage; other test ceilings unchanged"
+  },
+  "cumulativeReadCeiling": 19876,
+  "otherCeilings": {
+    "writesAndDeletes": 3000,
+    "uploadedBytes": 1000000000
+  },
+  "finalEstimates": {
+    "reads": 19548,
+    "writesAndDeletes": 2373,
+    "uploadedBytes": 11000201
+  },
+  "additionalReadsUsed": 9672,
+  "cleanupVerified": true
+}

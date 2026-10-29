@@ -1,6 +1,6 @@
 # M04 capacity measurements
 
-Generated 2026-10-29T09:15:59.997Z. Three independent passing windows are required for a repeated scenario result. A complete event acceptance additionally requires all scenarios, browser evidence and Production validation.
+Generated 2026-10-29T10:11:58.591Z. Three independent passing windows are required for a repeated scenario result. A complete event acceptance additionally requires all scenarios, browser evidence and Production validation.
 
 Highest repeated passing scenario: not established. This is not a complete event-capacity certification.
 
@@ -22,6 +22,11 @@ Highest repeated passing scenario: not established. This is not a complete event
 | 5 | metadata | 180s | 5 | 5 | passed | 401 ms | 434 ms | 788 ms | 707 ms |
 | 10 | metadata | 180s | 10 | 5 | passed | 425 ms | 1153 ms | 1040 ms | 642 ms |
 | 1 | ten-files | 118s | 1 | 5 | stopped | 429 ms | 392 ms | 15500 ms | 5252 ms |
+| 20 | metadata | 180s | 20 | 9 | passed | 1114 ms | 679 ms | 1355 ms | 918 ms |
+| 1 | browsing | 180s | 1 | 6 | passed | 485 ms | 391 ms | — | — |
+| 5 | browsing | 180s | 5 | 6 | passed | 515 ms | 441 ms | — | — |
+| 10 | browsing | 180s | 10 | 9 | passed | 466 ms | 395 ms | — | — |
+| 20 | browsing | 180s | 20 | 13 | passed | 418 ms | 418 ms | — | — |
 
 ## Timing attribution
 
@@ -29,19 +34,19 @@ Server spans overlap. Compare their elapsed times; do not sum them or call the c
 
 | Span | Samples | Median | p95 |
 |---|---:|---:|---:|
-| database-init | 1112 | 0.0 ms | 0.1 ms |
-| auth-signin-verify | 75 | 301.3 ms | 695.7 ms |
-| session-create | 75 | 303.9 ms | 333.0 ms |
-| handler | 1127 | 347.8 ms | 664.7 ms |
-| auth-validate | 1022 | 0.5 ms | 0.8 ms |
-| profile | 1022 | 15.4 ms | 41.1 ms |
-| auth-revoke | 1022 | 300.7 ms | 330.4 ms |
-| access | 1022 | 301.4 ms | 332.8 ms |
-| transaction | 308 | 139.5 ms | 269.8 ms |
-| drive-reserve | 88 | 0.0 ms | 0.1 ms |
-| upload-preparation | 88 | 205.6 ms | 359.6 ms |
-| save | 88 | 287.9 ms | 471.0 ms |
-| query | 508 | 20.8 ms | 54.7 ms |
+| database-init | 3510 | 0.0 ms | 0.1 ms |
+| auth-signin-verify | 138 | 300.2 ms | 485.3 ms |
+| session-create | 138 | 300.6 ms | 331.0 ms |
+| handler | 3530 | 322.0 ms | 623.6 ms |
+| auth-validate | 3352 | 0.5 ms | 0.8 ms |
+| profile | 3352 | 14.4 ms | 31.5 ms |
+| auth-revoke | 3352 | 296.8 ms | 326.1 ms |
+| access | 3352 | 297.5 ms | 327.0 ms |
+| transaction | 448 | 134.5 ms | 272.0 ms |
+| drive-reserve | 128 | 0.0 ms | 0.1 ms |
+| upload-preparation | 128 | 201.3 ms | 344.3 ms |
+| save | 128 | 286.3 ms | 471.0 ms |
+| query | 1410 | 19.1 ms | 48.9 ms |
 | drive-oauth | 2 | 147.4 ms | 147.4 ms |
 | drive-http | 6 | 4506.7 ms | 14760.5 ms |
 | drive-metadata | 6 | 4293.5 ms | 4529.9 ms |
@@ -1053,12 +1058,221 @@ Server spans overlap. Compare their elapsed times; do not sum them or call the c
 | 1 / ten-files | submissions/:id/unlock / access | 1 | 335.3 ms | 335.3 ms |
 | 1 / ten-files | submissions/:id/unlock / transaction | 1 | 157.1 ms | 157.1 ms |
 | 1 / ten-files | submissions/:id/unlock / handler | 1 | 492.9 ms | 492.9 ms |
+| 20 / metadata | upload-sessions / database-init | 40 | 0.0 ms | 0.2 ms |
+| 20 / metadata | upload-sessions / auth-validate | 40 | 0.5 ms | 0.8 ms |
+| 20 / metadata | upload-sessions / profile | 40 | 14.9 ms | 32.9 ms |
+| 20 / metadata | upload-sessions / auth-revoke | 40 | 297.2 ms | 355.5 ms |
+| 20 / metadata | upload-sessions / access | 40 | 297.8 ms | 356.1 ms |
+| 20 / metadata | upload-sessions / transaction | 40 | 86.1 ms | 113.5 ms |
+| 20 / metadata | upload-sessions / drive-reserve | 40 | 0.0 ms | 0.1 ms |
+| 20 / metadata | upload-sessions / upload-preparation | 40 | 194.1 ms | 286.9 ms |
+| 20 / metadata | upload-sessions / handler | 40 | 495.9 ms | 609.4 ms |
+| 20 / metadata | submissions / database-init | 21 | 0.0 ms | 0.1 ms |
+| 20 / metadata | submissions / auth-validate | 21 | 0.5 ms | 0.7 ms |
+| 20 / metadata | submissions / profile | 21 | 18.4 ms | 46.3 ms |
+| 20 / metadata | submissions / auth-revoke | 21 | 294.1 ms | 331.5 ms |
+| 20 / metadata | submissions / access | 21 | 294.6 ms | 643.5 ms |
+| 20 / metadata | submissions / transaction | 20 | 253.4 ms | 342.5 ms |
+| 20 / metadata | submissions / save | 20 | 309.8 ms | 489.2 ms |
+| 20 / metadata | submissions / handler | 21 | 608.9 ms | 1316.3 ms |
+| 20 / metadata | submissions/:id / database-init | 61 | 0.0 ms | 0.1 ms |
+| 20 / metadata | submissions/:id / auth-validate | 61 | 0.5 ms | 0.8 ms |
+| 20 / metadata | submissions/:id / profile | 61 | 13.7 ms | 27.3 ms |
+| 20 / metadata | submissions/:id / auth-revoke | 61 | 295.5 ms | 322.2 ms |
+| 20 / metadata | submissions/:id / access | 61 | 296.0 ms | 322.8 ms |
+| 20 / metadata | submissions/:id / query | 61 | 14.8 ms | 26.1 ms |
+| 20 / metadata | submissions/:id / handler | 61 | 313.7 ms | 339.9 ms |
+| 20 / metadata | auth/config / handler | 1 | 0.1 ms | 0.1 ms |
+| 20 / metadata | me / database-init | 3 | 0.1 ms | 0.4 ms |
+| 20 / metadata | me / auth-validate | 3 | 295.0 ms | 460.1 ms |
+| 20 / metadata | me / profile | 3 | 39.5 ms | 39.9 ms |
+| 20 / metadata | me / auth-revoke | 3 | 307.6 ms | 387.0 ms |
+| 20 / metadata | me / access | 3 | 682.7 ms | 767.8 ms |
+| 20 / metadata | me / handler | 3 | 682.9 ms | 768.2 ms |
+| 20 / metadata | domains / database-init | 1 | 0.1 ms | 0.1 ms |
+| 20 / metadata | domains / auth-validate | 1 | 300.2 ms | 300.2 ms |
+| 20 / metadata | domains / profile | 1 | 130.6 ms | 130.6 ms |
+| 20 / metadata | domains / auth-revoke | 1 | 395.3 ms | 395.3 ms |
+| 20 / metadata | domains / access | 1 | 695.6 ms | 695.6 ms |
+| 20 / metadata | domains / handler | 1 | 747.4 ms | 747.4 ms |
+| 20 / metadata | appearance / database-init | 1 | 491.4 ms | 491.4 ms |
+| 20 / metadata | appearance / handler | 1 | 726.8 ms | 726.8 ms |
+| 20 / metadata | submissions / query | 1 | 183.4 ms | 183.4 ms |
+| 20 / metadata | submissions/:id/remarks / database-init | 21 | 0.0 ms | 0.0 ms |
+| 20 / metadata | submissions/:id/remarks / auth-validate | 21 | 0.5 ms | 0.6 ms |
+| 20 / metadata | submissions/:id/remarks / profile | 21 | 13.8 ms | 18.9 ms |
+| 20 / metadata | submissions/:id/remarks / auth-revoke | 21 | 296.8 ms | 310.8 ms |
+| 20 / metadata | submissions/:id/remarks / access | 21 | 297.5 ms | 311.3 ms |
+| 20 / metadata | submissions/:id/remarks / handler | 21 | 423.5 ms | 461.0 ms |
+| 20 / metadata | submissions/:id/edits / database-init | 20 | 0.0 ms | 0.1 ms |
+| 20 / metadata | submissions/:id/edits / auth-validate | 20 | 0.5 ms | 0.8 ms |
+| 20 / metadata | submissions/:id/edits / profile | 20 | 13.6 ms | 15.7 ms |
+| 20 / metadata | submissions/:id/edits / auth-revoke | 20 | 296.9 ms | 320.1 ms |
+| 20 / metadata | submissions/:id/edits / access | 20 | 297.5 ms | 320.6 ms |
+| 20 / metadata | submissions/:id/edits / transaction | 20 | 204.7 ms | 283.7 ms |
+| 20 / metadata | submissions/:id/edits / save | 20 | 260.0 ms | 349.6 ms |
+| 20 / metadata | submissions/:id/edits / handler | 20 | 556.7 ms | 654.5 ms |
+| 20 / metadata | submissions/:id/lock / database-init | 20 | 0.0 ms | 0.1 ms |
+| 20 / metadata | submissions/:id/lock / auth-validate | 20 | 0.5 ms | 0.7 ms |
+| 20 / metadata | submissions/:id/lock / profile | 20 | 13.8 ms | 18.1 ms |
+| 20 / metadata | submissions/:id/lock / auth-revoke | 20 | 296.1 ms | 316.6 ms |
+| 20 / metadata | submissions/:id/lock / access | 20 | 296.6 ms | 317.2 ms |
+| 20 / metadata | submissions/:id/lock / transaction | 20 | 126.9 ms | 154.0 ms |
+| 20 / metadata | submissions/:id/lock / handler | 20 | 429.2 ms | 465.6 ms |
+| 20 / metadata | submissions/:id/remarks / transaction | 20 | 126.9 ms | 151.5 ms |
+| 20 / metadata | submissions/:id/unlock / database-init | 20 | 0.0 ms | 0.0 ms |
+| 20 / metadata | submissions/:id/unlock / auth-validate | 20 | 0.5 ms | 0.6 ms |
+| 20 / metadata | submissions/:id/unlock / profile | 20 | 13.4 ms | 22.2 ms |
+| 20 / metadata | submissions/:id/unlock / auth-revoke | 20 | 296.8 ms | 303.4 ms |
+| 20 / metadata | submissions/:id/unlock / access | 20 | 297.2 ms | 303.9 ms |
+| 20 / metadata | submissions/:id/unlock / transaction | 20 | 134.3 ms | 155.4 ms |
+| 20 / metadata | submissions/:id/unlock / handler | 20 | 429.2 ms | 458.9 ms |
+| 1 / browsing | me / database-init | 25 | 0.0 ms | 0.1 ms |
+| 1 / browsing | me / auth-validate | 25 | 0.5 ms | 0.7 ms |
+| 1 / browsing | me / profile | 25 | 21.5 ms | 73.3 ms |
+| 1 / browsing | me / auth-revoke | 25 | 305.0 ms | 389.3 ms |
+| 1 / browsing | me / access | 25 | 305.7 ms | 389.8 ms |
+| 1 / browsing | me / handler | 25 | 305.8 ms | 389.9 ms |
+| 1 / browsing | auth/config / handler | 1 | 0.1 ms | 0.1 ms |
+| 1 / browsing | appearance / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / browsing | appearance / handler | 1 | 14.8 ms | 14.8 ms |
+| 1 / browsing | submissions / database-init | 12 | 0.0 ms | 0.1 ms |
+| 1 / browsing | submissions / auth-validate | 12 | 0.5 ms | 0.9 ms |
+| 1 / browsing | submissions / profile | 12 | 20.2 ms | 59.8 ms |
+| 1 / browsing | submissions / auth-revoke | 12 | 305.4 ms | 345.3 ms |
+| 1 / browsing | submissions / access | 12 | 306.0 ms | 345.9 ms |
+| 1 / browsing | submissions / query | 12 | 46.3 ms | 61.3 ms |
+| 1 / browsing | submissions / handler | 12 | 352.4 ms | 395.1 ms |
+| 1 / browsing | submissions/:id / database-init | 12 | 0.0 ms | 0.1 ms |
+| 1 / browsing | submissions/:id / auth-validate | 12 | 0.5 ms | 0.7 ms |
+| 1 / browsing | submissions/:id / profile | 12 | 18.6 ms | 31.3 ms |
+| 1 / browsing | submissions/:id / auth-revoke | 12 | 295.4 ms | 308.3 ms |
+| 1 / browsing | submissions/:id / access | 12 | 295.9 ms | 308.9 ms |
+| 1 / browsing | submissions/:id / query | 12 | 16.5 ms | 22.3 ms |
+| 1 / browsing | submissions/:id / handler | 12 | 313.3 ms | 327.4 ms |
+| 1 / browsing | submissions/:id/remarks / database-init | 12 | 0.0 ms | 0.0 ms |
+| 1 / browsing | submissions/:id/remarks / auth-validate | 12 | 0.5 ms | 0.8 ms |
+| 1 / browsing | submissions/:id/remarks / profile | 12 | 25.4 ms | 44.7 ms |
+| 1 / browsing | submissions/:id/remarks / auth-revoke | 12 | 316.8 ms | 328.1 ms |
+| 1 / browsing | submissions/:id/remarks / access | 12 | 317.4 ms | 328.8 ms |
+| 1 / browsing | submissions/:id/remarks / handler | 12 | 366.5 ms | 388.6 ms |
+| 1 / browsing | domains / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / browsing | domains / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / browsing | domains / profile | 1 | 16.5 ms | 16.5 ms |
+| 1 / browsing | domains / auth-revoke | 1 | 311.3 ms | 311.3 ms |
+| 1 / browsing | domains / access | 1 | 311.8 ms | 311.8 ms |
+| 1 / browsing | domains / handler | 1 | 344.5 ms | 344.5 ms |
+| 5 / browsing | auth/config / handler | 1 | 0.1 ms | 0.1 ms |
+| 5 / browsing | appearance / database-init | 1 | 0.0 ms | 0.0 ms |
+| 5 / browsing | appearance / handler | 1 | 14.6 ms | 14.6 ms |
+| 5 / browsing | me / database-init | 119 | 0.0 ms | 0.1 ms |
+| 5 / browsing | me / auth-validate | 119 | 0.5 ms | 0.8 ms |
+| 5 / browsing | me / profile | 119 | 14.5 ms | 31.3 ms |
+| 5 / browsing | me / auth-revoke | 119 | 299.9 ms | 325.7 ms |
+| 5 / browsing | me / access | 119 | 300.6 ms | 326.1 ms |
+| 5 / browsing | me / handler | 119 | 300.8 ms | 326.2 ms |
+| 5 / browsing | submissions / database-init | 59 | 0.0 ms | 0.1 ms |
+| 5 / browsing | submissions / auth-validate | 59 | 0.5 ms | 0.8 ms |
+| 5 / browsing | submissions / profile | 59 | 15.0 ms | 29.9 ms |
+| 5 / browsing | submissions / auth-revoke | 59 | 298.5 ms | 322.2 ms |
+| 5 / browsing | submissions / access | 59 | 299.0 ms | 322.8 ms |
+| 5 / browsing | submissions / query | 59 | 32.4 ms | 75.6 ms |
+| 5 / browsing | submissions / handler | 59 | 333.2 ms | 383.9 ms |
+| 5 / browsing | submissions/:id / database-init | 59 | 0.0 ms | 0.1 ms |
+| 5 / browsing | submissions/:id / auth-validate | 59 | 0.5 ms | 0.9 ms |
+| 5 / browsing | submissions/:id / profile | 59 | 13.8 ms | 23.6 ms |
+| 5 / browsing | submissions/:id / auth-revoke | 59 | 297.0 ms | 325.2 ms |
+| 5 / browsing | submissions/:id / access | 59 | 297.5 ms | 325.8 ms |
+| 5 / browsing | submissions/:id / query | 59 | 15.0 ms | 25.5 ms |
+| 5 / browsing | submissions/:id / handler | 59 | 315.1 ms | 343.2 ms |
+| 5 / browsing | submissions/:id/remarks / database-init | 59 | 0.0 ms | 0.1 ms |
+| 5 / browsing | submissions/:id/remarks / auth-validate | 59 | 0.5 ms | 0.7 ms |
+| 5 / browsing | submissions/:id/remarks / profile | 59 | 14.5 ms | 27.1 ms |
+| 5 / browsing | submissions/:id/remarks / auth-revoke | 59 | 299.2 ms | 323.8 ms |
+| 5 / browsing | submissions/:id/remarks / access | 59 | 299.7 ms | 324.4 ms |
+| 5 / browsing | submissions/:id/remarks / handler | 59 | 333.0 ms | 366.8 ms |
+| 5 / browsing | domains / database-init | 1 | 0.0 ms | 0.0 ms |
+| 5 / browsing | domains / auth-validate | 1 | 0.4 ms | 0.4 ms |
+| 5 / browsing | domains / profile | 1 | 23.5 ms | 23.5 ms |
+| 5 / browsing | domains / auth-revoke | 1 | 299.3 ms | 299.3 ms |
+| 5 / browsing | domains / access | 1 | 299.8 ms | 299.8 ms |
+| 5 / browsing | domains / handler | 1 | 325.1 ms | 325.1 ms |
+| 10 / browsing | appearance / database-init | 1 | 0.0 ms | 0.0 ms |
+| 10 / browsing | appearance / handler | 1 | 14.0 ms | 14.0 ms |
+| 10 / browsing | auth/config / handler | 1 | 0.1 ms | 0.1 ms |
+| 10 / browsing | me / database-init | 231 | 0.0 ms | 0.1 ms |
+| 10 / browsing | me / auth-validate | 231 | 0.5 ms | 0.8 ms |
+| 10 / browsing | me / profile | 231 | 14.2 ms | 23.0 ms |
+| 10 / browsing | me / auth-revoke | 231 | 296.1 ms | 321.9 ms |
+| 10 / browsing | me / access | 231 | 296.6 ms | 322.4 ms |
+| 10 / browsing | me / handler | 231 | 296.7 ms | 322.5 ms |
+| 10 / browsing | submissions / database-init | 115 | 0.0 ms | 0.1 ms |
+| 10 / browsing | submissions / auth-validate | 115 | 0.5 ms | 0.8 ms |
+| 10 / browsing | submissions / profile | 115 | 14.4 ms | 23.9 ms |
+| 10 / browsing | submissions / auth-revoke | 115 | 296.7 ms | 322.1 ms |
+| 10 / browsing | submissions / access | 115 | 297.6 ms | 322.6 ms |
+| 10 / browsing | submissions / query | 115 | 25.7 ms | 50.0 ms |
+| 10 / browsing | submissions / handler | 115 | 324.7 ms | 365.4 ms |
+| 10 / browsing | submissions/:id / database-init | 115 | 0.0 ms | 0.2 ms |
+| 10 / browsing | submissions/:id / auth-validate | 115 | 0.5 ms | 0.8 ms |
+| 10 / browsing | submissions/:id / profile | 115 | 15.0 ms | 23.1 ms |
+| 10 / browsing | submissions/:id / auth-revoke | 115 | 296.7 ms | 323.4 ms |
+| 10 / browsing | submissions/:id / access | 115 | 297.3 ms | 324.0 ms |
+| 10 / browsing | submissions/:id / query | 115 | 15.3 ms | 29.0 ms |
+| 10 / browsing | submissions/:id / handler | 115 | 313.7 ms | 351.0 ms |
+| 10 / browsing | submissions/:id/remarks / database-init | 115 | 0.0 ms | 0.1 ms |
+| 10 / browsing | submissions/:id/remarks / auth-validate | 115 | 0.5 ms | 0.8 ms |
+| 10 / browsing | submissions/:id/remarks / profile | 115 | 14.2 ms | 23.6 ms |
+| 10 / browsing | submissions/:id/remarks / auth-revoke | 115 | 293.8 ms | 326.1 ms |
+| 10 / browsing | submissions/:id/remarks / access | 115 | 294.3 ms | 326.6 ms |
+| 10 / browsing | submissions/:id/remarks / handler | 115 | 329.0 ms | 369.6 ms |
+| 10 / browsing | domains / database-init | 1 | 0.0 ms | 0.0 ms |
+| 10 / browsing | domains / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 10 / browsing | domains / profile | 1 | 13.8 ms | 13.8 ms |
+| 10 / browsing | domains / auth-revoke | 1 | 293.2 ms | 293.2 ms |
+| 10 / browsing | domains / access | 1 | 293.7 ms | 293.7 ms |
+| 10 / browsing | domains / handler | 1 | 310.3 ms | 310.3 ms |
+| 20 / browsing | appearance / database-init | 1 | 0.0 ms | 0.0 ms |
+| 20 / browsing | appearance / handler | 1 | 12.3 ms | 12.3 ms |
+| 20 / browsing | auth/config / handler | 1 | 0.1 ms | 0.1 ms |
+| 20 / browsing | me / database-init | 469 | 0.0 ms | 0.1 ms |
+| 20 / browsing | me / auth-validate | 469 | 0.5 ms | 0.7 ms |
+| 20 / browsing | me / profile | 469 | 13.8 ms | 20.8 ms |
+| 20 / browsing | me / auth-revoke | 469 | 292.7 ms | 320.1 ms |
+| 20 / browsing | me / access | 469 | 293.3 ms | 320.6 ms |
+| 20 / browsing | me / handler | 469 | 293.4 ms | 320.8 ms |
+| 20 / browsing | submissions / database-init | 234 | 0.0 ms | 0.1 ms |
+| 20 / browsing | submissions / auth-validate | 234 | 0.5 ms | 0.7 ms |
+| 20 / browsing | submissions / profile | 234 | 13.5 ms | 21.9 ms |
+| 20 / browsing | submissions / auth-revoke | 234 | 294.0 ms | 323.6 ms |
+| 20 / browsing | submissions / access | 234 | 294.5 ms | 324.1 ms |
+| 20 / browsing | submissions / query | 234 | 22.0 ms | 41.6 ms |
+| 20 / browsing | submissions / handler | 234 | 319.9 ms | 363.6 ms |
+| 20 / browsing | submissions/:id / database-init | 234 | 0.0 ms | 0.0 ms |
+| 20 / browsing | submissions/:id / auth-validate | 234 | 0.5 ms | 0.7 ms |
+| 20 / browsing | submissions/:id / profile | 234 | 14.0 ms | 25.6 ms |
+| 20 / browsing | submissions/:id / auth-revoke | 234 | 292.3 ms | 321.9 ms |
+| 20 / browsing | submissions/:id / access | 234 | 292.8 ms | 322.4 ms |
+| 20 / browsing | submissions/:id / query | 234 | 14.6 ms | 22.3 ms |
+| 20 / browsing | submissions/:id / handler | 234 | 309.0 ms | 343.9 ms |
+| 20 / browsing | submissions/:id/remarks / database-init | 234 | 0.0 ms | 0.1 ms |
+| 20 / browsing | submissions/:id/remarks / auth-validate | 234 | 0.5 ms | 0.7 ms |
+| 20 / browsing | submissions/:id/remarks / profile | 234 | 13.7 ms | 25.8 ms |
+| 20 / browsing | submissions/:id/remarks / auth-revoke | 234 | 291.1 ms | 324.3 ms |
+| 20 / browsing | submissions/:id/remarks / access | 234 | 291.6 ms | 325.0 ms |
+| 20 / browsing | submissions/:id/remarks / handler | 234 | 326.0 ms | 378.2 ms |
+| 20 / browsing | domains / database-init | 1 | 0.0 ms | 0.0 ms |
+| 20 / browsing | domains / auth-validate | 1 | 0.4 ms | 0.4 ms |
+| 20 / browsing | domains / profile | 1 | 89.4 ms | 89.4 ms |
+| 20 / browsing | domains / auth-revoke | 1 | 322.4 ms | 322.4 ms |
+| 20 / browsing | domains / access | 1 | 322.9 ms | 322.9 ms |
+| 20 / browsing | domains / handler | 1 | 340.8 ms | 340.8 ms |
 
 ## 500-submission daily forecast
 
 Attachment assumption: 70% no files, 25% one 1 MB file, 5% two 5 MB files. This implies approximately **375 MB and 175 files** for 500 creates, before replacements or other Drive usage. Text-only edits retain files. The ten-file stress scenario is separate.
 
-Observed SDK operations across these test reports: 7048 reads, 853 writes, 0 deletes; 88 completed save workflows. These include control traffic and test-only run guards and are not an invoice or a per-submission production estimate.
+Observed SDK operations across these test reports: 16100 reads, 1260 writes, 0 deletes; 128 completed save workflows. These include control traffic and test-only run guards and are not an invoice or a per-submission production estimate.
 
 For each complete metadata/mixed window, normalize its observed operations by completed student workflows; forecast 500 creates, one edit, one remark and lock/unlock per submission. Add measured browsing/sign-in traffic separately. Do not extrapolate incomplete or browsing-only windows as write workflows.
 - metadata, 1 users, 85e45c5c-c258-4c08-b74e-015e3e184c14: conservative test-workload projection for 500 submissions = 184500 reads and 8000 writes. Includes that window's browsing and test guards; compare with owner/provider usage.
@@ -1068,6 +1282,7 @@ For each complete metadata/mixed window, normalize its observed operations by co
 - metadata, 10 users, d3a0e6c2-b141-42f6-a268-11f87f7235fa: conservative test-workload projection for 500 submissions = 37250 reads and 8000 writes. Includes that window's browsing and test guards; compare with owner/provider usage.
 - metadata, 5 users, 73bc6e02-3ec9-47c8-a639-10f2370a6abf: conservative test-workload projection for 500 submissions = 39100 reads and 8000 writes. Includes that window's browsing and test guards; compare with owner/provider usage.
 - metadata, 10 users, a3c5dfe4-d80b-4961-9f30-1eeee1dca1a5: conservative test-workload projection for 500 submissions = 37300 reads and 8000 writes. Includes that window's browsing and test guards; compare with owner/provider usage.
+- metadata, 20 users, bf43d0fa-f726-4bb6-82fa-12af0821395f: conservative test-workload projection for 500 submissions = 36525 reads and 8100 writes. Includes that window's browsing and test guards; compare with owner/provider usage.
 
 ## Next changes to investigate
 

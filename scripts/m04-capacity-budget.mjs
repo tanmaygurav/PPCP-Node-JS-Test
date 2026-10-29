@@ -5,6 +5,12 @@ export class Budget {
     this.path=path;mkdirSync('.local',{recursive:true});this.entries=existsSync(this.path)?JSON.parse(readFileSync(this.path,'utf8')):[];this.entries=this.entries.filter(e=>e.at>Date.now()-86400000);this.cleanup=cleanup;
     const v=headroom.vercel;if(!v)throw new Error('Verified Vercel allowance summary required.');this.vercelLimits={requests:Math.min(10000,Math.floor((v.invocationsLimit-v.invocationsUsed)*.25)),cpuSeconds:(v.cpuLimitSeconds-v.cpuUsedSeconds)*.25,memoryGBHours:(v.memoryLimitGBHours-v.memoryUsedGBHours)*.25,transferBytes:(v.transferLimitBytes-v.transferUsedBytes)*.25};
     this.limits={reads:Math.min(10000,Math.floor((50000-headroom.usage.read)*.25)),writes:Math.min(3000,Math.floor((20000-headroom.usage.write)*.25),Math.floor((20000-headroom.usage.delete)*.25)),bytes:1_000_000_000,driveUnitsPerMinute:Math.floor(Math.min(headroom.drive?.projectUnitsPerMinute||0,headroom.drive?.userUnitsPerMinute||0)*.25),driveRequestsPerMinute:Math.floor((headroom.drive?.legacyRequestsPerMinute||12000)*.25)};this.pending={reads:0,writes:0,driveUnits:0,driveRequests:0};this.reservations=[];
+    const grant=headroom.authorizedReadExtension;
+    if(grant){
+      if(!grant.id||!grant.reason||!Number.isSafeInteger(grant.baselineLedgerReads)||grant.baselineLedgerReads<0||grant.baselineLedgerReads>this.totals().reads||!Number.isSafeInteger(grant.additionalReads)||grant.additionalReads<1||Date.now()-Date.parse(grant.authorizedAt)>86400000||!Number.isFinite(Date.parse(grant.authorizedAt))||Date.parse(grant.authorizedAt)>Date.now())throw new Error('Invalid or expired explicit read-budget authorization.');
+      this.limits.reads=grant.baselineLedgerReads+Math.min(10000,grant.additionalReads,Math.floor((50000-headroom.usage.read)*.25));
+      this.readAuthorization={...grant,effectiveAdditionalReads:this.limits.reads-grant.baselineLedgerReads};
+    }
   }
   totals(){return this.entries.reduce((sum,e)=>({reads:sum.reads+(e.reads||0),writes:sum.writes+(e.writes||0),bytes:sum.bytes+(e.bytes||0)}),{reads:0,writes:0,bytes:0});}
   record(entry){this.entries.push({at:Date.now(),...entry});writeFileSync(this.path,JSON.stringify(this.entries));}

@@ -46,15 +46,27 @@ try{
   const reference=await context.db.collection('submissions').where('displayId','==','PP039').limit(1).get(),referenceBefore=JSON.stringify(reference.docs[0]?.data());
   const tasks=scenario==='all'?['baseline','browsing','metadata','mixed','arrival']: [scenario];
   let levels=scenario==='baseline'?[1]:ladder.filter(n=>n<=maximum);
+  if(arg('continue-from','')){
+    if(arg('repeat-of','')||scenario==='all'||scenario==='baseline')throw new Error('Continue one explicit scenario; do not combine continuation and repeats.');
+    const prior=JSON.parse(readFileSync(arg('continue-from',''),'utf8'));
+    if(prior.smoke||prior.origin!==context.origin||prior.source!==source||prior.conditions.some(c=>c.scenario===scenario&&c.hard))throw new Error('Continuation requires safe matching-source/origin evidence.');
+    const passed=prior.conditions.filter(c=>c.scenario===scenario&&c.state==='passed'&&!c.hard&&c.durationSeconds===180).map(c=>c.targetActiveUsers),last=Math.max(0,...passed);
+    if(!ladder.includes(last)||last>=maximum)throw new Error('Continuation requires a completed lower passing level.');
+    levels=levels.filter(n=>n>last);
+  }
   if(arg('repeat-of','')){const prior=JSON.parse(readFileSync(arg('repeat-of',''),'utf8'));if(prior.origin!==context.origin||prior.source!==source||!prior.conditions.some(c=>c.targetActiveUsers===maximum&&c.scenario===scenario&&['passed','latency-failed'].includes(c.state)&&!c.hard))throw new Error('Repeat requires a matching safe prior condition.');levels=[maximum,maximum];}
   let diagnosticAlready=false;
   for(const users of levels){let levelLatencyFailed=false;
     for(const mode of tasks){if(stop)break;if(mode==='baseline'&&users!==1)continue;if(mode==='ten-files'&&![1,5,20].includes(users))continue;
-      const studentCount=mode==='mixed'&&users>=3?users-Math.max(1,Math.round(users*.08))-Math.max(1,Math.round(users*.02)):users;
-      const staff=mode==='mixed'&&users>=3?[...pool.capacityStaff.filter(a=>a.role==='faculty').slice(0,Math.max(1,Math.round(users*.08))),...pool.capacityStaff.filter(a=>a.role==='admin').slice(0,Math.max(1,Math.round(users*.02)))]:[],accounts=[...pool.students.slice(0,studentCount),...staff];
+      const roleMix=['mixed','browsing'].includes(mode)&&users>=3;
+      const studentCount=roleMix?users-Math.max(1,Math.round(users*.08))-Math.max(1,Math.round(users*.02)):users;
+      const staff=roleMix?[...pool.capacityStaff.filter(a=>a.role==='faculty').slice(0,Math.max(1,Math.round(users*.08))),...pool.capacityStaff.filter(a=>a.role==='admin').slice(0,Math.max(1,Math.round(users*.02)))]:[],accounts=[...pool.students.slice(0,studentCount),...staff];
       const controllerFaculty=staff.find(a=>a.role==='faculty')||pool.faculty,memberUids=[...new Set([...accounts.map(a=>a.uid),controllerFaculty.uid])];
       const receipt=await control.api('admin/test-runs',{operationId:randomUUID(),name:`${mode} / ${users} active users`,scenario:mode,concurrency:users,durationSeconds:seconds,datasetTarget:mode==='seed'?Number(arg('dataset','100')):0,members:memberUids,source,origin:context.origin});const runId=receipt.runId;context.runId=runId;runIds.push(runId);persist();
       const condition={runId,scenario:mode,targetActiveUsers:users,roles:{student:accounts.filter(a=>a.role==='student').length,faculty:accounts.filter(a=>a.role==='faculty').length,admin:accounts.filter(a=>a.role==='admin').length},source,datasetSize:(await context.db.collection('submissions').count().get()).data().count,durationSeconds:seconds,thinkSeconds:[10,20],startedAt:new Date().toISOString(),attachmentMix:'70% none / 25% 1MB / 5% 2x5MB',readPattern:'Portal fan-out: me + list; me + detail + remarks, parallel within a screen; 10–20s per cycle',expected:'Correct IDs/ownership/versioning; list/detail p95<=2000ms; create/edit p95<=3000ms excluding transfer',state:'running'};reports.push(condition);persist();
+      condition.attachmentMix=mode==='mixed'?'70% none / 25% 1MB / 5% 2x5MB':mode==='ten-files'?'10 x 1,000,000 bytes per uploader':'No new attachments';
+      condition.auxiliaryActors={facultyController:accounts.some(a=>a.uid===controllerFaculty.uid)?0:1,browserObserverUsesExistingIdentity:true};
+      if(mode==='browsing')condition.facultyQueryPatterns=['domain/newest','domain/oldest/unlocked/has-remarks','title-prefix/domain/field-order','name-prefix/domain/field-order','domain/numeric-ID'];
       const actors=[];if(mode!=='arrival')for(const account of accounts)actors.push(await client(context,account,samples));const faculty=await client(context,controllerFaculty,samples);
       const stageStart=samples.length,cpu=process.cpuUsage(),stageBegin=performance.now();context.peakInFlight=0;context.peakTransfers=0;condition.measurementStartedAt=new Date().toISOString();lag.reset();const seen=new Set();let completed=0;
       const observer=mode==='arrival'||mode==='seed'?Promise.resolve():browserProbe(browser,context,actors[0],samples).catch(error=>{stop=true;failures.push('Browser observer: '+error.message);});
@@ -62,11 +74,16 @@ try{
         let actor=actors[i];if(mode==='arrival'){actor=await client(context,account,samples);await actor.api('me');completed++;return;}
         if(mode==='seed'){const target=Math.max(0,Number(arg('dataset','100'))-condition.datasetSize);if(i)return;for(let n=0;n<target;n++)await save(actor,runId);completed++;return;}
         const think=async()=>{if(stop)throw new Error('Stage stopped before the next mutation.');if(!process.argv.includes('--smoke'))await sleep(10000+Math.random()*10000);if(stop)throw new Error('Stage stopped before the next mutation.');};let own=null;const until=performance.now()+seconds*1000;let iteration=0;
+        let browseIndex=0,browseCursor='',browseSeen=new Set();
         if(!process.argv.includes('--smoke')&&i)await sleep((i%10)*1000);
         do{
           if(stop)break;
           if(account.role!=='student'||mode==='browsing'||mode==='baseline'){
-            const params=account.role==='student'?'limit=20':'limit=20&domain=Education&sort=newest';const [,list]=await Promise.all([actor.api('me'),actor.api('submissions?'+params)]);if(list.items.length){const item=list.items[i%list.items.length];await Promise.all([actor.api('me'),actor.api(`submissions/${item.id}`),actor.api(`submissions/${item.id}/remarks`)]);}if(mode==='baseline')break;
+            const patterns=['limit=20&domain=Education&sort=newest','limit=20&domain=Education&sort=oldest&locked=false&remarked=true','limit=20&domain=Education&searchBy=title&search='+encodeURIComponent('[LOAD TEST · '),'limit=20&domain=Education&searchBy=name&search=Synthetic','limit=20&domain=Education&sort=id'];
+            const params=account.role==='student'?'limit=20':patterns[browseIndex%patterns.length];const [,list]=await Promise.all([actor.api('me'),actor.api('submissions?'+params+(browseCursor?'&cursor='+encodeURIComponent(browseCursor):''))]);
+            for(const item of list.items){if(browseSeen.has(item.id))throw new Error('INTEGRITY: duplicate record across unchanged browsing pages.');browseSeen.add(item.id);}
+            browseCursor=list.nextCursor||'';if(!browseCursor){browseIndex++;browseSeen.clear();}
+            if(list.items.length){const item=list.items[i%list.items.length];await Promise.all([actor.api('me'),actor.api(`submissions/${item.id}`),actor.api(`submissions/${item.id}/remarks`)]);}if(mode==='baseline')break;
           }else if(iteration===0){
             let files=[];if(mode==='mixed'){const large=Math.round(studentCount*.05),typical=Math.round(studentCount*.25);if(i>=studentCount-large)files=[{name:'large-a.pdf',size:5000000},{name:'large-b.pdf',size:5000000}];else if(i>=studentCount-large-typical)files=[{name:'typical.pdf',size:1000000}];}if(mode==='ten-files')files=Array.from({length:10},(_,n)=>({name:`boundary-${n}.pdf`,size:1000000}));
             own=await save(actor,runId,files);if(seen.has(own.displayId))throw new Error('INTEGRITY: duplicate readable ID.');seen.add(own.displayId);await think();own=await save(actor,runId,[],own);await think();await actor.api(`submissions/${own.id}/lock`,{operationId:randomUUID(),expectedVersion:own.version});await think();await faculty.api(`submissions/${own.id}/remarks`,{operationId:randomUUID(),remark:'Synthetic capacity review.'});await think();await faculty.api(`submissions/${own.id}/unlock`,{operationId:randomUUID(),expectedVersion:own.version+1});const checked=(await actor.api(`submissions/${own.id}`)).item;if(checked.locked||checked.version!==own.version+2||checked.media.length!==own.media.length)throw new Error('INTEGRITY: lock/review workflow mismatch.');

@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "source": "bf54d8c05897ba831f6affa1cdc3603b7ff9bc3f",
+  "origin": "https://ppcp-m04-event-poc.vercel.app",
+  "at": "2026-10-29T10:12:25.667Z",
+  "cleanup": {
+    "jobId": "9b67dbaa-cc46-4ffa-b8b9-4bb841216f95",
+    "status": "done",
+    "deleted": 20,
+    "filesResolved": 0,
+    "files": 0,
+    "remaining": 0
+  },
+  "markedSubmissionsRemaining": 0,
+  "pp039": {
+    "version": 5,
+    "locked": false,
+    "attachments": 1,
+    "lastEditedAt": "2026-10-29T05:27:24.826Z",
+    "marked": false
+  },
+  "adminPage": true,
+  "browserErrors": 0
+}

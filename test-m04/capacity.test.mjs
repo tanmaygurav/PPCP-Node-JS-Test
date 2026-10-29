@@ -1,9 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
-import { rmSync } from 'node:fs';
+import { rmSync,writeFileSync } from 'node:fs';
 import { Budget } from '../scripts/m04-capacity-budget.mjs';
 const headroom=()=>({ready:true,projectId:'ppcp-m04-redesign',checkedAt:new Date().toISOString(),usage:{read:1400,write:86,delete:0},drive:{projectUnitsPerMinute:1000000,userUnitsPerMinute:325000,legacyRequestsPerMinute:12000},vercel:{invocationsUsed:2500,invocationsLimit:1000000,cpuUsedSeconds:135,cpuLimitSeconds:14400,memoryUsedGBHours:.71,memoryLimitGBHours:360,transferUsedBytes:33330000,transferLimitBytes:100000000000}});
 function fixture(t){const path='.local/capacity-unit-'+randomUUID()+'.json';t.after(()=>rmSync(path,{force:true}));return new Budget(headroom(),{path});}
 test('budget reserves concurrency, matches out-of-order responses, and keeps cleanup headroom',t=>{const budget=fixture(t),large=budget.beforeRequest('upload-sessions',true,{files:Array(10)}),small=budget.beforeRequest('upload-sessions',true,{files:[]});assert.equal(budget.pending.driveUnits,2000);budget.afterRequest({reservation:small,endpoint:'upload-sessions',method:'POST',ms:10,status:201,observed:{reads:2,writes:1}});assert.equal(budget.pending.driveUnits,2000);budget.afterRequest({reservation:large,endpoint:'upload-sessions',method:'POST',ms:10,status:201,observed:{reads:2,writes:1,driveRequests:21,driveUnitsEstimate:1055}});assert.equal(budget.pending.driveUnits,0);assert.equal(budget.totals().writes,2);budget.record({writes:2400});assert.throws(()=>budget.beforeRequest('submissions',true,{}),/Budget/);budget.cleanup=true;assert.doesNotThrow(()=>budget.beforeRequest('admin/test-cleanup',true,{}));});
 test('quota freshness, Drive rates and upload byte ceilings fail closed',t=>{const h=headroom();h.checkedAt=new Date(Date.now()-3600001).toISOString();assert.throws(()=>new Budget(h),/Fresh/);const budget=fixture(t);budget.record({driveUnits:81250});assert.throws(()=>budget.beforeRequest('upload-sessions',true,{files:[{}]}),/Drive/);budget.entries=[];budget.record({bytes:999999999});assert.throws(()=>budget.beforeUpload(2),/Budget/);});
+test('explicit refreshed read allowance retains usage and other caps and cannot be reused as a reset',t=>{
+ const path='.local/capacity-unit-'+randomUUID()+'.json';t.after(()=>rmSync(path,{force:true}));writeFileSync(path,JSON.stringify([{at:Date.now(),reads:9876,writes:1838}]));
+ const h=headroom();h.usage.read=9200;h.authorizedReadExtension={id:randomUUID(),reason:'Owner authorized additional read testing',authorizedAt:new Date().toISOString(),baselineLedgerReads:9876,additionalReads:10000};
+ const b=new Budget(h,{path});assert.equal(b.limits.reads,19876);assert.equal(b.totals().reads,9876);assert.equal(b.limits.writes,3000);b.record({reads:1000});assert.equal(new Budget(h,{path}).limits.reads,19876);
+ h.usage.read=40000;assert.equal(new Budget(h,{path}).limits.reads,12376);h.authorizedReadExtension.baselineLedgerReads=20000;assert.throws(()=>new Budget(h,{path}),/authorization/);
+});

@@ -14,6 +14,7 @@ try{
   try{const quota=await request(`https://serviceusage.googleapis.com/v1/projects/${config.projectId}/services/drive.googleapis.com/consumerQuotaMetrics?view=FULL&pageSize=200`);result.driveQuotaMetrics=(quota.metrics||[]).map(metric=>({metric:metric.metric,limits:(metric.consumerQuotaLimits||[]).map(limit=>({unit:limit.unit,buckets:(limit.quotaBuckets||[]).map(bucket=>({effectiveLimit:bucket.effectiveLimit,dimensions:bucket.dimensions}))}))}));}catch{result.unavailable.push('Drive project/user quota configuration');}
   if(previous?.ownerReported&&previous.projectId===config.projectId&&Date.now()-Date.parse(previous.checkedAt)<3600000){
     result.inspectedAt=result.checkedAt;result.checkedAt=previous.checkedAt;result.ownerReported=previous.ownerReported;result.drive=previous.drive;result.vercel=previous.vercel;
+    if(previous.authorizedReadExtension)result.authorizedReadExtension=previous.authorizedReadExtension;
     if(result.billingDisabled===null)result.billingDisabled=previous.billingDisabled;
     for(const key of ['read','write','delete'])if(!Number.isFinite(result.usage[key]))result.usage[key]=previous.usage[key];
     result.note='Automated inspection could not cover all services. Fresh owner-reported dashboard figures retained with their original timestamp; no freshness extension.';
