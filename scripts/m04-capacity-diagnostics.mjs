@@ -14,9 +14,9 @@ if(!ladder.includes(maximum)||seconds!==180&&!process.argv.includes('--smoke')||
 const context=await environment();
 if(!process.argv.includes('--production-window')&&!new URL(context.origin).hostname.includes('-git-'))throw new Error('Heavier tests require Preview. Production requires an agreed quiet window and --production-window.');
 const headroom=JSON.parse(readFileSync('.local/m04-capacity-headroom.json','utf8')),budget=new Budget(headroom);context.beforeRequest=budget.beforeRequest;context.afterRequest=row=>{budget.afterRequest(row);if(typeof row.status!=='number'||row.status>=400||Object.keys(row.observed||{}).some(k=>/^driveStatus(401|403|429|5\d\d)$/.test(k)&&row.observed[k]>0))stop=true;};context.beforeUpload=budget.beforeUpload;
-const samples=[],reports=[],runIds=[],failures=[],globalIds=new Set(),source=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
-if(context.deployedSource&&context.deployedSource!==source)throw new Error('Local and deployed application source differ; inspect the target before testing.');
-if(!process.argv.includes('--smoke'))execFileSync('git',['diff','--quiet','--','src/m04','api/m04.js','m04-web']);
+const samples=[],reports=[],runIds=[],failures=[],globalIds=new Set(),source=context.deployedSource||execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+if(!/^[a-f0-9]{40}$/.test(source))throw new Error('Inspect deployed application source before testing.');
+if(!process.argv.includes('--smoke'))execFileSync('git',['diff','--quiet',source,'--','src/m04','api/m04.js','m04-web','vercel.json','package.json','package-lock.json']);
 const cpuStart=process.cpuUsage(),started=performance.now(),lag=monitorEventLoopDelay({resolution:20});lag.enable();let stop=false;
 mkdirSync('output/m04',{recursive:true});
 const harnessDigest=createHash('sha256').update(['scripts/m04-capacity-diagnostics.mjs','scripts/m04-test-support.mjs','scripts/m04-capacity-budget.mjs','scripts/m04-capacity-browser.mjs'].map(p=>readFileSync(p,'utf8')).join('\n')).digest('hex');
@@ -27,6 +27,7 @@ function stats(rows){const values=rows.filter(r=>typeof r.status==='number'&&r.s
 function classify(rows){const groups={};for(const row of rows){const key=row.method+' '+row.endpoint;(groups[key]||=[]).push(row);}return Object.fromEntries(Object.entries(groups).map(([key,value])=>[key,stats(value)]));}
 function gates(rows){const groups=classify(rows),timed=['GET submissions','GET submissions/:id','POST submissions','POST submissions/:id/edits'];const latencies=timed.filter(k=>groups[k]?.p95!=null).map(k=>({endpoint:k,p95:groups[k].p95,target:k.startsWith('GET')?2000:3000}));const hard=rows.some(r=>typeof r.status!=='number'||r.status>=400)||Object.entries(groups).some(([key,value])=>/^(GET|POST) /.test(key)&&value.p95>10000)||latencies.some(v=>v.p95>10000)||lag.percentile(95)/1e6>200;return{hard,latencyPassed:latencies.every(v=>v.p95<=v.target),latencies,groups};}
 async function save(actor,runId,files=[],current=null){
+  if(stop)throw new Error('Stage stopped before the next save.');
   let transferMs=0;const op=randomUUID(),begin=performance.now(),values={title:`[LOAD TEST · ${runId.slice(0,8)}] ${current?'Edited':'New'} ${op.slice(0,8)}`,domain:'Education',description:'Independent synthetic capacity condition.',solution:''},prepared=await actor.api('upload-sessions',{operationId:op,files,...(current?{submissionId:current.id,expectedVersion:current.version,retainedIds:current.media.map(f=>f.id)}:{})});
   try{
     for(const file of prepared.uploads){budget.beforeUpload(file.size);const bytes=Buffer.alloc(file.size,32);bytes.write('%PDF-1.4\n');const start=performance.now();let status='network-error';context.activeTransfers=(context.activeTransfers||0)+1;context.peakTransfers=Math.max(context.peakTransfers||0,context.activeTransfers);try{const response=await fetch(file.uploadUrl,{method:'PUT',headers:{'Content-Type':file.mimeType},body:bytes,signal:AbortSignal.timeout(120000)});await response.arrayBuffer();status=response.status;if(!response.ok)throw new Error('Drive transfer failed: '+status);}finally{context.activeTransfers--;const elapsed=performance.now()-start;transferMs+=elapsed;samples.push({endpoint:'drive-transfer',method:'PUT',timestamp:new Date().toISOString(),ms:performance.now()-start,status,bytes:file.size});}}
@@ -60,7 +61,7 @@ try{
       const results=await Promise.allSettled(accounts.map(async(account,i)=>{
         let actor=actors[i];if(mode==='arrival'){actor=await client(context,account,samples);await actor.api('me');completed++;return;}
         if(mode==='seed'){const target=Math.max(0,Number(arg('dataset','100'))-condition.datasetSize);if(i)return;for(let n=0;n<target;n++)await save(actor,runId);completed++;return;}
-        const think=()=>process.argv.includes('--smoke')?Promise.resolve():sleep(10000+Math.random()*10000);let own=null;const until=performance.now()+seconds*1000;let iteration=0;
+        const think=async()=>{if(stop)throw new Error('Stage stopped before the next mutation.');if(!process.argv.includes('--smoke'))await sleep(10000+Math.random()*10000);if(stop)throw new Error('Stage stopped before the next mutation.');};let own=null;const until=performance.now()+seconds*1000;let iteration=0;
         if(!process.argv.includes('--smoke')&&i)await sleep((i%10)*1000);
         do{
           if(stop)break;
