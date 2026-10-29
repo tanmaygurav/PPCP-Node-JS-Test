@@ -2,16 +2,19 @@ import { randomUUID } from 'node:crypto';
 import { AppError, canRead, digest, displayId, facets, files, identifier, institutional, normalize, requireRole, submission, text, version } from './domain.mjs';
 import { sign, verify } from '../security.mjs';
 import { listSpec } from './query.mjs';
+import { testGate, testPrefix, TestRuns } from './test-runs.mjs';
+import { span, count } from './telemetry.mjs';
 import { DEFAULT_THEME, isEventTheme } from '../../shared/m04-themes.mjs';
 
 export class M04Store {
-  constructor(config, db, drive) { this.config = config; this.db = db; this.drive = drive; }
+  constructor(config, db, drive) { this.config = config; this.db = db; this.drive = drive; this.tests = new TestRuns(this); }
+  async transaction(work) { return span("transaction", () => this.db.runTransaction(tx => { count("storeTransactionAttempts"); return work(tx); })); }
   ref(collection, id) { return this.db.collection(collection).doc(identifier(id)); }
   async profile(uid) { return (await this.ref('users', uid).get()).data() || null; }
   async register(identity, data) {
     if (!institutional(identity.email)) throw new AppError(403, 'Institutional account required.');
     const fields = { name: text(data.name, 'Name'), program: text(data.program, 'Program'), studentId: text(data.studentId, 'Student ID') };
-    return this.db.runTransaction(async tx => {
+    return this.transaction(async tx => {
       const userRef = this.ref('users', identity.uid), existing = (await tx.get(userRef)).data();
       if (existing) { if (existing.status !== 'active' || existing.email !== identity.email) throw new AppError(403, 'Account is disabled or email changed.'); return existing; }
       const controlRef = this.ref('counters', 'access'), control = (await tx.get(controlRef)).data() || { admins: 0, bootstrapped: false };
@@ -37,7 +40,7 @@ export class M04Store {
     if (!isEventTheme(data.theme)) throw new AppError(400, 'Choose one of the available event themes.');
     if (!Number.isSafeInteger(data.expectedVersion) || data.expectedVersion < 0) throw new AppError(400, 'Reload the saved theme before applying a change.');
     const opRef = this.receiptRef(profile.uid, data.operationId), hash = digest({ kind: 'appearance', theme: data.theme, expectedVersion: data.expectedVersion });
-    return this.db.runTransaction(async tx => {
+    return this.transaction(async tx => {
       await this.current(tx, profile, ['admin']);
       const prior = (await tx.get(opRef)).data();
       if (prior) { if (prior.digest !== hash) throw new AppError(409, 'Operation content changed.'); return prior; }
@@ -55,10 +58,11 @@ export class M04Store {
   async replay(profile, op, hash) { const receipt = (await this.receiptRef(profile.uid, op).get()).data(); if (receipt && receipt.digest !== hash) throw new AppError(409, 'Operation ID already used for different content.'); return receipt || null; }
   async prepare(profile, data) {
     requireRole(profile, ['student']);
-    const operationId = identifier(data.operationId), incoming = files(data.files || []), retainedIds = data.retainedIds || [];
+    const operationId = identifier(data.operationId), testRunId = await this.transaction(tx => testGate(this, tx, profile)), incoming = files((data.files || []).map(file => testRunId ? { ...file, name: `${testPrefix(testRunId)} ${file.name}` } : file)), retainedIds = data.retainedIds || [];
     if (!Array.isArray(retainedIds) || retainedIds.some(id => typeof id !== 'string')) throw new AppError(400, 'Invalid retained files.');
     let item = null;
     if (data.submissionId) { item = await this.find(profile, data.submissionId); if (item.locked || item.version !== version(data.expectedVersion)) throw new AppError(409, 'Submission is locked or changed.'); }
+    if (item) await this.transaction(tx => testGate(this, tx, profile, item));
     if (!item && retainedIds.length) throw new AppError(400, 'New submissions cannot retain attachments.');
     const retained = item ? item.media.filter(file => retainedIds.includes(file.id)) : [];
     if (new Set(retainedIds).size !== retainedIds.length || retained.length !== retainedIds.length) throw new AppError(400, 'Invalid retained attachments.');
@@ -67,35 +71,38 @@ export class M04Store {
     let upload = (await ref.get()).data();
     if (upload && upload.digest !== hash) throw new AppError(409, 'Upload operation changed. Start a new operation.');
     if (!upload) {
-      const ids = await this.drive.reserve(incoming), proposed = { id: ref.id, ownerUid: profile.uid, operationId, submissionId: item?.id || randomUUID(), expectedVersion: item?.version || null, files: incoming.map((f, i) => ({ ...f, id: ids[i] })), retainedIds, digest: hash, status: 'pending', expiresAt: Date.now() + 3600000, createdAt: new Date().toISOString() };
-      upload = await this.db.runTransaction(async tx => { const found = (await tx.get(ref)).data(); if (found) { if (found.digest !== hash) throw new AppError(409, 'Upload operation changed.'); return found; } await this.current(tx, profile, ['student']); tx.create(ref, proposed); return proposed; });
+      const ids = await span('drive-reserve', () => this.drive.reserve(incoming)), proposed = { ...(testRunId ? { testRunId } : {}), id: ref.id, ownerUid: profile.uid, operationId, submissionId: item?.id || randomUUID(), expectedVersion: item?.version || null, fileCount: incoming.length, totalBytes: incoming.reduce((sum,file)=>sum+file.size,0), files: incoming.map((f, i) => ({ ...f, id: ids[i] })), retainedIds, digest: hash, status: 'pending', expiresAt: Date.now() + 3600000, createdAt: new Date().toISOString() };
+      upload = await this.db.runTransaction(async tx => { const found = (await tx.get(ref)).data(); if (found) { if (found.digest !== hash) throw new AppError(409, 'Upload operation changed.'); return found; } await this.current(tx, profile, ['student']); const liveRun = await testGate(this, tx, profile, item); if (liveRun !== testRunId) throw new AppError(409, 'Test run changed.'); tx.create(ref, proposed); return proposed; });
     }
     if (upload.status !== 'pending' || upload.expiresAt < Date.now()) throw new AppError(409, 'Upload expired or already consumed.');
     const sessions = [];
     for (const file of upload.files) {
-      try { await this.drive.verify(file, profile.uid, upload.submissionId, upload.id); sessions.push({ ...file, completed: true }); }
-      catch (error) { if (error.status !== 404) throw error; sessions.push(await this.drive.start(upload, file)); }
+      try { await span('drive-verify', () => this.drive.verify(file, profile.uid, upload.submissionId, upload.id)); sessions.push({ ...file, completed: true }); }
+      catch (error) { if (error.status !== 404) throw error; sessions.push(await span('drive-session', () => this.drive.start(upload, file))); }
     }
     return { uploadId: upload.id, submissionId: upload.submissionId, uploads: sessions };
   }
   async save(profile, data, id = null) {
     requireRole(profile, ['student']);
+    const operationUpload = (await this.ref('uploads', identifier(data.uploadId)).get()).data();
+    await this.transaction(tx => testGate(this, tx, profile, operationUpload));
     const op = identifier(data.operationId), hash = digest({ action: 'save', id, data }), prior = await this.replay(profile, op, hash);
     if (prior) return prior;
     const uploadRef = this.ref('uploads', data.uploadId), upload = (await uploadRef.get()).data();
     if (!upload || upload.ownerUid !== profile.uid || upload.operationId !== op || (id && upload.submissionId !== id) || (!id && upload.expectedVersion !== null) || upload.status !== 'pending' || upload.expiresAt < Date.now()) throw new AppError(409, 'Upload operation is unavailable.');
     const current = id ? await this.find(profile, id) : null;
     if (current && (current.locked || current.version !== version(data.expectedVersion) || upload.expectedVersion !== current.version)) throw new AppError(409, 'Submission is locked or changed. Keep your draft.');
-    const validated = submission(data, profile), domainId = digest(normalize(validated.domain)), domainRef = this.ref('domains', domainId);
+    const validated = submission(upload.testRunId ? { ...data, title: typeof data.title==='string' && data.title.startsWith(testPrefix(upload.testRunId)) ? data.title : `${testPrefix(upload.testRunId)} ${data.title}` } : data, profile), domainId = digest(normalize(validated.domain)), domainRef = this.ref('domains', domainId);
     const retained = current ? current.media.filter(file => upload.retainedIds.includes(file.id)) : [];
     if (retained.length !== upload.retainedIds.length) throw new AppError(409, 'Saved attachments changed.');
     files([...retained, ...upload.files]);
     const media = [];
-    for (const file of retained) media.push(await this.drive.publish(file, profile.uid, upload.submissionId));
-    for (const file of upload.files) media.push(await this.drive.publish(file, profile.uid, upload.submissionId, upload.id));
+    for (const file of retained) media.push(await span('drive-publish', () => this.drive.publish(file, profile.uid, upload.submissionId)));
+    for (const file of upload.files) media.push(await span('drive-publish', () => this.drive.publish(file, profile.uid, upload.submissionId, upload.id)));
     const itemRef = this.ref('submissions', upload.submissionId), opRef = this.receiptRef(profile.uid, op), counterRef = this.ref('counters', 'submissions');
-    return this.db.runTransaction(async tx => {
+    return this.transaction(async tx => {
       await this.current(tx, profile, ['student']);
+      const checkedRun = await testGate(this, tx, profile, upload); if (checkedRun !== (upload.testRunId || null)) throw new AppError(409, 'Test run changed.');
       const existingReceipt = (await tx.get(opRef)).data();
       if (existingReceipt) { if (existingReceipt.digest !== hash) throw new AppError(409, 'Operation content changed.'); return existingReceipt; }
       const saved = (await tx.get(itemRef)).data(), freshUpload = (await tx.get(uploadRef)).data(), domain = (await tx.get(domainRef)).data();
@@ -104,7 +111,7 @@ export class M04Store {
       if (!freshUpload || freshUpload.status !== 'pending' || freshUpload.expiresAt < Date.now()) throw new AppError(409, 'Upload operation expired or consumed.');
       if (id ? !saved || saved.ownerUid !== profile.uid || saved.locked || saved.version !== data.expectedVersion : !!saved) throw new AppError(409, 'Submission changed or is locked. Keep your draft.');
       const now = new Date().toISOString(), sequence = saved?.sequence || (counter?.value || 0) + 1;
-      const item = { ...validated, id: itemRef.id, ownerUid: profile.uid, sequence, displayId: displayId(sequence), media, createdAt: saved?.createdAt || now, lastEditedAt: now, version: (saved?.version || 0) + 1, locked: saved?.locked || false, lockedAt: saved?.lockedAt || null, hasRemarks: saved?.hasRemarks || false };
+      const item = { ...validated, ...(upload.testRunId ? { testRunId: upload.testRunId, isTestData: true } : {}), mediaIds: media.map(file => file.id), id: itemRef.id, ownerUid: profile.uid, sequence, displayId: displayId(sequence), media, createdAt: saved?.createdAt || now, lastEditedAt: now, version: (saved?.version || 0) + 1, locked: saved?.locked || false, lockedAt: saved?.lockedAt || null, hasRemarks: saved?.hasRemarks || false };
       item.facets = facets(item);
       const receipt = { status: 'committed', kind: 'save', submissionId: item.id, displayId: item.displayId, version: item.version, digest: hash, committedAt: now };
       tx.set(itemRef, item); tx.create(opRef, receipt); tx.update(uploadRef, { status: 'consumed' });
@@ -117,13 +124,13 @@ export class M04Store {
     const op = identifier(data.operationId), hash = digest({ id, action, data }), itemRef = this.ref('submissions', id), opRef = this.receiptRef(profile.uid, op);
     const remarkRef = this.db.collection('remarks').doc();
     const expected = action === 'remarks' ? null : version(data.expectedVersion), remark = action === 'remarks' ? text(data.remark, 'Remark', 5000) : null;
-    return this.db.runTransaction(async tx => {
+    return this.transaction(async tx => {
       const actual = await this.current(tx, profile, action === 'remarks' || action === 'unlock' ? ['faculty', 'admin'] : ['student', 'faculty', 'admin']);
       const receipt = (await tx.get(opRef)).data(); if (receipt) { if (receipt.digest !== hash) throw new AppError(409, 'Operation content changed.'); return receipt; }
-      const item = (await tx.get(itemRef)).data(); if (!canRead(actual, item)) throw new AppError(404, 'Submission not found.');
+      const item = (await tx.get(itemRef)).data(); await testGate(this, tx, profile, item); if (!canRead(actual, item)) throw new AppError(404, 'Submission not found.');
       const now = new Date().toISOString();
       if (action === 'remarks') {
-        tx.create(remarkRef, { id: remarkRef.id, submissionId: id, displayId: item.displayId, authorUid: actual.uid, authorName: actual.name, remark, createdAt: now });
+        tx.create(remarkRef, { ...(item.testRunId ? { testRunId: item.testRunId } : {}), id: remarkRef.id, submissionId: id, displayId: item.displayId, authorUid: actual.uid, authorName: actual.name, remark, createdAt: now });
         tx.update(itemRef, { hasRemarks: true, facets: facets({ ...item, hasRemarks: true }) });
       } else {
         if (item.version !== expected) throw new AppError(409, 'Submission changed. Reload before changing its lock.');
@@ -153,7 +160,7 @@ export class M04Store {
     requireRole(profile, ['admin']); identifier(target);
     if (!['student', 'faculty', 'admin'].includes(data.role) || !['active', 'disabled'].includes(data.status)) throw new AppError(400, 'Invalid role or account status.');
     const opRef = this.receiptRef(profile.uid, data.operationId), hash = digest({ target, role: data.role, status: data.status });
-    return this.db.runTransaction(async tx => {
+    return this.transaction(async tx => {
       await this.current(tx, profile, ['admin']);
       const prior = (await tx.get(opRef)).data(); if (prior) { if (prior.digest !== hash) throw new AppError(409, 'Operation content changed.'); return prior; }
       const ref = this.ref('users', target), user = (await tx.get(ref)).data(), counterRef = this.ref('counters', 'access'), control = (await tx.get(counterRef)).data();

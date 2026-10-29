@@ -1085,6 +1085,1148 @@
           "order": "ASCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "lastEditedAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "lastEditedAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "lastEditedAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "lastEditedAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "sequence",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "sequence",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "sequence",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "sequence",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "nameNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "nameNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "nameNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "nameNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "titleNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "titleNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "titleNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "titleNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "displayId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "displayId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "displayId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "displayId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "displayId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "lastEditedAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "displayId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "lastEditedAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "displayId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "lastEditedAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "displayId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "lastEditedAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "displayId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "sequence",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "displayId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "sequence",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "displayId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "sequence",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "displayId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "sequence",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "emailNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "emailNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "emailNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "emailNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "emailNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "lastEditedAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "emailNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "lastEditedAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "emailNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "lastEditedAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "emailNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "lastEditedAt",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "emailNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "sequence",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "emailNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "sequence",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isTestData",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "emailNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "sequence",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "submissions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "testRunId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "facets",
+          "arrayConfig": "CONTAINS"
+        },
+        {
+          "fieldPath": "emailNormalized",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "sequence",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "__name__",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "testCleanupFiles",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "jobId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        }
+      ]
     }
   ],
   "fieldOverrides": [

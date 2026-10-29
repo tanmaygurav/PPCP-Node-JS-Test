@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import { randomUUID } from 'node:crypto';
+export async function testRunsBrowser({page,store,auth,origin}){
+  const uid='m04-poc-'+randomUUID().slice(0,8)+'-s1',email=uid+'@welingkar.org';await auth.createUser({uid,email,emailVerified:true,password:'Emulator!Only123'});
+  await store.ref('users',uid).set({uid,email,name:'Cleanup browser fixture',program:'Test',studentId:uid,role:'student',status:'active'});
+  await page.getByRole('link',{name:'Test runs',exact:true}).click();await page.getByText('Create a test condition',{exact:true}).click();await page.getByLabel('Condition name').fill('Browser cleanup acceptance');await page.getByLabel('Registered synthetic account UIDs').fill(uid);await page.getByRole('button',{name:'Create test run',exact:true}).click();await page.getByText('Browser cleanup acceptance',{exact:true}).waitFor();
+  const user=(await store.ref('users',uid).get()).data(),operationId=randomUUID(),upload=await store.prepare(user,{operationId,files:[]}),saved=await store.save(user,{operationId,uploadId:upload.uploadId,title:'Browser cleanup record',domain:'Education',description:'Synthetic UI fixture'});
+  await page.getByRole('button',{name:'Inspect run',exact:true}).click();await page.getByRole('link',{name:new RegExp(saved.displayId)}).waitFor();await page.getByRole('button',{name:'Delete this run’s test data',exact:true}).click();await page.getByRole('heading',{name:'Confirm test-data deletion',exact:true}).waitFor();await page.getByLabel('Type DELETE TEST DATA').fill('DELETE TEST DATA');await page.getByRole('button',{name:'Confirm deletion',exact:true}).click();await page.getByRole('heading',{name:'Cleanup progress',exact:true}).waitFor();
+  for(let i=0;i<15;i++){const next=page.getByRole('button',{name:'Continue / retry cleanup',exact:true});if(!await next.count())break;await next.click();await page.waitForFunction(()=>!document.querySelector('nav[inert]'));}
+  await page.getByText('Selected marked submissions/remarks deleted; file cleanup verified. Accounts and reports retained.',{exact:true}).waitFor();assert.equal((await store.ref('submissions',saved.submissionId).get()).data(),undefined);assert((await store.ref('users',uid).get()).data());assert.equal(new URL(page.url()).pathname,'/admin/test-runs');
+}

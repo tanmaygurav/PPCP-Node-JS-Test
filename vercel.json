@@ -1,7 +1,7 @@
 {
   "version": 2,
   "framework": null,
-  "git": { "deploymentEnabled": { "codex/m04-event-poc": false, "milestone/m04-event-poc": false, "codex/m04-url-routing": false } },
+  "git": { "deploymentEnabled": { "codex/m04-event-poc": false, "milestone/m04-event-poc": false, "codex/m04-url-routing": false, "codex/m04-capacity-diagnostics": false } },
   "buildCommand": "node build-deployment.mjs",
   "outputDirectory": "dist-deployment",
   "functions": { "api/index.js": { "maxDuration": 60 }, "api/m02.js": { "maxDuration": 60 }, "api/m04.js": { "maxDuration": 60 } },

@@ -6,6 +6,8 @@ export function listSpec(params, profile) {
   const searchBy = params.get('searchBy') || '', search = normalize(params.get('search') || '');
   if (search.length > 300 || (search && !['id', 'email', 'domain', 'name', 'title'].includes(searchBy))) throw new AppError(400, 'Choose a supported search field.');
   const filters = [], facet = {};
+  if(params.get('testData')||params.get('testRunId')) { if(profile.role!=='admin')throw new AppError(403,'Administrator test filters only.');if(params.get('testRunId')){if(!/^[\w-]{1,100}$/.test(params.get('testRunId')))throw new AppError(400,'Invalid test run ID.');filters.push(['testRunId','==',params.get('testRunId')]);}else{if(params.get('testData')!=='true')throw new AppError(400,'Invalid test filter.');filters.push(['isTestData','==',true]);} }
+
   if (!staff) filters.push(['ownerUid', '==', profile.uid]);
   const domain = params.get('domain'); if (domain) facet.domain = normalize(domain);
   for (const [param, field] of [['locked', 'locked'], ['remarked', 'hasRemarks']]) {

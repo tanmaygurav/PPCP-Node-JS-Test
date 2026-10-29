@@ -1,3 +1,4 @@
+import { span, timingHeaders, withTelemetry } from './telemetry.mjs';
 import { randomUUID } from 'node:crypto';
 import { AppError, identifier, institutional, normalize, requireRole, text } from './domain.mjs';
 import { allowedIdentity, authenticate, sessionCookie, SESSION_SECONDS } from './auth.mjs';
@@ -9,14 +10,14 @@ async function body(req) {
   if (Buffer.byteLength(raw) > 96000) throw new AppError(413, 'Request too large.');
   try { const value = JSON.parse(raw); if (!value || Array.isArray(value) || typeof value !== 'object') throw new Error(); return value; } catch { throw new AppError(400, 'Expected a JSON object.'); }
 }
-function send(res, code, data) { res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8' }); res.end(JSON.stringify(data)); }
+function send(res, code, data) { timingHeaders(res); res.writeHead(code, { 'Content-Type': 'application/json; charset=utf-8' }); res.end(JSON.stringify(data)); }
 export function createM04Handler(config, store, auth) {
-  return async (req, res) => {
+  return async (req, res) => withTelemetry(req, res, async () => {
     const requestId = randomUUID(); res.setHeader('X-Request-ID', requestId); res.setHeader('Cache-Control', 'no-store'); res.setHeader('X-Content-Type-Options', 'nosniff');
     const timings = [];
     const measured = async (name, operation) => {
       const started = performance.now();
-      try { return await operation(); }
+      try { return await span(name, operation); }
       finally { timings.push(`${name};dur=${(performance.now() - started).toFixed(1)}`); if (!res.headersSent) res.setHeader('Server-Timing', timings.join(', ')); }
     };
     try {
@@ -32,13 +33,13 @@ export function createM04Handler(config, store, auth) {
       if (path === '/api/appearance' && method === 'GET') { await databaseReady; return send(res, 200, { appearance: await store.appearance() }); }
       if (path === '/api/auth/session' && method === 'POST') {
         const data = await body(req); let decoded;
-        try { decoded = await auth.verifyIdToken(text(data.idToken, 'ID token', 20000), true); } catch { throw new AppError(401, 'Sign in again.'); }
+        try { decoded = await measured('auth-signin-verify',()=>auth.verifyIdToken(text(data.idToken, 'ID token', 20000), true)); } catch { throw new AppError(401, 'Sign in again.'); }
         const identity = allowedIdentity(decoded);
         if (!Number.isFinite(decoded.auth_time) || Date.now() / 1000 - decoded.auth_time > 300) throw new AppError(401, 'A recent sign-in is required.');
         await databaseReady;
         const profile = await store.profile(identity.uid);
         if (profile && (profile.status !== 'active' || profile.email !== identity.email)) throw new AppError(403, 'Account access is disabled or email changed.');
-        const token = await auth.createSessionCookie(data.idToken, { expiresIn: SESSION_SECONDS * 1000 });
+        const token = await measured('session-create',()=>auth.createSessionCookie(data.idToken, { expiresIn: SESSION_SECONDS * 1000 }));
         res.setHeader('Set-Cookie', sessionCookie(config, token)); return send(res, 200, { ok: true });
       }
       if (method === 'POST' && ['/api/auth/logout', '/api/profile'].includes(path)) {
@@ -57,17 +58,30 @@ export function createM04Handler(config, store, auth) {
         const receipt = await store.changeAppearance(profile, await body(req));
         return send(res, 200, { ...receipt, appearance: await store.appearance() });
       }
+      if (path.startsWith('/api/admin/test-')) {
+        requireRole(profile, ['admin']); const tests = store.tests;
+        if (path === '/api/admin/test-runs' && method === 'GET') return send(res,200,await tests.list(profile,url.searchParams.get('cursor')||''));
+        if (path === '/api/admin/test-runs' && method === 'POST') return send(res,200,await tests.create(profile,await body(req)));
+        if (path === '/api/admin/test-cleanup' && method === 'POST') return send(res,200,await tests.start(profile,await body(req)));
+        const run = path.match(/^\/api\/admin\/test-runs\/([\w-]+)(?:\/(close))?$/);
+        if(run && method==='GET') return send(res,200,await tests.inventory(profile,run[1],url.searchParams.get('cursor')||'',url.searchParams.get('submissionId'),url.searchParams.get('uploads')==='true'));
+        if(run?.[2]==='close' && method==='POST') return send(res,200,await tests.close(profile,run[1],await body(req)));
+        const job=path.match(/^\/api\/admin\/test-cleanup\/([\w-]+)(?:\/(retry))?$/);
+        if(job && method==='GET') return send(res,200,await tests.status(profile,job[1]));
+        if(job?.[2]==='retry' && method==='POST') { const data=await body(req);identifier(data.operationId,'Operation ID'); return send(res,200,await tests.step(profile,job[1])); }
+        throw new AppError(404,'Test operation not found.');
+      }
       if (path === '/api/domains' && method === 'GET') return send(res, 200, { domains: await store.domains() });
       if (path === '/api/submissions' && method === 'GET') return send(res, 200, await measured('query', () => store.list(profile, url.searchParams)));
-      if (path === '/api/submissions' && method === 'POST') return send(res, 200, await store.save(profile, await body(req)));
-      if (path === '/api/upload-sessions' && method === 'POST') return send(res, 201, await store.prepare(profile, await body(req)));
+      if (path === '/api/submissions' && method === 'POST') { const data=await body(req); return send(res,200,await measured('save',()=>store.save(profile,data))); }
+      if (path === '/api/upload-sessions' && method === 'POST') { const data=await body(req); return send(res,201,await measured('upload-preparation',()=>store.prepare(profile,data))); }
       const operation = path.match(/^\/api\/operations\/([\w-]{1,100})$/);
       if (operation && method === 'GET') return send(res, 200, await store.receipt(profile, operation[1]));
       const match = path.match(/^\/api\/submissions\/([\w-]{1,100})(?:\/(edits|lock|unlock|remarks))?$/);
       if (match) {
         if (!match[2] && method === 'GET') return send(res, 200, { item: await measured('query', () => store.find(profile, match[1])) });
         if (match[2] === 'remarks' && method === 'GET') return send(res, 200, await store.remarks(profile, match[1], url.searchParams));
-        if (method === 'POST' && match[2]) { const data = await body(req); return send(res, 200, match[2] === 'edits' ? await store.save(profile, data, match[1]) : await store.mutate(profile, match[1], match[2], data)); }
+        if (method === 'POST' && match[2]) { const data = await body(req); return send(res, 200, match[2] === 'edits' ? await measured('save',()=>store.save(profile, data, match[1])) : await store.mutate(profile, match[1], match[2], data)); }
       }
       if (path === '/api/admin/users' && method === 'GET') {
         requireRole(profile, ['admin']); const email = normalize(url.searchParams.get('email') || '');
@@ -89,5 +103,5 @@ export function createM04Handler(config, store, auth) {
       console.error(JSON.stringify({ requestId, status, type: error.name }));
       send(res, status, { error: error instanceof AppError ? error.message : error.code === 9 ? 'A required Firestore index is not ready. Contact the organizer.' : 'Request could not complete. Retry the same operation to check its outcome.', requestId });
     }
-  };
+  });
 }

@@ -33,7 +33,11 @@
     "fixtures:export": "node scripts/export-fixtures.mjs",
     "check:deploy": "node --check src/app.mjs && node --check src/google.mjs && node --check src/config.mjs && node --check src/domain.mjs && node --check src/security.mjs && node --check public/app.js && node --check api/index.js",
     "check": "npm run check:deploy",
-    "check:local": "npm run check:deploy && node --check scripts/authorize.mjs && node --check scripts/setup.mjs && node --check scripts/smoke.mjs && node --check scripts/browser.mjs && node --check scripts/offline.mjs && node --check test-tools/runtime.mjs && node --check test-tools/mock-server.mjs && node --check server.mjs"
+    "check:local": "npm run check:deploy && node --check scripts/authorize.mjs && node --check scripts/setup.mjs && node --check scripts/smoke.mjs && node --check scripts/browser.mjs && node --check scripts/offline.mjs && node --check test-tools/runtime.mjs && node --check test-tools/mock-server.mjs && node --check server.mjs",
+    "m04:capacity:preflight": "node scripts/m04-capacity-preflight.mjs",
+    "m04:capacity": "node scripts/m04-capacity-diagnostics.mjs",
+    "m04:capacity:report": "node scripts/m04-capacity-report.mjs",
+    "m04:capacity:cleanup": "node scripts/m04-capacity-cleanup.mjs"
   },
   "devDependencies": {
     "firebase-tools": "^15.34.1",

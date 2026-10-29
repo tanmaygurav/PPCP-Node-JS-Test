@@ -1,3 +1,4 @@
+import { testRunsBrowser } from './m04-test-runs-browser.mjs';
 import { createServer } from 'node:http';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { resolve, extname, sep } from 'node:path';
@@ -85,6 +86,7 @@ try {
   await admin.page.screenshot({ path: 'output/m04/admin-desktop.png', fullPage: true }); assert.deepEqual(errors, []);
   assert.equal(await page.getByRole('link', { name: 'Event theme', exact: true }).count(), 0);
   assert.equal(await faculty.page.getByRole('link', { name: 'Event theme', exact: true }).count(), 0);
+  await testRunsBrowser({page:admin.page,store,auth,origin:config.origin}); results.push('admin test-run creation, explicit cleanup preview/confirmation and resumable deletion preserve synthetic accounts');
   await admin.page.getByRole('link', { name: 'Event theme', exact: true }).click();
   for (const theme of ['innovation', 'festival', 'conference', 'classic']) {
     await admin.page.getByLabel('Event theme', { exact: true }).selectOption(theme);

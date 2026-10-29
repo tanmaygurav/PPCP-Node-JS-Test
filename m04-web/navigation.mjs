@@ -1,4 +1,4 @@
-export const FILTER_KEYS = ['searchBy', 'search', 'domain', 'locked', 'remarked', 'from', 'to', 'sort', 'limit'];
+export const FILTER_KEYS = ['searchBy', 'search', 'domain', 'locked', 'remarked', 'from', 'to', 'sort', 'limit', 'testData', 'testRunId'];
 export function readFilters(search) {
   const params = new URLSearchParams(search), result = {};
   for (const key of FILTER_KEYS) { const value = params.get(key); if (value && value.length <= 300) result[key] = value; }

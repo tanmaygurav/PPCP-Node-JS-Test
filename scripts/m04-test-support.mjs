@@ -8,10 +8,12 @@ export async function environment() {
   loadM04Env(); const config = m04Config(), { auth, db } = services(config);
   const origin = process.argv.find(arg => arg.startsWith('--target='))?.slice(9) || config.origin, url = new URL(origin);
   if (url.origin !== origin || url.username || url.password || (url.protocol !== 'https:' && !['127.0.0.1', 'localhost'].includes(url.hostname))) throw new Error('Use an exact HTTPS target or local origin.');
-  const health = await fetch(`${origin}/api/health`); if (!health.ok || (await health.json()).milestone !== 'M04') throw new Error('Target is not an M04 deployment.');
-  return { config, auth, db, origin, store: new M04Store(config, db, new M04Drive(config)) };
+  let protectionCookie='', protectionCookies=[];
+  if(process.argv.includes('--preview-access')) { const { chromium }=await import('playwright');const browser=await chromium.launch({headless:true});try{const page=await browser.newPage();const access=JSON.parse(readFileSync('.local/m04-capacity-access.json','utf8'));if(new URL(access.url).origin!==origin)throw new Error('Preview access origin mismatch.');await page.goto(access.url);protectionCookies=await page.context().cookies(origin);protectionCookie=protectionCookies.map(c=>c.name+'='+c.value).join('; ');}finally{await browser.close();} }
+  const health = await fetch(origin+'/api/health',{headers:{Cookie:protectionCookie}}); if (!health.ok || (await health.json()).milestone !== 'M04') throw new Error('Target is not an M04 deployment.');
+  return { config, auth, db, origin, protectionCookie, protectionCookies, store: new M04Store(config, db, new M04Drive(config)) };
 }
-export async function accountPool(context, count, staff = false) {
+export async function accountPool(context, count, staff = false, extraStaff = 0) {
   if (!process.argv.includes('--write')) throw new Error('Creating synthetic M04 accounts requires --write.');
   const { auth, db, config } = context, path = '.local/m04-accounts.json'; mkdirSync('.local', { recursive: true });
   const pool = existsSync(path) ? JSON.parse(readFileSync(path)) : { projectId: config.projectId, prefix: `m04-poc-${randomUUID().slice(0, 8)}`, students: [] };
@@ -37,31 +39,46 @@ export async function accountPool(context, count, staff = false) {
   if (pool.pending) { const account = pool.pending; await provision(account); if (account.role === 'student') pool.students.push(account); else pool[account.role] = account; delete pool.pending; persist(); }
   while (pool.students.length < count) { pool.students.push(await create(`s${pool.students.length + 1}`, 'student', pool.students.length % 2 ? 'welingkarmail.org' : 'welingkar.org')); persist(); }
   if (staff) for (const role of ['faculty', 'admin']) if (!pool[role]) { pool[role] = await create(role, role, 'welingkarmail.org'); persist(); }
+  if(extraStaff){pool.capacityStaff ||= [];for(let i=pool.capacityStaff.length;i<extraStaff;i++){const role=i%4===3?'admin':'faculty';pool.capacityStaff.push(await create((role==='admin'?'a':'f')+(i+1),role,'welingkarmail.org'));persist();}}
   return pool;
 }
+export function endpoint(path) { return path.split('?')[0].replace(/^submissions\/[\w-]+(?=\/|$)/,'submissions/:id').replace(/^operations\/[\w-]+$/,'operations/:id').replace(/^(admin\/test-(?:runs|cleanup))\/[\w-]+/,'$1/:id'); }
 export async function client(context, account, samples = []) {
   const { config, origin } = context;
-  const signIn = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${config.web.apiKey}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: account.email, password: account.password, returnSecureToken: true }), signal: AbortSignal.timeout(30000) });
-  if (!signIn.ok) throw new Error(`Synthetic Firebase sign-in failed (${signIn.status}).`);
-  const { idToken } = await signIn.json(); let cookie = '';
+  const signinStart=performance.now();const signinReservation=context.beforeRequest?.('auth/signin',false);
+  const signIn = await fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='+config.web.apiKey, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: account.email, password: account.password, returnSecureToken: true }), signal: AbortSignal.timeout(30000) });
+  const signInValue=await signIn.json();const signinRow={endpoint:'auth/signin',reservation:signinReservation,method:'POST',ms:performance.now()-signinStart,status:signIn.status,timestamp:new Date().toISOString(),observed:{reads:0,writes:0}};samples.push(signinRow);context.afterRequest?.(signinRow);
+  if (!signIn.ok) throw new Error('Synthetic Firebase sign-in failed ('+signIn.status+').');
+  const { idToken } = signInValue; let cookie = '';
   const api = async (path, data, expected) => {
-    const started = performance.now(); let response;
-    try { response = await fetch(`${origin}/api/${path}`, { method: data === undefined ? 'GET' : 'POST', headers: { Origin: origin, Cookie: cookie, ...(data === undefined ? {} : { 'Content-Type': 'application/json' }) }, ...(data === undefined ? {} : { body: JSON.stringify(data) }), signal: AbortSignal.timeout(65000), redirect: 'error' }); }
-    catch { samples.push({ path: path.split('?')[0], ms: performance.now() - started, status: 'network-error' }); throw new Error('API response interrupted; rerun with the same operation ID.'); }
-    samples.push({ path: path.split('?')[0], method: data === undefined ? 'GET' : 'POST', ms: performance.now() - started, status: response.status, serverTiming: response.headers.get('server-timing') });
-    if (response.headers.get('set-cookie')) cookie = response.headers.get('set-cookie').split(';')[0];
-    let value; try { value = await response.json(); } catch { throw new Error('API returned a non-JSON response.'); }
-    if (expected ? response.status !== expected : !response.ok) throw new Error(`API ${path.split('?')[0]} returned ${response.status}; expected ${expected || 'success'}.`);
-    return value;
+    const label=endpoint(path),method=data===undefined?'GET':'POST'; let finalError;
+    for(let attempt=0;attempt<3;attempt++){
+      context.uploadEstimates ||= new Map();const reservation=context.beforeRequest?.(label,method==='POST',{...data,estimatedDriveFiles:context.uploadEstimates.get(data?.uploadId)||0});const started=performance.now();let response,value,row;
+      context.inFlight=(context.inFlight||0)+1;context.peakInFlight=Math.max(context.peakInFlight||0,context.inFlight);
+      try {
+        response = await fetch(origin+'/api/'+path, { method, headers: { Origin: origin, Cookie: [context.protectionCookie,cookie].filter(Boolean).join('; '), ...(context.runId?{'X-M04-Test-Run':context.runId}:{}), ...(data === undefined ? {} : { 'Content-Type': 'application/json' }) }, ...(data === undefined ? {} : { body: JSON.stringify(data) }), signal: AbortSignal.timeout(65000), redirect: 'error' });
+        const raw=await response.text();try{value=JSON.parse(raw);}catch{throw new Error('Non-JSON response.');}
+        let observed={};try{observed=JSON.parse(response.headers.get('x-m04-observed-ops')||'{}');}catch{}
+        row={endpoint:label,reservation,path:label,method,ms:performance.now()-started,status:response.status,bytes:Buffer.byteLength(raw),attempt,timestamp:new Date().toISOString(),cpuUs:Number(response.headers.get('x-m04-cpu-us')||0),requestId:response.headers.get('x-request-id'),instance:response.headers.get('x-m04-instance'),firstObserved:response.headers.get('x-m04-first-observed')==='true',serverTiming:response.headers.get('server-timing'),observed};samples.push(row);context.afterRequest?.(row);
+        if(response.headers.get('set-cookie'))cookie=response.headers.get('set-cookie').split(';')[0];
+        if(expected?response.status!==expected:!response.ok){const error=new Error('API '+label+' returned '+response.status+'.');error.status=response.status;throw error;}
+        if(label==='upload-sessions'&&value.uploadId)context.uploadEstimates.set(value.uploadId,(value.uploads?.length||0)+(data?.retainedIds?.length||0));return value;
+      }catch(error){finalError=error;if(!row){row={endpoint:label,path:label,method,ms:performance.now()-started,status:'network-error',attempt,timestamp:new Date().toISOString()};samples.push(row);context.afterRequest?.(row);}
+        if(error.status && error.status<500 || attempt===2)break;
+        // Retry only the exact request. Write operation IDs remain unchanged.
+        await new Promise(resolve=>setTimeout(resolve,250*2**attempt+Math.random()*150));
+      }finally{context.inFlight--;}
+    }
+    throw finalError;
   };
-  await api('auth/session', { idToken }); return { api, uid: account.uid };
+  await api('auth/session', { idToken }); return { api, uid: account.uid, role:account.role, sessionCookie:()=>cookie, beforeUpload:context.beforeUpload };
 }
 export async function uploadSave(actor, values, attachments, current = null, samples = []) {
   const operationId = randomUUID(), prepared = await actor.api('upload-sessions', { operationId, files: attachments.map(file => ({ name: file.name, size: file.size })), ...(current ? { submissionId: current.id, expectedVersion: current.version, retainedIds: [] } : {}) });
   for (const file of prepared.uploads) {
-    const start = performance.now(), bytes = Buffer.alloc(file.size, 32); bytes.write('%PDF-1.4\n');
+    actor.beforeUpload?.(file.size); const start = performance.now(), bytes = Buffer.alloc(file.size, 32); bytes.write('%PDF-1.4\n');
     const response = await fetch(file.uploadUrl, { method: 'PUT', headers: { 'Content-Type': file.mimeType }, body: bytes, signal: AbortSignal.timeout(120000) });
-    samples.push({ path: 'drive-transfer', ms: performance.now() - start, status: response.status, bytes: file.size }); if (!response.ok) throw new Error(`Drive transfer failed (${response.status}).`);
+    await response.arrayBuffer(); samples.push({ endpoint:'drive-transfer',method:'PUT', timestamp:new Date().toISOString(), path: 'drive-transfer', ms: performance.now() - start, status: response.status, bytes: file.size }); if (!response.ok) throw new Error(`Drive transfer failed (${response.status}).`);
   }
   const data = { ...values, operationId, uploadId: prepared.uploadId, ...(current ? { expectedVersion: current.version } : {}) }, path = current ? `submissions/${current.id}/edits` : 'submissions';
   return { receipt: await actor.api(path, data), path, data };
