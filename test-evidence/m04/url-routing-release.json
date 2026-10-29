@@ -14,6 +14,6 @@
   "offlineChecks": { "M01": 17, "M02": 10, "M03": 14 },
   "preservedStableOriginsReadOnly": { "M01": 200, "M02": 200, "M03A": 200, "M03B": 200 },
   "rollbackRehearsal": "Exact tagged baseline build; explicit 302 frontend redirects; root, API and assets pass locally.",
-  "ownerManualNavigation": "pending",
+  "ownerManualNavigation": { "status": "passed-owner-reported", "date": "2026-10-29", "check": "Open PP039, browser Back to dashboard, Forward to submission." },
   "capacityCertified": false
 }

@@ -39,7 +39,7 @@ Unsaved forms show a keyboard-accessible modal before internal navigation. Cance
 - Preserved offline regressions passed: M01 17 checks, M02 10 checks, M03 14 checks. Read-only GETs of all four M01/M02/M03-A/M03-B stable URLs returned HTTP 200. No preserved source modules or legacy resource data were written.
 - Exact baseline build plus temporary 302 redirects, root, API and assets passed local rehearsal. Secret scan passed. Vite reports a 522 KB JavaScript chunk (145 KB gzip); capacity acceptance remains separate.
 - Sanitized evidence is in `test-evidence/m04/url-routing-*.json`. Later evidence/tooling commits do not change the deployed application runtime.
-- Owner manual navigation check remains pending. No capacity certification or milestone freeze is implied.
+- On 2026-10-29 IST, the owner confirmed the requested PP039 browser Back/Forward check: dashboard and submission reopened correctly. Navigation checkpoint accepted. No capacity certification or milestone freeze is implied.
 
 ## Manual rollback
 

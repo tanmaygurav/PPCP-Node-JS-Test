@@ -79,3 +79,5 @@ Two early browser rehearsals stopped on test-harness dropdown selectors; those s
 ## URL navigation checkpoint — 2026-10-28 IST
 
 The existing M04 project now serves URL navigation from source `89dbb70ab40cfacf4278fc0b6bbd2b9eb527b3f0`, Production deployment `dpl_HRcyUjLUGMTihZqjjg8Wok9FbAb1`. Preview and Production browser regressions passed with zero browser errors. The previous runtime is tagged `m04-routing-baseline-v0.1.0`. M01–M03 and PP039 remain unchanged. See `M04_ROUTING.md` for measured evidence, provider configuration, reruns and manual rollback. Owner navigation acceptance remains pending; capacity acceptance is still separate.
+
+On 2026-10-29 IST, the owner confirmed the requested PP039 Back/Forward navigation check. The URL navigation checkpoint is accepted. This is owner-reported manual evidence; capacity acceptance and milestone freeze remain separate.
