@@ -1,0 +1,7 @@
+import {readFileSync} from 'node:fs';
+import {randomUUID} from 'node:crypto';
+import {environment,client} from './m04-test-support.mjs';
+import {Budget} from './m04-capacity-budget.mjs';
+if(!process.argv.includes('--write'))throw new Error('Publishing aggregate results requires --write.');
+const path=process.argv.find(a=>a.startsWith('--report='))?.slice(9);if(!path)throw new Error('Provide --report=path.');const report=JSON.parse(readFileSync(path,'utf8')),context=await environment();if(report.origin!==context.origin)throw new Error('Report target differs.');const budget=new Budget(JSON.parse(readFileSync('.local/m04-capacity-headroom.json','utf8')),{cleanup:true});context.beforeRequest=budget.beforeRequest;context.afterRequest=budget.afterRequest;
+try{const pool=JSON.parse(readFileSync('.local/m04-accounts.json','utf8')),admin=await client(context,pool.admin);for(const condition of report.conditions){if(!['passed','latency-failed','stopped'].includes(condition.state)||!Number.isInteger(condition.completed))continue;const inventory=await admin.api(`admin/test-runs/${condition.runId}`);if(inventory.run.result){console.log('Already recorded: '+condition.runId);continue;}await admin.api(`admin/test-runs/${condition.runId}/results`,{...condition,operationId:randomUUID(),smoke:report.smoke===true});console.log('Recorded aggregate result: '+condition.runId);}}finally{await context.db.terminate();}

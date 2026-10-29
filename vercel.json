@@ -1,14 +1,59 @@
 {
   "version": 2,
   "framework": null,
-  "git": { "deploymentEnabled": { "codex/m04-event-poc": false, "milestone/m04-event-poc": false, "codex/m04-url-routing": false, "codex/m04-capacity-diagnostics": false } },
+  "git": {
+    "deploymentEnabled": {
+      "codex/m04-event-poc": false,
+      "milestone/m04-event-poc": false,
+      "codex/m04-url-routing": false,
+      "codex/m04-capacity-diagnostics": false,
+      "codex/m04-capacity-production": false
+    }
+  },
   "buildCommand": "node build-deployment.mjs",
   "outputDirectory": "dist-deployment",
-  "functions": { "api/index.js": { "maxDuration": 60 }, "api/m02.js": { "maxDuration": 60 }, "api/m04.js": { "maxDuration": 60 } },
-  "rewrites": [{ "source": "/api/:path*", "destination": "/api/index?route=:path*" }, { "source": "/submissions/:path*", "destination": "/index.html" }, { "source": "/admin/:path*", "destination": "/index.html" }],
-  "headers": [{ "source": "/(.*)", "headers": [
-    { "key": "X-Content-Type-Options", "value": "nosniff" },
-    { "key": "Referrer-Policy", "value": "no-referrer" },
-    { "key": "Content-Security-Policy", "value": "default-src 'self'; connect-src 'self' https://www.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'" }
-  ] }]
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 60
+    },
+    "api/m02.js": {
+      "maxDuration": 60
+    },
+    "api/m04.js": {
+      "maxDuration": 60
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/index?route=:path*"
+    },
+    {
+      "source": "/submissions/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/admin/:path*",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; connect-src 'self' https://www.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+        }
+      ]
+    }
+  ]
 }

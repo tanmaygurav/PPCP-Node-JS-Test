@@ -11,7 +11,7 @@ export async function environment() {
   let protectionCookie='', protectionCookies=[];
   if(process.argv.includes('--preview-access')) { const { chromium }=await import('playwright');const browser=await chromium.launch({headless:true});try{const page=await browser.newPage();const access=JSON.parse(readFileSync('.local/m04-capacity-access.json','utf8'));if(new URL(access.url).origin!==origin)throw new Error('Preview access origin mismatch.');await page.goto(access.url);protectionCookies=await page.context().cookies(origin);protectionCookie=protectionCookies.map(c=>c.name+'='+c.value).join('; ');}finally{await browser.close();} }
   const health = await fetch(origin+'/api/health',{headers:{Cookie:protectionCookie}}); if (!health.ok || (await health.json()).milestone !== 'M04') throw new Error('Target is not an M04 deployment.');
-  return { config, auth, db, origin, protectionCookie, protectionCookies, store: new M04Store(config, db, new M04Drive(config)) };
+  return { config, auth, db, origin, deployedSource:health.headers.get('x-m04-source'), protectionCookie, protectionCookies, store: new M04Store(config, db, new M04Drive(config)) };
 }
 export async function accountPool(context, count, staff = false, extraStaff = 0) {
   if (!process.argv.includes('--write')) throw new Error('Creating synthetic M04 accounts requires --write.');
@@ -59,7 +59,7 @@ export async function client(context, account, samples = []) {
         response = await fetch(origin+'/api/'+path, { method, headers: { Origin: origin, Cookie: [context.protectionCookie,cookie].filter(Boolean).join('; '), ...(context.runId?{'X-M04-Test-Run':context.runId}:{}), ...(data === undefined ? {} : { 'Content-Type': 'application/json' }) }, ...(data === undefined ? {} : { body: JSON.stringify(data) }), signal: AbortSignal.timeout(65000), redirect: 'error' });
         const raw=await response.text();try{value=JSON.parse(raw);}catch{throw new Error('Non-JSON response.');}
         let observed={};try{observed=JSON.parse(response.headers.get('x-m04-observed-ops')||'{}');}catch{}
-        row={endpoint:label,reservation,path:label,method,ms:performance.now()-started,status:response.status,bytes:Buffer.byteLength(raw),attempt,timestamp:new Date().toISOString(),cpuUs:Number(response.headers.get('x-m04-cpu-us')||0),requestId:response.headers.get('x-request-id'),instance:response.headers.get('x-m04-instance'),firstObserved:response.headers.get('x-m04-first-observed')==='true',serverTiming:response.headers.get('server-timing'),observed};samples.push(row);context.afterRequest?.(row);
+        row={endpoint:label,reservation,path:label,method,ms:performance.now()-started,status:response.status,bytes:Buffer.byteLength(raw),attempt,timestamp:new Date().toISOString(),cpuUs:Number(response.headers.get('x-m04-cpu-us')||0),source:response.headers.get('x-m04-source'),requestId:response.headers.get('x-request-id'),instance:response.headers.get('x-m04-instance'),firstObserved:response.headers.get('x-m04-first-observed')==='true',serverTiming:response.headers.get('server-timing'),observed};samples.push(row);context.afterRequest?.(row);
         if(response.headers.get('set-cookie'))cookie=response.headers.get('set-cookie').split(';')[0];
         if(expected?response.status!==expected:!response.ok){const error=new Error('API '+label+' returned '+response.status+'.');error.status=response.status;throw error;}
         if(label==='upload-sessions'&&value.uploadId)context.uploadEstimates.set(value.uploadId,(value.uploads?.length||0)+(data?.retainedIds?.length||0));return value;

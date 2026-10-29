@@ -254,3 +254,7 @@ legend { font-size: 12px; font-weight: 650; padding: 0 5px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
 }
+
+.test-results { max-width: 100%; overflow-x: auto; }
+.test-results table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.test-results th, .test-results td { padding: .5rem; text-align: left; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }

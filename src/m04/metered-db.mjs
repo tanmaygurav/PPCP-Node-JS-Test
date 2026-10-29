@@ -8,7 +8,7 @@ export function meteredDB(db) {
   function wrap(value) {
     return new Proxy(value,{get(target,key){const member=Reflect.get(target,key,target);if(typeof member!=='function')return member;
       return (...args)=>{
-        if(key==='get')return member.apply(target,args).then(result=>{count('reads',result.docs?Math.max(1,result.docs.length):1);return snapshot(result);});
+        if(key==='get')return member.apply(target,args).then(result=>{count('reads',result.docs?Math.max(1,result.docs.length)+(result.docs.length?1:0):1);return snapshot(result);});
         if(['set','create','update','delete'].includes(key)){count(key==='delete'?'deletes':'writes');return member.apply(target,args);}
         const result=member.apply(target,args);return result&&typeof result==='object'&&!('then'in result)?wrap(result):result;
       };

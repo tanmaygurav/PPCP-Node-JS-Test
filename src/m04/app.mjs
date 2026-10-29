@@ -63,12 +63,13 @@ export function createM04Handler(config, store, auth) {
         if (path === '/api/admin/test-runs' && method === 'GET') return send(res,200,await tests.list(profile,url.searchParams.get('cursor')||''));
         if (path === '/api/admin/test-runs' && method === 'POST') return send(res,200,await tests.create(profile,await body(req)));
         if (path === '/api/admin/test-cleanup' && method === 'POST') return send(res,200,await tests.start(profile,await body(req)));
-        const run = path.match(/^\/api\/admin\/test-runs\/([\w-]+)(?:\/(close))?$/);
-        if(run && method==='GET') return send(res,200,await tests.inventory(profile,run[1],url.searchParams.get('cursor')||'',url.searchParams.get('submissionId'),url.searchParams.get('uploads')==='true'));
+        const run = path.match(/^\/api\/admin\/test-runs\/([\w-]+)(?:\/(close|results))?$/);
+        if(run && !run[2] && method==='GET') return send(res,200,await tests.inventory(profile,run[1],url.searchParams.get('cursor')||'',url.searchParams.get('submissionId'),url.searchParams.get('uploads')==='true'));
         if(run?.[2]==='close' && method==='POST') return send(res,200,await tests.close(profile,run[1],await body(req)));
+        if(run?.[2]==='results' && method==='POST') return send(res,200,await tests.results(profile,run[1],await body(req)));
         const job=path.match(/^\/api\/admin\/test-cleanup\/([\w-]+)(?:\/(retry))?$/);
         if(job && method==='GET') return send(res,200,await tests.status(profile,job[1]));
-        if(job?.[2]==='retry' && method==='POST') { const data=await body(req);identifier(data.operationId,'Operation ID'); return send(res,200,await tests.step(profile,job[1])); }
+        if(job?.[2]==='retry' && method==='POST') { const data=await body(req);identifier(data.operationId,'Operation ID'); return send(res,200,await tests.step(profile,job[1],data.lean===true)); }
         throw new AppError(404,'Test operation not found.');
       }
       if (path === '/api/domains' && method === 'GET') return send(res, 200, { domains: await store.domains() });

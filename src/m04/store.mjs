@@ -75,6 +75,7 @@ export class M04Store {
       upload = await this.db.runTransaction(async tx => { const found = (await tx.get(ref)).data(); if (found) { if (found.digest !== hash) throw new AppError(409, 'Upload operation changed.'); return found; } await this.current(tx, profile, ['student']); const liveRun = await testGate(this, tx, profile, item); if (liveRun !== testRunId) throw new AppError(409, 'Test run changed.'); tx.create(ref, proposed); return proposed; });
     }
     if (upload.status !== 'pending' || upload.expiresAt < Date.now()) throw new AppError(409, 'Upload expired or already consumed.');
+    if(upload.testRunId && upload.files.length) await this.transaction(async tx=>{const fresh=(await tx.get(ref)).data();await testGate(this,tx,profile,fresh);if(fresh.status!=='pending'||fresh.expiresAt<Date.now())throw new AppError(409,'Upload expired.');tx.update(ref,{driveSessionExpiresAt:Date.now()+7*86400000+3600000});});
     const sessions = [];
     for (const file of upload.files) {
       try { await span('drive-verify', () => this.drive.verify(file, profile.uid, upload.submissionId, upload.id)); sessions.push({ ...file, completed: true }); }
@@ -128,7 +129,7 @@ export class M04Store {
     return this.transaction(async tx => {
       const actual = await this.current(tx, profile, action === 'remarks' || action === 'unlock' ? ['faculty', 'admin'] : ['student', 'faculty', 'admin']);
       const receipt = (await tx.get(opRef)).data(); if (receipt) { if (receipt.digest !== hash) throw new AppError(409, 'Operation content changed.'); return receipt; }
-      const item = (await tx.get(itemRef)).data(); await testGate(this, tx, profile, item); if (!canRead(actual, item)) throw new AppError(404, 'Submission not found.');
+      const item = (await tx.get(itemRef)).data(); if (!canRead(actual, item)) throw new AppError(404, 'Submission not found.'); await testGate(this, tx, profile, item);
       const now = new Date().toISOString();
       if (action === 'remarks') {
         tx.create(remarkRef, { ...(item.testRunId ? { testRunId: item.testRunId } : {}), id: remarkRef.id, submissionId: id, displayId: item.displayId, authorUid: actual.uid, authorName: actual.name, remark, createdAt: now });
