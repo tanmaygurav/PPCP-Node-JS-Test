@@ -1,6 +1,6 @@
 # M04 capacity measurements
 
-Generated 2026-10-29T10:11:58.591Z. Three independent passing windows are required for a repeated scenario result. A complete event acceptance additionally requires all scenarios, browser evidence and Production validation.
+Generated 2026-10-30T03:35:32.708Z. Three independent passing windows are required for a repeated scenario result. A complete event acceptance additionally requires all scenarios, browser evidence and Production validation.
 
 Highest repeated passing scenario: not established. This is not a complete event-capacity certification.
 
@@ -27,6 +27,12 @@ Highest repeated passing scenario: not established. This is not a complete event
 | 5 | browsing | 180s | 5 | 6 | passed | 515 ms | 441 ms | — | — |
 | 10 | browsing | 180s | 10 | 9 | passed | 466 ms | 395 ms | — | — |
 | 20 | browsing | 180s | 20 | 13 | passed | 418 ms | 418 ms | — | — |
+| 1 | ten-files | 100s | 1 | 4 | latency-failed | 411 ms | 420 ms | 6298 ms | 2380 ms |
+| 1 | ten-files | 82s | 1 | 4 | latency-failed | 423 ms | 392 ms | 6337 ms | 2325 ms |
+| 1 | ten-files | 110s | 1 | 4 | latency-failed | 378 ms | 388 ms | 6450 ms | 2311 ms |
+| 1 | ten-files | 83s | 1 | 4 | latency-failed | 447 ms | 2101 ms | 3932 ms | 1707 ms |
+| 1 | ten-files | 96s | 1 | 4 | latency-failed | 484 ms | 1291 ms | 4489 ms | 1559 ms |
+| 1 | ten-files | 88s | 1 | 4 | latency-failed | 433 ms | 422 ms | 3522 ms | 2012 ms |
 
 ## Timing attribution
 
@@ -34,26 +40,29 @@ Server spans overlap. Compare their elapsed times; do not sum them or call the c
 
 | Span | Samples | Median | p95 |
 |---|---:|---:|---:|
-| database-init | 3510 | 0.0 ms | 0.1 ms |
-| auth-signin-verify | 138 | 300.2 ms | 485.3 ms |
-| session-create | 138 | 300.6 ms | 331.0 ms |
-| handler | 3530 | 322.0 ms | 623.6 ms |
-| auth-validate | 3352 | 0.5 ms | 0.8 ms |
-| profile | 3352 | 14.4 ms | 31.5 ms |
-| auth-revoke | 3352 | 296.8 ms | 326.1 ms |
-| access | 3352 | 297.5 ms | 327.0 ms |
-| transaction | 448 | 134.5 ms | 272.0 ms |
-| drive-reserve | 128 | 0.0 ms | 0.1 ms |
-| upload-preparation | 128 | 201.3 ms | 344.3 ms |
-| save | 128 | 286.3 ms | 471.0 ms |
-| query | 1410 | 19.1 ms | 48.9 ms |
-| drive-oauth | 2 | 147.4 ms | 147.4 ms |
-| drive-http | 6 | 4506.7 ms | 14760.5 ms |
-| drive-metadata | 6 | 4293.5 ms | 4529.9 ms |
-| drive-verify | 2 | 4293.9 ms | 4293.9 ms |
-| drive-session | 2 | 9168.0 ms | 9168.0 ms |
-| drive-sharing | 2 | 10315.7 ms | 10315.7 ms |
-| drive-publish | 4 | 4530.4 ms | 14804.5 ms |
+| database-init | 3652 | 0.0 ms | 0.1 ms |
+| auth-signin-verify | 154 | 301.2 ms | 576.0 ms |
+| session-create | 154 | 301.2 ms | 329.3 ms |
+| handler | 3678 | 322.8 ms | 634.0 ms |
+| auth-validate | 3472 | 0.5 ms | 0.8 ms |
+| profile | 3472 | 14.4 ms | 33.5 ms |
+| auth-revoke | 3472 | 297.2 ms | 327.3 ms |
+| access | 3472 | 297.8 ms | 328.6 ms |
+| transaction | 490 | 136.9 ms | 275.3 ms |
+| drive-reserve | 140 | 0.0 ms | 333.4 ms |
+| upload-preparation | 140 | 206.6 ms | 2113.1 ms |
+| save | 140 | 288.8 ms | 3123.3 ms |
+| query | 1440 | 19.1 ms | 49.8 ms |
+| drive-oauth | 5 | 139.1 ms | 147.4 ms |
+| drive-http | 24 | 13752.4 ms | 14760.5 ms |
+| drive-metadata | 24 | 4324.3 ms | 4739.1 ms |
+| drive-verify | 8 | 4116.5 ms | 4532.4 ms |
+| drive-session | 8 | 9355.5 ms | 9657.3 ms |
+| drive-sharing | 8 | 9998.2 ms | 11235.7 ms |
+| drive-publish | 16 | 4739.4 ms | 15509.6 ms |
+| drive-queue | 18 | 0.1 ms | 0.5 ms |
+| drive-prepare-wall | 12 | 2616.8 ms | 5419.3 ms |
+| drive-publish-wall | 12 | 2824.8 ms | 5777.4 ms |
 
 ## Breakdown by load and operation
 
@@ -1267,12 +1276,531 @@ Server spans overlap. Compare their elapsed times; do not sum them or call the c
 | 20 / browsing | domains / auth-revoke | 1 | 322.4 ms | 322.4 ms |
 | 20 / browsing | domains / access | 1 | 322.9 ms | 322.9 ms |
 | 20 / browsing | domains / handler | 1 | 340.8 ms | 340.8 ms |
+| 1 / ten-files | auth/config / handler | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | appearance / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | appearance / handler | 1 | 25.8 ms | 25.8 ms |
+| 1 / ten-files | me / database-init | 3 | 0.1 ms | 669.6 ms |
+| 1 / ten-files | me / auth-validate | 3 | 0.8 ms | 980.7 ms |
+| 1 / ten-files | me / profile | 3 | 15.6 ms | 269.7 ms |
+| 1 / ten-files | me / auth-revoke | 3 | 305.0 ms | 611.1 ms |
+| 1 / ten-files | me / access | 3 | 305.6 ms | 1592.6 ms |
+| 1 / ten-files | me / handler | 3 | 305.8 ms | 1595.5 ms |
+| 1 / ten-files | domains / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | domains / auth-validate | 1 | 0.7 ms | 0.7 ms |
+| 1 / ten-files | domains / profile | 1 | 28.0 ms | 28.0 ms |
+| 1 / ten-files | domains / auth-revoke | 1 | 303.6 ms | 303.6 ms |
+| 1 / ten-files | domains / access | 1 | 304.4 ms | 304.4 ms |
+| 1 / ten-files | domains / handler | 1 | 350.4 ms | 350.4 ms |
+| 1 / ten-files | submissions / database-init | 2 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | submissions / auth-validate | 2 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions / profile | 2 | 38.7 ms | 38.7 ms |
+| 1 / ten-files | submissions / auth-revoke | 2 | 307.1 ms | 307.1 ms |
+| 1 / ten-files | submissions / access | 2 | 307.6 ms | 307.6 ms |
+| 1 / ten-files | submissions / query | 1 | 65.0 ms | 65.0 ms |
+| 1 / ten-files | submissions / handler | 2 | 6230.6 ms | 6230.6 ms |
+| 1 / ten-files | submissions/:id / database-init | 4 | 0.0 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id / auth-validate | 4 | 0.6 ms | 0.6 ms |
+| 1 / ten-files | submissions/:id / profile | 4 | 30.7 ms | 60.8 ms |
+| 1 / ten-files | submissions/:id / auth-revoke | 4 | 316.9 ms | 326.2 ms |
+| 1 / ten-files | submissions/:id / access | 4 | 317.5 ms | 326.7 ms |
+| 1 / ten-files | submissions/:id / query | 4 | 16.2 ms | 54.3 ms |
+| 1 / ten-files | submissions/:id / handler | 4 | 342.0 ms | 351.2 ms |
+| 1 / ten-files | submissions/:id/remarks / database-init | 2 | 541.4 ms | 541.4 ms |
+| 1 / ten-files | submissions/:id/remarks / auth-validate | 2 | 854.1 ms | 854.1 ms |
+| 1 / ten-files | submissions/:id/remarks / profile | 2 | 246.3 ms | 246.3 ms |
+| 1 / ten-files | submissions/:id/remarks / auth-revoke | 2 | 581.2 ms | 581.2 ms |
+| 1 / ten-files | submissions/:id/remarks / access | 2 | 1436.0 ms | 1436.0 ms |
+| 1 / ten-files | submissions/:id/remarks / handler | 2 | 1546.3 ms | 1546.3 ms |
+| 1 / ten-files | upload-sessions / database-init | 2 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | upload-sessions / auth-validate | 2 | 0.6 ms | 0.6 ms |
+| 1 / ten-files | upload-sessions / profile | 2 | 27.4 ms | 27.4 ms |
+| 1 / ten-files | upload-sessions / auth-revoke | 2 | 308.1 ms | 308.1 ms |
+| 1 / ten-files | upload-sessions / access | 2 | 308.7 ms | 308.7 ms |
+| 1 / ten-files | upload-sessions / transaction | 2 | 224.8 ms | 224.8 ms |
+| 1 / ten-files | upload-sessions / drive-queue | 1 | 0.3 ms | 0.3 ms |
+| 1 / ten-files | upload-sessions / drive-oauth | 1 | 144.4 ms | 144.4 ms |
+| 1 / ten-files | upload-sessions / drive-http | 1 | 14506.2 ms | 14506.2 ms |
+| 1 / ten-files | upload-sessions / drive-reserve | 2 | 520.1 ms | 520.1 ms |
+| 1 / ten-files | upload-sessions / drive-metadata | 1 | 4532.2 ms | 4532.2 ms |
+| 1 / ten-files | upload-sessions / drive-verify | 1 | 4532.4 ms | 4532.4 ms |
+| 1 / ten-files | upload-sessions / drive-session | 1 | 9614.0 ms | 9614.0 ms |
+| 1 / ten-files | upload-sessions / drive-prepare-wall | 2 | 5419.3 ms | 5419.3 ms |
+| 1 / ten-files | upload-sessions / upload-preparation | 2 | 6307.7 ms | 6307.7 ms |
+| 1 / ten-files | upload-sessions / handler | 2 | 6605.1 ms | 6605.1 ms |
+| 1 / ten-files | submissions / transaction | 1 | 257.8 ms | 257.8 ms |
+| 1 / ten-files | submissions / drive-queue | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions / drive-http | 1 | 14518.9 ms | 14518.9 ms |
+| 1 / ten-files | submissions / drive-metadata | 1 | 4541.7 ms | 4541.7 ms |
+| 1 / ten-files | submissions / drive-sharing | 1 | 9998.2 ms | 9998.2 ms |
+| 1 / ten-files | submissions / drive-publish | 1 | 14540.8 ms | 14540.8 ms |
+| 1 / ten-files | submissions / drive-publish-wall | 1 | 5610.0 ms | 5610.0 ms |
+| 1 / ten-files | submissions / save | 1 | 5922.7 ms | 5922.7 ms |
+| 1 / ten-files | submissions/:id/edits / database-init | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id/edits / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions/:id/edits / profile | 1 | 13.3 ms | 13.3 ms |
+| 1 / ten-files | submissions/:id/edits / auth-revoke | 1 | 297.8 ms | 297.8 ms |
+| 1 / ten-files | submissions/:id/edits / access | 1 | 298.4 ms | 298.4 ms |
+| 1 / ten-files | submissions/:id/edits / transaction | 1 | 205.9 ms | 205.9 ms |
+| 1 / ten-files | submissions/:id/edits / drive-queue | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id/edits / drive-http | 1 | 4660.5 ms | 4660.5 ms |
+| 1 / ten-files | submissions/:id/edits / drive-metadata | 1 | 4692.4 ms | 4692.4 ms |
+| 1 / ten-files | submissions/:id/edits / drive-publish | 1 | 4692.7 ms | 4692.7 ms |
+| 1 / ten-files | submissions/:id/edits / drive-publish-wall | 1 | 1721.4 ms | 1721.4 ms |
+| 1 / ten-files | submissions/:id/edits / save | 1 | 2011.8 ms | 2011.8 ms |
+| 1 / ten-files | submissions/:id/edits / handler | 1 | 2310.5 ms | 2310.5 ms |
+| 1 / ten-files | submissions/:id/lock / database-init | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id/lock / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions/:id/lock / profile | 1 | 30.2 ms | 30.2 ms |
+| 1 / ten-files | submissions/:id/lock / auth-revoke | 1 | 329.0 ms | 329.0 ms |
+| 1 / ten-files | submissions/:id/lock / access | 1 | 329.5 ms | 329.5 ms |
+| 1 / ten-files | submissions/:id/lock / transaction | 1 | 154.3 ms | 154.3 ms |
+| 1 / ten-files | submissions/:id/lock / handler | 1 | 484.6 ms | 484.6 ms |
+| 1 / ten-files | submissions/:id/remarks / transaction | 1 | 120.3 ms | 120.3 ms |
+| 1 / ten-files | submissions/:id/unlock / database-init | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id/unlock / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions/:id/unlock / profile | 1 | 25.7 ms | 25.7 ms |
+| 1 / ten-files | submissions/:id/unlock / auth-revoke | 1 | 316.2 ms | 316.2 ms |
+| 1 / ten-files | submissions/:id/unlock / access | 1 | 316.8 ms | 316.8 ms |
+| 1 / ten-files | submissions/:id/unlock / transaction | 1 | 150.5 ms | 150.5 ms |
+| 1 / ten-files | submissions/:id/unlock / handler | 1 | 467.7 ms | 467.7 ms |
+| 1 / ten-files | auth/config / handler | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | appearance / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | appearance / handler | 1 | 66.4 ms | 66.4 ms |
+| 1 / ten-files | me / database-init | 3 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | me / auth-validate | 3 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | me / profile | 3 | 13.7 ms | 15.6 ms |
+| 1 / ten-files | me / auth-revoke | 3 | 311.9 ms | 314.7 ms |
+| 1 / ten-files | me / access | 3 | 312.5 ms | 315.2 ms |
+| 1 / ten-files | me / handler | 3 | 312.6 ms | 315.3 ms |
+| 1 / ten-files | domains / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | domains / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | domains / profile | 1 | 14.8 ms | 14.8 ms |
+| 1 / ten-files | domains / auth-revoke | 1 | 295.1 ms | 295.1 ms |
+| 1 / ten-files | domains / access | 1 | 295.7 ms | 295.7 ms |
+| 1 / ten-files | domains / handler | 1 | 328.5 ms | 328.5 ms |
+| 1 / ten-files | submissions / database-init | 2 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions / auth-validate | 2 | 0.7 ms | 0.7 ms |
+| 1 / ten-files | submissions / profile | 2 | 34.6 ms | 34.6 ms |
+| 1 / ten-files | submissions / auth-revoke | 2 | 338.0 ms | 338.0 ms |
+| 1 / ten-files | submissions / access | 2 | 338.6 ms | 338.6 ms |
+| 1 / ten-files | submissions / query | 1 | 72.6 ms | 72.6 ms |
+| 1 / ten-files | submissions / handler | 2 | 6266.3 ms | 6266.3 ms |
+| 1 / ten-files | submissions/:id / database-init | 4 | 0.0 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id / auth-validate | 4 | 0.6 ms | 0.9 ms |
+| 1 / ten-files | submissions/:id / profile | 4 | 15.3 ms | 15.6 ms |
+| 1 / ten-files | submissions/:id / auth-revoke | 4 | 308.5 ms | 308.9 ms |
+| 1 / ten-files | submissions/:id / access | 4 | 309.1 ms | 309.5 ms |
+| 1 / ten-files | submissions/:id / query | 4 | 17.9 ms | 22.6 ms |
+| 1 / ten-files | submissions/:id / handler | 4 | 326.5 ms | 332.0 ms |
+| 1 / ten-files | submissions/:id/remarks / database-init | 2 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | submissions/:id/remarks / auth-validate | 2 | 0.6 ms | 0.6 ms |
+| 1 / ten-files | submissions/:id/remarks / profile | 2 | 15.2 ms | 15.2 ms |
+| 1 / ten-files | submissions/:id/remarks / auth-revoke | 2 | 310.7 ms | 310.7 ms |
+| 1 / ten-files | submissions/:id/remarks / access | 2 | 311.4 ms | 311.4 ms |
+| 1 / ten-files | submissions/:id/remarks / handler | 2 | 454.8 ms | 454.8 ms |
+| 1 / ten-files | upload-sessions / database-init | 2 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | upload-sessions / auth-validate | 2 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | upload-sessions / profile | 2 | 16.5 ms | 16.5 ms |
+| 1 / ten-files | upload-sessions / auth-revoke | 2 | 321.0 ms | 321.0 ms |
+| 1 / ten-files | upload-sessions / access | 2 | 321.6 ms | 321.6 ms |
+| 1 / ten-files | upload-sessions / transaction | 2 | 119.4 ms | 119.4 ms |
+| 1 / ten-files | upload-sessions / drive-queue | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | upload-sessions / drive-http | 1 | 13842.0 ms | 13842.0 ms |
+| 1 / ten-files | upload-sessions / drive-reserve | 2 | 350.2 ms | 350.2 ms |
+| 1 / ten-files | upload-sessions / drive-metadata | 1 | 4142.5 ms | 4142.5 ms |
+| 1 / ten-files | upload-sessions / drive-verify | 1 | 4142.6 ms | 4142.6 ms |
+| 1 / ten-files | upload-sessions / drive-session | 1 | 9355.5 ms | 9355.5 ms |
+| 1 / ten-files | upload-sessions / drive-prepare-wall | 2 | 5314.8 ms | 5314.8 ms |
+| 1 / ten-files | upload-sessions / upload-preparation | 2 | 5885.8 ms | 5885.8 ms |
+| 1 / ten-files | upload-sessions / handler | 2 | 6207.8 ms | 6207.8 ms |
+| 1 / ten-files | submissions / transaction | 1 | 273.8 ms | 273.8 ms |
+| 1 / ten-files | submissions / drive-queue | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions / drive-http | 1 | 14274.2 ms | 14274.2 ms |
+| 1 / ten-files | submissions / drive-metadata | 1 | 4426.3 ms | 4426.3 ms |
+| 1 / ten-files | submissions / drive-sharing | 1 | 9873.3 ms | 9873.3 ms |
+| 1 / ten-files | submissions / drive-publish | 1 | 14300.0 ms | 14300.0 ms |
+| 1 / ten-files | submissions / drive-publish-wall | 1 | 5604.1 ms | 5604.1 ms |
+| 1 / ten-files | submissions / save | 1 | 5927.5 ms | 5927.5 ms |
+| 1 / ten-files | submissions/:id/edits / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | submissions/:id/edits / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions/:id/edits / profile | 1 | 18.5 ms | 18.5 ms |
+| 1 / ten-files | submissions/:id/edits / auth-revoke | 1 | 293.2 ms | 293.2 ms |
+| 1 / ten-files | submissions/:id/edits / access | 1 | 293.8 ms | 293.8 ms |
+| 1 / ten-files | submissions/:id/edits / transaction | 1 | 204.0 ms | 204.0 ms |
+| 1 / ten-files | submissions/:id/edits / drive-queue | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id/edits / drive-http | 1 | 4312.7 ms | 4312.7 ms |
+| 1 / ten-files | submissions/:id/edits / drive-metadata | 1 | 4324.3 ms | 4324.3 ms |
+| 1 / ten-files | submissions/:id/edits / drive-publish | 1 | 4324.6 ms | 4324.6 ms |
+| 1 / ten-files | submissions/:id/edits / drive-publish-wall | 1 | 1663.1 ms | 1663.1 ms |
+| 1 / ten-files | submissions/:id/edits / save | 1 | 1923.0 ms | 1923.0 ms |
+| 1 / ten-files | submissions/:id/edits / handler | 1 | 2217.0 ms | 2217.0 ms |
+| 1 / ten-files | submissions/:id/lock / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | submissions/:id/lock / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions/:id/lock / profile | 1 | 22.1 ms | 22.1 ms |
+| 1 / ten-files | submissions/:id/lock / auth-revoke | 1 | 306.3 ms | 306.3 ms |
+| 1 / ten-files | submissions/:id/lock / access | 1 | 306.9 ms | 306.9 ms |
+| 1 / ten-files | submissions/:id/lock / transaction | 1 | 168.7 ms | 168.7 ms |
+| 1 / ten-files | submissions/:id/lock / handler | 1 | 476.1 ms | 476.1 ms |
+| 1 / ten-files | submissions/:id/remarks / transaction | 1 | 142.9 ms | 142.9 ms |
+| 1 / ten-files | submissions/:id/unlock / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | submissions/:id/unlock / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions/:id/unlock / profile | 1 | 14.4 ms | 14.4 ms |
+| 1 / ten-files | submissions/:id/unlock / auth-revoke | 1 | 303.5 ms | 303.5 ms |
+| 1 / ten-files | submissions/:id/unlock / access | 1 | 304.0 ms | 304.0 ms |
+| 1 / ten-files | submissions/:id/unlock / transaction | 1 | 137.6 ms | 137.6 ms |
+| 1 / ten-files | submissions/:id/unlock / handler | 1 | 442.1 ms | 442.1 ms |
+| 1 / ten-files | auth/config / handler | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | appearance / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | appearance / handler | 1 | 36.6 ms | 36.6 ms |
+| 1 / ten-files | me / database-init | 3 | 0.0 ms | 0.1 ms |
+| 1 / ten-files | me / auth-validate | 3 | 0.5 ms | 0.7 ms |
+| 1 / ten-files | me / profile | 3 | 23.1 ms | 32.6 ms |
+| 1 / ten-files | me / auth-revoke | 3 | 304.1 ms | 316.1 ms |
+| 1 / ten-files | me / access | 3 | 304.9 ms | 316.6 ms |
+| 1 / ten-files | me / handler | 3 | 305.2 ms | 316.7 ms |
+| 1 / ten-files | domains / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | domains / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | domains / profile | 1 | 14.7 ms | 14.7 ms |
+| 1 / ten-files | domains / auth-revoke | 1 | 304.1 ms | 304.1 ms |
+| 1 / ten-files | domains / access | 1 | 304.7 ms | 304.7 ms |
+| 1 / ten-files | domains / handler | 1 | 324.7 ms | 324.7 ms |
+| 1 / ten-files | submissions / database-init | 2 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions / auth-validate | 2 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions / profile | 2 | 14.8 ms | 14.8 ms |
+| 1 / ten-files | submissions / auth-revoke | 2 | 311.2 ms | 311.2 ms |
+| 1 / ten-files | submissions / access | 2 | 311.8 ms | 311.8 ms |
+| 1 / ten-files | submissions / query | 1 | 46.8 ms | 46.8 ms |
+| 1 / ten-files | submissions / handler | 2 | 6370.6 ms | 6370.6 ms |
+| 1 / ten-files | submissions/:id / database-init | 4 | 0.0 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id / auth-validate | 4 | 0.5 ms | 0.7 ms |
+| 1 / ten-files | submissions/:id / profile | 4 | 18.5 ms | 21.8 ms |
+| 1 / ten-files | submissions/:id / auth-revoke | 4 | 318.2 ms | 325.6 ms |
+| 1 / ten-files | submissions/:id / access | 4 | 318.8 ms | 326.4 ms |
+| 1 / ten-files | submissions/:id / query | 4 | 18.4 ms | 22.3 ms |
+| 1 / ten-files | submissions/:id / handler | 4 | 334.2 ms | 348.9 ms |
+| 1 / ten-files | submissions/:id/remarks / database-init | 2 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id/remarks / auth-validate | 2 | 0.6 ms | 0.6 ms |
+| 1 / ten-files | submissions/:id/remarks / profile | 2 | 118.0 ms | 118.0 ms |
+| 1 / ten-files | submissions/:id/remarks / auth-revoke | 2 | 365.1 ms | 365.1 ms |
+| 1 / ten-files | submissions/:id/remarks / access | 2 | 365.8 ms | 365.8 ms |
+| 1 / ten-files | submissions/:id/remarks / handler | 2 | 488.5 ms | 488.5 ms |
+| 1 / ten-files | upload-sessions / database-init | 2 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | upload-sessions / auth-validate | 2 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | upload-sessions / profile | 2 | 19.2 ms | 19.2 ms |
+| 1 / ten-files | upload-sessions / auth-revoke | 2 | 1060.2 ms | 1060.2 ms |
+| 1 / ten-files | upload-sessions / access | 2 | 1060.7 ms | 1060.7 ms |
+| 1 / ten-files | upload-sessions / transaction | 2 | 125.4 ms | 125.4 ms |
+| 1 / ten-files | upload-sessions / drive-queue | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | upload-sessions / drive-http | 1 | 13454.9 ms | 13454.9 ms |
+| 1 / ten-files | upload-sessions / drive-reserve | 2 | 357.4 ms | 357.4 ms |
+| 1 / ten-files | upload-sessions / drive-metadata | 1 | 3908.9 ms | 3908.9 ms |
+| 1 / ten-files | upload-sessions / drive-verify | 1 | 3909.0 ms | 3909.0 ms |
+| 1 / ten-files | upload-sessions / drive-session | 1 | 9195.8 ms | 9195.8 ms |
+| 1 / ten-files | upload-sessions / drive-prepare-wall | 2 | 5057.8 ms | 5057.8 ms |
+| 1 / ten-files | upload-sessions / upload-preparation | 2 | 5630.1 ms | 5630.1 ms |
+| 1 / ten-files | upload-sessions / handler | 2 | 5948.6 ms | 5948.6 ms |
+| 1 / ten-files | submissions / transaction | 1 | 231.4 ms | 231.4 ms |
+| 1 / ten-files | submissions / drive-queue | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions / drive-http | 1 | 14525.3 ms | 14525.3 ms |
+| 1 / ten-files | submissions / drive-metadata | 1 | 4289.0 ms | 4289.0 ms |
+| 1 / ten-files | submissions / drive-sharing | 1 | 10258.7 ms | 10258.7 ms |
+| 1 / ten-files | submissions / drive-publish | 1 | 14548.0 ms | 14548.0 ms |
+| 1 / ten-files | submissions / drive-publish-wall | 1 | 5777.4 ms | 5777.4 ms |
+| 1 / ten-files | submissions / save | 1 | 6058.6 ms | 6058.6 ms |
+| 1 / ten-files | submissions/:id/edits / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | submissions/:id/edits / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions/:id/edits / profile | 1 | 13.0 ms | 13.0 ms |
+| 1 / ten-files | submissions/:id/edits / auth-revoke | 1 | 295.7 ms | 295.7 ms |
+| 1 / ten-files | submissions/:id/edits / access | 1 | 296.3 ms | 296.3 ms |
+| 1 / ten-files | submissions/:id/edits / transaction | 1 | 217.5 ms | 217.5 ms |
+| 1 / ten-files | submissions/:id/edits / drive-queue | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id/edits / drive-http | 1 | 4588.3 ms | 4588.3 ms |
+| 1 / ten-files | submissions/:id/edits / drive-metadata | 1 | 4639.8 ms | 4639.8 ms |
+| 1 / ten-files | submissions/:id/edits / drive-publish | 1 | 4640.1 ms | 4640.1 ms |
+| 1 / ten-files | submissions/:id/edits / drive-publish-wall | 1 | 1677.2 ms | 1677.2 ms |
+| 1 / ten-files | submissions/:id/edits / save | 1 | 1959.2 ms | 1959.2 ms |
+| 1 / ten-files | submissions/:id/edits / handler | 1 | 2255.8 ms | 2255.8 ms |
+| 1 / ten-files | submissions/:id/lock / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | submissions/:id/lock / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions/:id/lock / profile | 1 | 15.7 ms | 15.7 ms |
+| 1 / ten-files | submissions/:id/lock / auth-revoke | 1 | 334.4 ms | 334.4 ms |
+| 1 / ten-files | submissions/:id/lock / access | 1 | 335.0 ms | 335.0 ms |
+| 1 / ten-files | submissions/:id/lock / transaction | 1 | 128.1 ms | 128.1 ms |
+| 1 / ten-files | submissions/:id/lock / handler | 1 | 463.5 ms | 463.5 ms |
+| 1 / ten-files | submissions/:id/remarks / transaction | 1 | 171.2 ms | 171.2 ms |
+| 1 / ten-files | submissions/:id/unlock / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | submissions/:id/unlock / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions/:id/unlock / profile | 1 | 25.8 ms | 25.8 ms |
+| 1 / ten-files | submissions/:id/unlock / auth-revoke | 1 | 339.2 ms | 339.2 ms |
+| 1 / ten-files | submissions/:id/unlock / access | 1 | 339.7 ms | 339.7 ms |
+| 1 / ten-files | submissions/:id/unlock / transaction | 1 | 170.7 ms | 170.7 ms |
+| 1 / ten-files | submissions/:id/unlock / handler | 1 | 510.8 ms | 510.8 ms |
+| 1 / ten-files | auth/config / handler | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | appearance / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | appearance / handler | 1 | 13.5 ms | 13.5 ms |
+| 1 / ten-files | me / database-init | 3 | 0.0 ms | 663.5 ms |
+| 1 / ten-files | me / auth-validate | 3 | 0.6 ms | 964.7 ms |
+| 1 / ten-files | me / profile | 3 | 25.6 ms | 301.6 ms |
+| 1 / ten-files | me / auth-revoke | 3 | 309.4 ms | 629.9 ms |
+| 1 / ten-files | me / access | 3 | 310.2 ms | 1595.2 ms |
+| 1 / ten-files | me / handler | 3 | 310.3 ms | 1598.2 ms |
+| 1 / ten-files | domains / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | domains / auth-validate | 1 | 8.8 ms | 8.8 ms |
+| 1 / ten-files | domains / profile | 1 | 41.9 ms | 41.9 ms |
+| 1 / ten-files | domains / auth-revoke | 1 | 360.8 ms | 360.8 ms |
+| 1 / ten-files | domains / access | 1 | 369.7 ms | 369.7 ms |
+| 1 / ten-files | domains / handler | 1 | 414.4 ms | 414.4 ms |
+| 1 / ten-files | submissions / database-init | 2 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions / auth-validate | 2 | 0.7 ms | 0.7 ms |
+| 1 / ten-files | submissions / profile | 2 | 50.4 ms | 50.4 ms |
+| 1 / ten-files | submissions / auth-revoke | 2 | 305.2 ms | 305.2 ms |
+| 1 / ten-files | submissions / access | 2 | 305.9 ms | 305.9 ms |
+| 1 / ten-files | submissions / query | 1 | 111.5 ms | 111.5 ms |
+| 1 / ten-files | submissions / handler | 2 | 3854.4 ms | 3854.4 ms |
+| 1 / ten-files | submissions/:id/remarks / database-init | 2 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id/remarks / auth-validate | 2 | 0.6 ms | 0.6 ms |
+| 1 / ten-files | submissions/:id/remarks / profile | 2 | 46.9 ms | 46.9 ms |
+| 1 / ten-files | submissions/:id/remarks / auth-revoke | 2 | 306.3 ms | 306.3 ms |
+| 1 / ten-files | submissions/:id/remarks / access | 2 | 306.8 ms | 306.8 ms |
+| 1 / ten-files | submissions/:id/remarks / handler | 2 | 447.6 ms | 447.6 ms |
+| 1 / ten-files | upload-sessions / database-init | 2 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | upload-sessions / auth-validate | 2 | 0.7 ms | 0.7 ms |
+| 1 / ten-files | upload-sessions / profile | 2 | 21.7 ms | 21.7 ms |
+| 1 / ten-files | upload-sessions / auth-revoke | 2 | 332.2 ms | 332.2 ms |
+| 1 / ten-files | upload-sessions / access | 2 | 332.8 ms | 332.8 ms |
+| 1 / ten-files | upload-sessions / transaction | 2 | 154.3 ms | 154.3 ms |
+| 1 / ten-files | upload-sessions / drive-queue | 1 | 0.3 ms | 0.3 ms |
+| 1 / ten-files | upload-sessions / drive-oauth | 1 | 139.1 ms | 139.1 ms |
+| 1 / ten-files | upload-sessions / drive-http | 1 | 13211.2 ms | 13211.2 ms |
+| 1 / ten-files | upload-sessions / drive-reserve | 2 | 489.2 ms | 489.2 ms |
+| 1 / ten-files | upload-sessions / drive-metadata | 1 | 4116.3 ms | 4116.3 ms |
+| 1 / ten-files | upload-sessions / drive-verify | 1 | 4116.5 ms | 4116.5 ms |
+| 1 / ten-files | upload-sessions / drive-session | 1 | 8777.2 ms | 8777.2 ms |
+| 1 / ten-files | upload-sessions / drive-prepare-wall | 2 | 2616.8 ms | 2616.8 ms |
+| 1 / ten-files | upload-sessions / upload-preparation | 2 | 3412.4 ms | 3412.4 ms |
+| 1 / ten-files | upload-sessions / handler | 2 | 3745.4 ms | 3745.4 ms |
+| 1 / ten-files | submissions/:id / database-init | 4 | 0.2 ms | 531.6 ms |
+| 1 / ten-files | submissions/:id / auth-validate | 4 | 1.1 ms | 825.6 ms |
+| 1 / ten-files | submissions/:id / profile | 4 | 24.7 ms | 232.1 ms |
+| 1 / ten-files | submissions/:id / auth-revoke | 4 | 317.1 ms | 559.8 ms |
+| 1 / ten-files | submissions/:id / access | 4 | 317.8 ms | 1386.2 ms |
+| 1 / ten-files | submissions/:id / query | 4 | 27.4 ms | 65.5 ms |
+| 1 / ten-files | submissions/:id / handler | 4 | 345.2 ms | 1455.3 ms |
+| 1 / ten-files | submissions / transaction | 1 | 298.4 ms | 298.4 ms |
+| 1 / ten-files | submissions / drive-queue | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions / drive-oauth | 1 | 132.8 ms | 132.8 ms |
+| 1 / ten-files | submissions / drive-http | 1 | 14209.9 ms | 14209.9 ms |
+| 1 / ten-files | submissions / drive-metadata | 1 | 5105.8 ms | 5105.8 ms |
+| 1 / ten-files | submissions / drive-sharing | 1 | 9872.3 ms | 9872.3 ms |
+| 1 / ten-files | submissions / drive-publish | 1 | 14978.9 ms | 14978.9 ms |
+| 1 / ten-files | submissions / drive-publish-wall | 1 | 3147.7 ms | 3147.7 ms |
+| 1 / ten-files | submissions / save | 1 | 3547.4 ms | 3547.4 ms |
+| 1 / ten-files | submissions/:id/edits / database-init | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id/edits / auth-validate | 1 | 0.9 ms | 0.9 ms |
+| 1 / ten-files | submissions/:id/edits / profile | 1 | 20.1 ms | 20.1 ms |
+| 1 / ten-files | submissions/:id/edits / auth-revoke | 1 | 303.1 ms | 303.1 ms |
+| 1 / ten-files | submissions/:id/edits / access | 1 | 304.1 ms | 304.1 ms |
+| 1 / ten-files | submissions/:id/edits / transaction | 1 | 243.2 ms | 243.2 ms |
+| 1 / ten-files | submissions/:id/edits / drive-queue | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id/edits / drive-http | 1 | 4514.7 ms | 4514.7 ms |
+| 1 / ten-files | submissions/:id/edits / drive-metadata | 1 | 4556.7 ms | 4556.7 ms |
+| 1 / ten-files | submissions/:id/edits / drive-publish | 1 | 4557.0 ms | 4557.0 ms |
+| 1 / ten-files | submissions/:id/edits / drive-publish-wall | 1 | 989.9 ms | 989.9 ms |
+| 1 / ten-files | submissions/:id/edits / save | 1 | 1313.7 ms | 1313.7 ms |
+| 1 / ten-files | submissions/:id/edits / handler | 1 | 1618.0 ms | 1618.0 ms |
+| 1 / ten-files | submissions/:id/lock / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | submissions/:id/lock / auth-validate | 1 | 0.7 ms | 0.7 ms |
+| 1 / ten-files | submissions/:id/lock / profile | 1 | 24.2 ms | 24.2 ms |
+| 1 / ten-files | submissions/:id/lock / auth-revoke | 1 | 304.2 ms | 304.2 ms |
+| 1 / ten-files | submissions/:id/lock / access | 1 | 305.0 ms | 305.0 ms |
+| 1 / ten-files | submissions/:id/lock / transaction | 1 | 137.2 ms | 137.2 ms |
+| 1 / ten-files | submissions/:id/lock / handler | 1 | 442.9 ms | 442.9 ms |
+| 1 / ten-files | submissions/:id/remarks / transaction | 1 | 140.3 ms | 140.3 ms |
+| 1 / ten-files | submissions/:id/unlock / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | submissions/:id/unlock / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions/:id/unlock / profile | 1 | 32.7 ms | 32.7 ms |
+| 1 / ten-files | submissions/:id/unlock / auth-revoke | 1 | 300.7 ms | 300.7 ms |
+| 1 / ten-files | submissions/:id/unlock / access | 1 | 301.2 ms | 301.2 ms |
+| 1 / ten-files | submissions/:id/unlock / transaction | 1 | 125.7 ms | 125.7 ms |
+| 1 / ten-files | submissions/:id/unlock / handler | 1 | 427.2 ms | 427.2 ms |
+| 1 / ten-files | auth/config / handler | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | appearance / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | appearance / handler | 1 | 22.3 ms | 22.3 ms |
+| 1 / ten-files | me / database-init | 3 | 0.0 ms | 0.1 ms |
+| 1 / ten-files | me / auth-validate | 3 | 0.6 ms | 0.6 ms |
+| 1 / ten-files | me / profile | 3 | 39.9 ms | 56.4 ms |
+| 1 / ten-files | me / auth-revoke | 3 | 300.2 ms | 338.5 ms |
+| 1 / ten-files | me / access | 3 | 300.8 ms | 339.2 ms |
+| 1 / ten-files | me / handler | 3 | 300.9 ms | 339.3 ms |
+| 1 / ten-files | domains / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | domains / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | domains / profile | 1 | 15.3 ms | 15.3 ms |
+| 1 / ten-files | domains / auth-revoke | 1 | 305.0 ms | 305.0 ms |
+| 1 / ten-files | domains / access | 1 | 305.5 ms | 305.5 ms |
+| 1 / ten-files | domains / handler | 1 | 348.1 ms | 348.1 ms |
+| 1 / ten-files | submissions / database-init | 2 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | submissions / auth-validate | 2 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions / profile | 2 | 33.4 ms | 33.4 ms |
+| 1 / ten-files | submissions / auth-revoke | 2 | 324.3 ms | 324.3 ms |
+| 1 / ten-files | submissions / access | 2 | 324.8 ms | 324.8 ms |
+| 1 / ten-files | submissions / query | 1 | 144.4 ms | 144.4 ms |
+| 1 / ten-files | submissions / handler | 2 | 4375.9 ms | 4375.9 ms |
+| 1 / ten-files | submissions/:id/remarks / database-init | 2 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id/remarks / auth-validate | 2 | 0.6 ms | 0.6 ms |
+| 1 / ten-files | submissions/:id/remarks / profile | 2 | 100.0 ms | 100.0 ms |
+| 1 / ten-files | submissions/:id/remarks / auth-revoke | 2 | 415.0 ms | 415.0 ms |
+| 1 / ten-files | submissions/:id/remarks / access | 2 | 415.7 ms | 415.7 ms |
+| 1 / ten-files | submissions/:id/remarks / handler | 2 | 484.0 ms | 484.0 ms |
+| 1 / ten-files | submissions/:id / database-init | 4 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | submissions/:id / auth-validate | 4 | 0.5 ms | 0.6 ms |
+| 1 / ten-files | submissions/:id / profile | 4 | 22.1 ms | 23.0 ms |
+| 1 / ten-files | submissions/:id / auth-revoke | 4 | 313.4 ms | 1235.5 ms |
+| 1 / ten-files | submissions/:id / access | 4 | 314.1 ms | 1236.1 ms |
+| 1 / ten-files | submissions/:id / query | 4 | 16.5 ms | 21.8 ms |
+| 1 / ten-files | submissions/:id / handler | 4 | 329.3 ms | 1258.3 ms |
+| 1 / ten-files | upload-sessions / database-init | 2 | 0.2 ms | 0.2 ms |
+| 1 / ten-files | upload-sessions / auth-validate | 2 | 0.7 ms | 0.7 ms |
+| 1 / ten-files | upload-sessions / profile | 2 | 22.6 ms | 22.6 ms |
+| 1 / ten-files | upload-sessions / auth-revoke | 2 | 318.3 ms | 318.3 ms |
+| 1 / ten-files | upload-sessions / access | 2 | 319.0 ms | 319.0 ms |
+| 1 / ten-files | upload-sessions / transaction | 2 | 152.0 ms | 152.0 ms |
+| 1 / ten-files | upload-sessions / drive-queue | 1 | 0.2 ms | 0.2 ms |
+| 1 / ten-files | upload-sessions / drive-http | 1 | 14069.1 ms | 14069.1 ms |
+| 1 / ten-files | upload-sessions / drive-reserve | 2 | 333.4 ms | 333.4 ms |
+| 1 / ten-files | upload-sessions / drive-metadata | 1 | 4091.6 ms | 4091.6 ms |
+| 1 / ten-files | upload-sessions / drive-verify | 1 | 4091.8 ms | 4091.8 ms |
+| 1 / ten-files | upload-sessions / drive-session | 1 | 9657.3 ms | 9657.3 ms |
+| 1 / ten-files | upload-sessions / drive-prepare-wall | 2 | 2912.4 ms | 2912.4 ms |
+| 1 / ten-files | upload-sessions / upload-preparation | 2 | 3514.8 ms | 3514.8 ms |
+| 1 / ten-files | upload-sessions / handler | 2 | 3834.1 ms | 3834.1 ms |
+| 1 / ten-files | submissions / transaction | 1 | 303.5 ms | 303.5 ms |
+| 1 / ten-files | submissions / drive-queue | 1 | 0.2 ms | 0.2 ms |
+| 1 / ten-files | submissions / drive-http | 1 | 15456.6 ms | 15456.6 ms |
+| 1 / ten-files | submissions / drive-metadata | 1 | 4273.5 ms | 4273.5 ms |
+| 1 / ten-files | submissions / drive-sharing | 1 | 11235.7 ms | 11235.7 ms |
+| 1 / ten-files | submissions / drive-publish | 1 | 15509.6 ms | 15509.6 ms |
+| 1 / ten-files | submissions / drive-publish-wall | 1 | 3673.2 ms | 3673.2 ms |
+| 1 / ten-files | submissions / save | 1 | 4050.8 ms | 4050.8 ms |
+| 1 / ten-files | submissions/:id/edits / database-init | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id/edits / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions/:id/edits / profile | 1 | 73.7 ms | 73.7 ms |
+| 1 / ten-files | submissions/:id/edits / auth-revoke | 1 | 298.3 ms | 298.3 ms |
+| 1 / ten-files | submissions/:id/edits / access | 1 | 298.9 ms | 298.9 ms |
+| 1 / ten-files | submissions/:id/edits / transaction | 1 | 234.9 ms | 234.9 ms |
+| 1 / ten-files | submissions/:id/edits / drive-queue | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id/edits / drive-http | 1 | 4204.2 ms | 4204.2 ms |
+| 1 / ten-files | submissions/:id/edits / drive-metadata | 1 | 4245.7 ms | 4245.7 ms |
+| 1 / ten-files | submissions/:id/edits / drive-publish | 1 | 4246.0 ms | 4246.0 ms |
+| 1 / ten-files | submissions/:id/edits / drive-publish-wall | 1 | 888.0 ms | 888.0 ms |
+| 1 / ten-files | submissions/:id/edits / save | 1 | 1190.2 ms | 1190.2 ms |
+| 1 / ten-files | submissions/:id/edits / handler | 1 | 1490.2 ms | 1490.2 ms |
+| 1 / ten-files | submissions/:id/lock / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | submissions/:id/lock / auth-validate | 1 | 0.6 ms | 0.6 ms |
+| 1 / ten-files | submissions/:id/lock / profile | 1 | 22.4 ms | 22.4 ms |
+| 1 / ten-files | submissions/:id/lock / auth-revoke | 1 | 304.9 ms | 304.9 ms |
+| 1 / ten-files | submissions/:id/lock / access | 1 | 305.5 ms | 305.5 ms |
+| 1 / ten-files | submissions/:id/lock / transaction | 1 | 168.7 ms | 168.7 ms |
+| 1 / ten-files | submissions/:id/lock / handler | 1 | 474.7 ms | 474.7 ms |
+| 1 / ten-files | submissions/:id/remarks / transaction | 1 | 140.8 ms | 140.8 ms |
+| 1 / ten-files | submissions/:id/unlock / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | submissions/:id/unlock / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions/:id/unlock / profile | 1 | 19.8 ms | 19.8 ms |
+| 1 / ten-files | submissions/:id/unlock / auth-revoke | 1 | 313.5 ms | 313.5 ms |
+| 1 / ten-files | submissions/:id/unlock / access | 1 | 314.0 ms | 314.0 ms |
+| 1 / ten-files | submissions/:id/unlock / transaction | 1 | 141.4 ms | 141.4 ms |
+| 1 / ten-files | submissions/:id/unlock / handler | 1 | 455.7 ms | 455.7 ms |
+| 1 / ten-files | appearance / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | appearance / handler | 1 | 14.6 ms | 14.6 ms |
+| 1 / ten-files | auth/config / handler | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | me / database-init | 3 | 0.0 ms | 0.1 ms |
+| 1 / ten-files | me / auth-validate | 3 | 0.6 ms | 0.8 ms |
+| 1 / ten-files | me / profile | 3 | 39.2 ms | 56.2 ms |
+| 1 / ten-files | me / auth-revoke | 3 | 293.1 ms | 332.4 ms |
+| 1 / ten-files | me / access | 3 | 293.9 ms | 333.2 ms |
+| 1 / ten-files | me / handler | 3 | 294.0 ms | 334.8 ms |
+| 1 / ten-files | domains / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | domains / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | domains / profile | 1 | 23.1 ms | 23.1 ms |
+| 1 / ten-files | domains / auth-revoke | 1 | 316.5 ms | 316.5 ms |
+| 1 / ten-files | domains / access | 1 | 317.0 ms | 317.0 ms |
+| 1 / ten-files | domains / handler | 1 | 349.5 ms | 349.5 ms |
+| 1 / ten-files | submissions / database-init | 2 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | submissions / auth-validate | 2 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions / profile | 2 | 27.6 ms | 27.6 ms |
+| 1 / ten-files | submissions / auth-revoke | 2 | 334.6 ms | 334.6 ms |
+| 1 / ten-files | submissions / access | 2 | 335.1 ms | 335.1 ms |
+| 1 / ten-files | submissions / query | 1 | 52.2 ms | 52.2 ms |
+| 1 / ten-files | submissions / handler | 2 | 3448.4 ms | 3448.4 ms |
+| 1 / ten-files | submissions/:id / database-init | 4 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id / auth-validate | 4 | 0.5 ms | 0.7 ms |
+| 1 / ten-files | submissions/:id / profile | 4 | 22.5 ms | 37.2 ms |
+| 1 / ten-files | submissions/:id / auth-revoke | 4 | 330.6 ms | 342.1 ms |
+| 1 / ten-files | submissions/:id / access | 4 | 331.2 ms | 342.9 ms |
+| 1 / ten-files | submissions/:id / query | 4 | 27.5 ms | 37.2 ms |
+| 1 / ten-files | submissions/:id / handler | 4 | 347.2 ms | 366.2 ms |
+| 1 / ten-files | submissions/:id/remarks / database-init | 2 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | submissions/:id/remarks / auth-validate | 2 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions/:id/remarks / profile | 2 | 25.9 ms | 25.9 ms |
+| 1 / ten-files | submissions/:id/remarks / auth-revoke | 2 | 313.1 ms | 313.1 ms |
+| 1 / ten-files | submissions/:id/remarks / access | 2 | 313.7 ms | 313.7 ms |
+| 1 / ten-files | submissions/:id/remarks / handler | 2 | 457.8 ms | 457.8 ms |
+| 1 / ten-files | upload-sessions / database-init | 2 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | upload-sessions / auth-validate | 2 | 0.6 ms | 0.6 ms |
+| 1 / ten-files | upload-sessions / profile | 2 | 21.1 ms | 21.1 ms |
+| 1 / ten-files | upload-sessions / auth-revoke | 2 | 307.4 ms | 307.4 ms |
+| 1 / ten-files | upload-sessions / access | 2 | 308.0 ms | 308.0 ms |
+| 1 / ten-files | upload-sessions / transaction | 2 | 135.2 ms | 135.2 ms |
+| 1 / ten-files | upload-sessions / drive-queue | 1 | 0.2 ms | 0.2 ms |
+| 1 / ten-files | upload-sessions / drive-http | 1 | 13949.8 ms | 13949.8 ms |
+| 1 / ten-files | upload-sessions / drive-reserve | 2 | 360.0 ms | 360.0 ms |
+| 1 / ten-files | upload-sessions / drive-metadata | 1 | 4023.3 ms | 4023.3 ms |
+| 1 / ten-files | upload-sessions / drive-verify | 1 | 4023.4 ms | 4023.4 ms |
+| 1 / ten-files | upload-sessions / drive-session | 1 | 9578.3 ms | 9578.3 ms |
+| 1 / ten-files | upload-sessions / drive-prepare-wall | 2 | 2938.3 ms | 2938.3 ms |
+| 1 / ten-files | upload-sessions / upload-preparation | 2 | 3566.7 ms | 3566.7 ms |
+| 1 / ten-files | upload-sessions / handler | 2 | 3860.5 ms | 3860.5 ms |
+| 1 / ten-files | submissions / transaction | 1 | 244.8 ms | 244.8 ms |
+| 1 / ten-files | submissions / drive-queue | 1 | 0.2 ms | 0.2 ms |
+| 1 / ten-files | submissions / drive-http | 1 | 13752.4 ms | 13752.4 ms |
+| 1 / ten-files | submissions / drive-metadata | 1 | 4337.6 ms | 4337.6 ms |
+| 1 / ten-files | submissions / drive-sharing | 1 | 9463.6 ms | 9463.6 ms |
+| 1 / ten-files | submissions / drive-publish | 1 | 13801.7 ms | 13801.7 ms |
+| 1 / ten-files | submissions / drive-publish-wall | 1 | 2824.8 ms | 2824.8 ms |
+| 1 / ten-files | submissions / save | 1 | 3123.3 ms | 3123.3 ms |
+| 1 / ten-files | submissions/:id/edits / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | submissions/:id/edits / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions/:id/edits / profile | 1 | 14.4 ms | 14.4 ms |
+| 1 / ten-files | submissions/:id/edits / auth-revoke | 1 | 297.2 ms | 297.2 ms |
+| 1 / ten-files | submissions/:id/edits / access | 1 | 297.7 ms | 297.7 ms |
+| 1 / ten-files | submissions/:id/edits / transaction | 1 | 300.7 ms | 300.7 ms |
+| 1 / ten-files | submissions/:id/edits / drive-queue | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id/edits / drive-http | 1 | 4702.9 ms | 4702.9 ms |
+| 1 / ten-files | submissions/:id/edits / drive-metadata | 1 | 4739.1 ms | 4739.1 ms |
+| 1 / ten-files | submissions/:id/edits / drive-publish | 1 | 4739.4 ms | 4739.4 ms |
+| 1 / ten-files | submissions/:id/edits / drive-publish-wall | 1 | 1255.4 ms | 1255.4 ms |
+| 1 / ten-files | submissions/:id/edits / save | 1 | 1652.3 ms | 1652.3 ms |
+| 1 / ten-files | submissions/:id/edits / handler | 1 | 1950.2 ms | 1950.2 ms |
+| 1 / ten-files | submissions/:id/lock / database-init | 1 | 0.0 ms | 0.0 ms |
+| 1 / ten-files | submissions/:id/lock / auth-validate | 1 | 0.9 ms | 0.9 ms |
+| 1 / ten-files | submissions/:id/lock / profile | 1 | 22.2 ms | 22.2 ms |
+| 1 / ten-files | submissions/:id/lock / auth-revoke | 1 | 326.1 ms | 326.1 ms |
+| 1 / ten-files | submissions/:id/lock / access | 1 | 327.1 ms | 327.1 ms |
+| 1 / ten-files | submissions/:id/lock / transaction | 1 | 162.3 ms | 162.3 ms |
+| 1 / ten-files | submissions/:id/lock / handler | 1 | 489.9 ms | 489.9 ms |
+| 1 / ten-files | submissions/:id/remarks / transaction | 1 | 143.7 ms | 143.7 ms |
+| 1 / ten-files | submissions/:id/unlock / database-init | 1 | 0.1 ms | 0.1 ms |
+| 1 / ten-files | submissions/:id/unlock / auth-validate | 1 | 0.5 ms | 0.5 ms |
+| 1 / ten-files | submissions/:id/unlock / profile | 1 | 13.3 ms | 13.3 ms |
+| 1 / ten-files | submissions/:id/unlock / auth-revoke | 1 | 307.3 ms | 307.3 ms |
+| 1 / ten-files | submissions/:id/unlock / access | 1 | 307.8 ms | 307.8 ms |
+| 1 / ten-files | submissions/:id/unlock / transaction | 1 | 138.6 ms | 138.6 ms |
+| 1 / ten-files | submissions/:id/unlock / handler | 1 | 446.8 ms | 446.8 ms |
 
 ## 500-submission daily forecast
 
 Attachment assumption: 70% no files, 25% one 1 MB file, 5% two 5 MB files. This implies approximately **375 MB and 175 files** for 500 creates, before replacements or other Drive usage. Text-only edits retain files. The ten-file stress scenario is separate.
 
-Observed SDK operations across these test reports: 16100 reads, 1260 writes, 0 deletes; 128 completed save workflows. These include control traffic and test-only run guards and are not an invoice or a per-submission production estimate.
+Observed SDK operations across these test reports: 16878 reads, 1404 writes, 0 deletes; 140 completed save workflows. These include control traffic and test-only run guards and are not an invoice or a per-submission production estimate.
 
 For each complete metadata/mixed window, normalize its observed operations by completed student workflows; forecast 500 creates, one edit, one remark and lock/unlock per submission. Add measured browsing/sign-in traffic separately. Do not extrapolate incomplete or browsing-only windows as write workflows.
 - metadata, 1 users, 85e45c5c-c258-4c08-b74e-015e3e184c14: conservative test-workload projection for 500 submissions = 184500 reads and 8000 writes. Includes that window's browsing and test guards; compare with owner/provider usage.

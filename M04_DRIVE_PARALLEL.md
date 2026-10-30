@@ -4,7 +4,7 @@
 
 Existing M04 resources and diagnostics branch only. Production rollback remains source `bf54d8c05897ba831f6affa1cdc3603b7ff9bc3f`, deployment `dpl_3SjEVbv6XDh3vLrH16xFLig6J9be`. Do not promote until Preview acceptance and a new agreed Production quiet session. October 29's quiet window does not authorize October 30 Production load.
 
-Ordered workers process three files per request during upload preparation and publication, including retained-file verification. A module-shared FIFO limiter permits six M04 Drive operations in this process across all Drive objects/requests. Each file's steps remain sequential. Failure stops scheduling files and drains all started work before rejecting; Firestore commit occurs only after successful publication. Existing validation, upload ownership, operation receipts/reconciliation, lock/version checks and shared OAuth refresh remain. No legacy runtime modules, API schema, browser transfer concurrency, file limits or backing resources change.
+The initial candidate used three file workers; the final tested Preview candidate uses five during upload preparation and publication, including retained-file verification. A module-shared FIFO limiter permits six M04 Drive operations in this process across all Drive objects/requests. Each file's steps remain sequential. Failure stops scheduling files and drains all started work before rejecting; Firestore commit occurs only after successful publication. Existing validation, upload ownership, operation receipts/reconciliation, lock/version checks and shared OAuth refresh remain. No legacy runtime modules, API schema, browser transfer concurrency, file limits or backing resources change.
 
 `drive-prepare-wall` and `drive-publish-wall` are elapsed phase timings. Per-file metadata/sharing/publish spans are overlapping work totals under concurrency; do not sum them as critical-path latency. `drive-queue` records cumulative permit wait. `driveActivePeak` is the maximum instance-active count observed by the request, not a global Google-account limit. Slots release in `finally`, including transport failures and timeouts. Existing request retry behavior remains.
 
@@ -28,4 +28,26 @@ Three-worker source `87788bf201f0fbf0295621dc931bbbb947eac599`, protected Previe
 
 First-trial elapsed preparation was 6,648 ms, including `drive-prepare-wall` 5,419 ms. Publication elapsed `drive-publish-wall` was 5,610 ms while cumulative per-file publication work was 14,541 ms; retained-file publication elapsed was 1,721 ms versus 4,693 ms of cumulative work. Peak active Drive operations observed was three. The external request counts were unchanged (21 preparation including ten expected pre-upload 404 probes, 20 create, ten retained-file edit). No overlapping spans are added to infer elapsed time.
 
-The approved second candidate changes only the runtime per-request file pool from three to five, retaining six instance-wide Drive permits. It is pending three identical hosted trials. Production remains unchanged. No higher-load escalation is allowed unless the boundary gate passes.
+The approved second candidate changed only the runtime per-request file pool from three to five, retaining six instance-wide Drive permits. Source `facca69e6bbd93caff8047ce80b81a6e49812350`, Preview deployment `dpl_54JqJzuqWrZEPfN4ANrXVrXiPLoj`, completed three trials:
+
+| Workers | Trial | Prepare API | Final create | Retained edit | Full create acknowledgment |
+|---:|---:|---:|---:|---:|---:|
+| 5 | 1 | 3.80 s | 3.93 s | 1.71 s | 23.22 s |
+| 5 | 2 | 3.89 s | 4.49 s | 1.56 s | 23.99 s |
+| 5 | 3 | 3.90 s | 3.52 s | 2.01 s | 23.58 s |
+
+All six workflows completed with zero reported HTTP/integrity failures, six successful anonymous Drive views and unchanged PP039 comparisons. The file sets remained ten 1,000,000-byte PDF files with serial transfers. These are six individual observations, not reliable population p95 estimates. The first five-worker trial also had a 2.10-second first-observed detail miss: access 1.39 seconds, query 66 ms, handler 1.46 seconds. Its initialization overlapped authentication; it remains a separate startup observation.
+
+The five-worker final-create gate **failed in every trial**. Higher loads and Production promotion were therefore not performed, as specified by the plan. The five-worker Preview remains available for review; Production remains READY at the original `bf54d8c` source and `dpl_3SjEVbv6XDh3vLrH16xFLig6J9be` deployment, independently rechecked after testing. No capacity-release tag was created.
+
+Five-worker publication wall times were 3.15 / 3.67 / 2.82 seconds, plus approximately 0.31–0.33 seconds of access checks and transaction overhead. Cumulative sharing work remained 9.46–11.24 seconds across ten files. Queue wait was negligible for this single-uploader condition, and observed Drive peak was five, below the six-instance permit limit. The remaining latency is visible in file work plus fixed server overhead; this is not a local-byte-transfer bottleneck. The approved three/five-worker experiment is exhausted. Further changes or a different attachment-save target require a new decision; do not silently loosen targets or increase the instance limit.
+
+## Cleanup, budgets and reruns
+
+Cleanup job `e3c9b02a-e181-40fd-be58-d9a216a13a31` completed: six marked submissions and remarks deleted; 60 file entries resolved with zero remaining. A separate read-back of every file confirmed all 60 were in Drive Trash with matching run/owner/upload metadata. Zero marked submissions remained, and 43 unmarked submissions remained. PP039 stayed version 5, unlocked, with one attachment and its unchanged October 29 edit timestamp. Accounts, aggregate results, receipts and reports remain; no permanent Drive deletion or previous-content snapshots were introduced. The actual Production admin cleanup screen showed completion without browser errors; its screenshot was inspected.
+
+Final conservative cumulative ledger: **21,126 reads, 2,738 writes/deletes, 71,000,201 uploaded bytes**. This experiment used **1,578 additional reads, 365 additional writes/deletes and 60,000,000 uploaded bytes**, including cleanup and final verification. Testing stopped on the latency gate, not budget exhaustion. These estimates are distinct from the timestamped owner/provider snapshot.
+
+Final validation: offline M04 36 passed/one emulator-dependent skip; initial full emulator suite 37 passed and browser rehearsal zero errors; tuned five-worker focused emulator suite 14 passed. M01/M02/M03 offline regressions passed, and four preserved deployment root GETs returned HTTP 200. No legacy resources were written.
+
+Raw sanitized first/repeat reports, final verification, cleanup screenshot, provider snapshot and comparison are under `test-evidence/m04/drive-parallel-*`. Rerun `node scripts/m04-drive-parallel-report.mjs` to reproduce `output/m04/DRIVE_PARALLEL_RESULTS.md` and JSON from committed evidence. Comparison includes UTC/IST timestamps, full deployed source hashes, sample sizes, transfer/acknowledgment times, wall-versus-work timings and observed request peaks. Fresh hosted trials still require valid quota snapshots and an explicit fixed-baseline allowance; the old authorization must not be reset by restarting a script.

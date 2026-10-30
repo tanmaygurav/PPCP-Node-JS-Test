@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "recordedAt": "2026-10-30T03:39:22.267Z",
+  "recordedAtIST": "30/10/2026, 9:09:22 am",
+  "productionSource": "bf54d8c05897ba831f6affa1cdc3603b7ff9bc3f",
+  "jobId": "e3c9b02a-e181-40fd-be58-d9a216a13a31",
+  "deleted": 6,
+  "fileEntriesResolved": 60,
+  "remainingFiles": 0,
+  "driveFilesVerifiedTrashed": 60,
+  "driveMetadataRequests": 60,
+  "markedSubmissionsRemaining": 0,
+  "preservedSubmissionCount": 43,
+  "pp039": {
+    "version": 5,
+    "locked": false,
+    "attachments": 1,
+    "lastEditedAt": "2026-10-29T05:27:24.826Z"
+  },
+  "browserErrors": 0,
+  "finalBudgetEstimates": {
+    "reads": 21126,
+    "writes": 2738,
+    "bytes": 71000201
+  }
+}
