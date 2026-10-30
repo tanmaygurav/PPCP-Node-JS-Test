@@ -15,6 +15,7 @@ try{
   if(previous?.ownerReported&&previous.projectId===config.projectId&&Date.now()-Date.parse(previous.checkedAt)<3600000){
     result.inspectedAt=result.checkedAt;result.checkedAt=previous.checkedAt;result.ownerReported=previous.ownerReported;result.drive=previous.drive;result.vercel=previous.vercel;
     if(previous.authorizedReadExtension)result.authorizedReadExtension=previous.authorizedReadExtension;
+    if(previous.authorizedWriteExtension)result.authorizedWriteExtension=previous.authorizedWriteExtension;
     if(result.billingDisabled===null)result.billingDisabled=previous.billingDisabled;
     for(const key of ['read','write','delete'])if(!Number.isFinite(result.usage[key]))result.usage[key]=previous.usage[key];
     result.note='Automated inspection could not cover all services. Fresh owner-reported dashboard figures retained with their original timestamp; no freshness extension.';

@@ -4,6 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { Firestore } from '@google-cloud/firestore';
 import { MemoryDB } from './memory.mjs';
 import { M04Store } from '../src/m04/store.mjs';
+import { DRIVE_FILE_CONCURRENCY } from '../src/m04/concurrency.mjs';
 import { AppError, digest, files } from '../src/m04/domain.mjs';
 const emulator = !!process.env.FIRESTORE_EMULATOR_HOST;
 const config = { secret: 'test-secret'.repeat(4), bootstrapUids: ['admin'] };
@@ -123,4 +124,17 @@ test('Firestore emulator: indexed query combinations, cursor pages and remarks',
   }
   await store.mutate(faculty, first.items[0].id, 'remarks', { operationId: randomUUID(), remark: 'Hello' });
   assert.equal((await store.remarks(student, first.items[0].id)).items[0].authorName, 'Faculty');
+});
+
+test('parallel publication failure drains work, keeps saved content, and retries exactly',async()=>{
+ const {store,student,drive,savedFiles}=await fixture();
+ const operationId=randomUUID(),prepared=await store.prepare(student,{operationId,files:Array.from({length:6},(_,i)=>({name:`proof-${i}.pdf`,size:100,mimeType:'application/pdf'}))});
+ for(const file of prepared.uploads)savedFiles.get(file.id).complete=true;
+ const first=await store.save(student,{...input,operationId,uploadId:prepared.uploadId});const before=await store.find(student,first.submissionId);
+ const editOp=randomUUID(),edit=await store.prepare(student,{operationId:editOp,submissionId:before.id,expectedVersion:before.version,retainedIds:before.media.map(f=>f.id),files:[]});
+ const original=drive.publish;let active=0,peak=0,started=0,completed=0;
+ drive.publish=async(...args)=>{const index=started++;active++;peak=Math.max(peak,active);try{if(index===1)throw new AppError(502,'Sharing failed');await new Promise(resolve=>setImmediate(resolve));completed++;return await original(...args);}finally{active--;}};
+ const data={...input,title:'Edited after retry',operationId:editOp,uploadId:edit.uploadId,expectedVersion:before.version};
+ await assert.rejects(store.save(student,data,before.id),{status:502});assert.equal(active,0);assert.ok(peak<=DRIVE_FILE_CONCURRENCY);assert.equal(started,DRIVE_FILE_CONCURRENCY);assert.equal(completed,DRIVE_FILE_CONCURRENCY-1);assert.deepEqual(await store.find(student,before.id),before);
+ drive.publish=original;const retries=await Promise.all([store.save(student,data,before.id),store.save(student,data,before.id)]);assert.deepEqual(retries[0],retries[1]);assert.deepEqual(await store.save(student,data,before.id),retries[0]);assert.equal((await store.find(student,before.id)).version,before.version+1);
 });

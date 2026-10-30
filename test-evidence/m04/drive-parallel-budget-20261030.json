@@ -1,0 +1,47 @@
+{
+  "recordedAt": "2026-10-30T03:09:05.826Z",
+  "ist": "30/10/2026, 8:39:05 am",
+  "providerFirestore": {
+    "read": 18000,
+    "write": 1900,
+    "delete": 134
+  },
+  "providerDrive": {
+    "source": "owner-reported GCP quotas",
+    "checkedAt": "2026-10-30T03:03:01Z",
+    "projectUnitsPerMinute": 1000000,
+    "userUnitsPerMinute": 325000,
+    "legacyRequestsPerMinute": 12000,
+    "currentProjectUnitsPerMinute": 0,
+    "reportedErrorsPercent": 16,
+    "reportedProviderP95ms": 2761
+  },
+  "providerVercel": {
+    "source": "owner-reported team usage, last 30 days",
+    "checkedAt": "2026-10-30T03:09:05.826Z",
+    "invocationsUsed": 6400,
+    "invocationsLimit": 1000000,
+    "cpuUsedSeconds": 274,
+    "cpuLimitSeconds": 14400,
+    "memoryUsedGBHours": 1.4,
+    "memoryLimitGBHours": 360,
+    "transferUsedBytes": 52190000,
+    "transferLimitBytes": 100000000000,
+    "originUsedBytes": 19470000,
+    "originLimitBytes": 10000000000
+  },
+  "readAuthorization": {
+    "id": "drive-parallel-20261030-reads",
+    "authorizedAt": "2026-10-30T03:09:05.826Z",
+    "baselineLedgerReads": 19548,
+    "additionalReads": 8000,
+    "reason": "Owner approved bounded Drive retesting plan with fresh reported quotas"
+  },
+  "writeAuthorization": {
+    "id": "drive-parallel-20261030-writes",
+    "authorizedAt": "2026-10-30T03:09:05.826Z",
+    "baselineLedgerWrites": 2373,
+    "additionalWrites": 3000,
+    "reason": "Owner approved plan additional combined writes/deletes and cleanup"
+  }
+}

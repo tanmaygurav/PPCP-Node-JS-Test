@@ -11,6 +11,12 @@ export class Budget {
       this.limits.reads=grant.baselineLedgerReads+Math.min(10000,grant.additionalReads,Math.floor((50000-headroom.usage.read)*.25));
       this.readAuthorization={...grant,effectiveAdditionalReads:this.limits.reads-grant.baselineLedgerReads};
     }
+    const writeGrant=headroom.authorizedWriteExtension;
+    if(writeGrant){
+      if(!writeGrant.id||!writeGrant.reason||!Number.isSafeInteger(writeGrant.baselineLedgerWrites)||writeGrant.baselineLedgerWrites<0||writeGrant.baselineLedgerWrites>this.totals().writes||!Number.isSafeInteger(writeGrant.additionalWrites)||writeGrant.additionalWrites<1||!Number.isFinite(Date.parse(writeGrant.authorizedAt))||Date.parse(writeGrant.authorizedAt)>Date.now()||Date.now()-Date.parse(writeGrant.authorizedAt)>86400000)throw new Error('Invalid or expired explicit write-budget authorization.');
+      this.limits.writes=writeGrant.baselineLedgerWrites+Math.min(3000,writeGrant.additionalWrites,Math.floor((20000-headroom.usage.write)*.25),Math.floor((20000-headroom.usage.delete)*.25));
+      this.writeAuthorization={...writeGrant,effectiveAdditionalWrites:this.limits.writes-writeGrant.baselineLedgerWrites};
+    }
   }
   totals(){return this.entries.reduce((sum,e)=>({reads:sum.reads+(e.reads||0),writes:sum.writes+(e.writes||0),bytes:sum.bytes+(e.bytes||0)}),{reads:0,writes:0,bytes:0});}
   record(entry){this.entries.push({at:Date.now(),...entry});writeFileSync(this.path,JSON.stringify(this.entries));}

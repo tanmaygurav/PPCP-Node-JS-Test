@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { orderedPool, DRIVE_FILE_CONCURRENCY } from './concurrency.mjs';
 import { AppError, canRead, digest, displayId, facets, files, identifier, institutional, normalize, requireRole, submission, text, version } from './domain.mjs';
 import { sign, verify } from '../security.mjs';
 import { listSpec } from './query.mjs';
@@ -76,11 +77,10 @@ export class M04Store {
     }
     if (upload.status !== 'pending' || upload.expiresAt < Date.now()) throw new AppError(409, 'Upload expired or already consumed.');
     if(upload.testRunId && upload.files.length) await this.transaction(async tx=>{const fresh=(await tx.get(ref)).data();await testGate(this,tx,profile,fresh);if(fresh.status!=='pending'||fresh.expiresAt<Date.now())throw new AppError(409,'Upload expired.');tx.update(ref,{driveSessionExpiresAt:Date.now()+7*86400000+3600000});});
-    const sessions = [];
-    for (const file of upload.files) {
-      try { await span('drive-verify', () => this.drive.verify(file, profile.uid, upload.submissionId, upload.id)); sessions.push({ ...file, completed: true }); }
-      catch (error) { if (error.status !== 404) throw error; sessions.push(await span('drive-session', () => this.drive.start(upload, file))); }
-    }
+    const sessions = await span('drive-prepare-wall', () => orderedPool(upload.files, DRIVE_FILE_CONCURRENCY, async file => {
+      try { await span('drive-verify', () => this.drive.verify(file, profile.uid, upload.submissionId, upload.id)); return { ...file, completed: true }; }
+      catch (error) { if (error.status !== 404) throw error; return span('drive-session', () => this.drive.start(upload, file)); }
+    }));
     return { uploadId: upload.id, submissionId: upload.submissionId, uploads: sessions };
   }
   async save(profile, data, id = null) {
@@ -98,9 +98,8 @@ export class M04Store {
     const retained = current ? current.media.filter(file => upload.retainedIds.includes(file.id)) : [];
     if (retained.length !== upload.retainedIds.length) throw new AppError(409, 'Saved attachments changed.');
     files([...retained, ...upload.files]);
-    const media = [];
-    for (const file of retained) media.push(await span('drive-publish', () => this.drive.publish(file, profile.uid, upload.submissionId)));
-    for (const file of upload.files) media.push(await span('drive-publish', () => this.drive.publish(file, profile.uid, upload.submissionId, upload.id)));
+    const media = await span('drive-publish-wall', () => orderedPool([...retained, ...upload.files], DRIVE_FILE_CONCURRENCY,
+      (file, index) => span('drive-publish', () => this.drive.publish(file, profile.uid, upload.submissionId, index < retained.length ? undefined : upload.id))));
     const itemRef = this.ref('submissions', upload.submissionId), opRef = this.receiptRef(profile.uid, op), counterRef = this.ref('counters', 'submissions');
     return this.transaction(async tx => {
       await this.current(tx, profile, ['student']);

@@ -13,3 +13,8 @@ test('explicit refreshed read allowance retains usage and other caps and cannot 
  const b=new Budget(h,{path});assert.equal(b.limits.reads,19876);assert.equal(b.totals().reads,9876);assert.equal(b.limits.writes,3000);b.record({reads:1000});assert.equal(new Budget(h,{path}).limits.reads,19876);
  h.usage.read=40000;assert.equal(new Budget(h,{path}).limits.reads,12376);h.authorizedReadExtension.baselineLedgerReads=20000;assert.throws(()=>new Budget(h,{path}),/authorization/);
 });
+test('explicit write extension is fixed-baseline and bounded by both remaining allowances',t=>{
+ const path='.local/capacity-unit-'+randomUUID()+'.json';t.after(()=>rmSync(path,{force:true}));writeFileSync(path,JSON.stringify([{at:Date.now(),reads:19548,writes:2373}]));
+ const h=headroom();h.authorizedWriteExtension={id:randomUUID(),reason:'Approved retest plan',authorizedAt:new Date().toISOString(),baselineLedgerWrites:2373,additionalWrites:3000};
+ assert.equal(new Budget(h,{path}).limits.writes,5373);h.usage.delete=18000;assert.equal(new Budget(h,{path}).limits.writes,2873);h.authorizedWriteExtension.baselineLedgerWrites=2500;assert.throws(()=>new Budget(h,{path}),/authorization/);
+});

@@ -1,8 +1,16 @@
-import { span, count } from './telemetry.mjs';
+import { span, count, maximum } from './telemetry.mjs';
+import { limiter } from './concurrency.mjs';
 import { GoogleStore } from '../google.mjs';
 import { AppError } from './domain.mjs';
 const DRIVE = 'https://www.googleapis.com/drive/v3';
+// Shared across all M04Drive objects/requests in this process, not all Vercel instances.
+const requests = limiter(6);
 export class M04Drive extends GoogleStore {
+  async request(...args) {
+    const release = await span('drive-queue', () => requests.acquire());
+    maximum('driveActivePeak', requests.active);
+    try { return await super.request(...args); } finally { release(); }
+  }
   constructor(config, fetcher = fetch) {
     super(config, async (url, options = {}) => {
       const drive = new URL(url).hostname === 'www.googleapis.com';

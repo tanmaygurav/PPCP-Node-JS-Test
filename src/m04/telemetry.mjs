@@ -6,6 +6,7 @@ export async function span(name, work) {
   try { return await work(); } finally { if (context) { const value = context.spans[name] ||= { ms: 0, count: 0 }; value.ms += performance.now() - start; value.count++; } }
 }
 export function count(name, amount = 1) { const context = storage.getStore(); if (context) context.counts[name] = (context.counts[name] || 0) + amount; }
+export function maximum(name, value) { const context = storage.getStore(); if (context) context.counts[name] = Math.max(context.counts[name] || 0, value); }
 export function timingHeaders(res) {
   const context = storage.getStore(); if (!context || res.headersSent) return;
   res.setHeader('Server-Timing', [...Object.entries(context.spans).map(([name, value]) => `${name};dur=${value.ms.toFixed(1)}`), `handler;dur=${(performance.now() - context.start).toFixed(1)}`].join(', '));

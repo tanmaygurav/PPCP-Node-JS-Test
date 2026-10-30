@@ -14,14 +14,14 @@ if(!ladder.includes(maximum)||seconds!==180&&!process.argv.includes('--smoke')||
 const context=await environment();
 if(!process.argv.includes('--production-window')&&!new URL(context.origin).hostname.includes('-git-'))throw new Error('Heavier tests require Preview. Production requires an agreed quiet window and --production-window.');
 const headroom=JSON.parse(readFileSync('.local/m04-capacity-headroom.json','utf8')),budget=new Budget(headroom);context.beforeRequest=budget.beforeRequest;context.afterRequest=row=>{budget.afterRequest(row);if(typeof row.status!=='number'||row.status>=400||Object.keys(row.observed||{}).some(k=>/^driveStatus(401|403|429|5\d\d)$/.test(k)&&row.observed[k]>0))stop=true;};context.beforeUpload=budget.beforeUpload;
-const samples=[],reports=[],runIds=[],failures=[],globalIds=new Set(),source=context.deployedSource||execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+const samples=[],reports=[],runIds=[],failures=[],globalIds=new Set(),anonymousTargets=[],source=context.deployedSource||execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
 if(!/^[a-f0-9]{40}$/.test(source))throw new Error('Inspect deployed application source before testing.');
 if(!process.argv.includes('--smoke'))execFileSync('git',['diff','--quiet',source,'--','src/m04','api/m04.js','m04-web','vercel.json','package.json','package-lock.json']);
 const cpuStart=process.cpuUsage(),started=performance.now(),lag=monitorEventLoopDelay({resolution:20});lag.enable();let stop=false;
 mkdirSync('output/m04',{recursive:true});
 const harnessDigest=createHash('sha256').update(['scripts/m04-capacity-diagnostics.mjs','scripts/m04-test-support.mjs','scripts/m04-capacity-budget.mjs','scripts/m04-capacity-browser.mjs'].map(p=>readFileSync(p,'utf8')).join('\n')).digest('hex');
 const reportPath=`output/m04/capacity-diagnostics-${Date.now()}.json`;
-function persist(){writeFileSync(reportPath,JSON.stringify({source,harnessDigest,indexManifestDigest:createHash('sha256').update(readFileSync('firestore.m04.indexes.json')).digest('hex'),origin:context.origin,startedAt:new Date(Date.now()-(performance.now()-started)).toISOString(),target:maximum,durationSeconds:seconds,smoke:process.argv.includes('--smoke'),capacityCertified:false,conditions:reports,runIds,failures,budget:{limits:budget.limits,vercelLimits:budget.vercelLimits,estimated:budget.totals()},generator:{cpu:process.cpuUsage(cpuStart),elapsedMs:performance.now()-started,eventLoopP95ms:lag.percentile(95)/1e6,rssBytes:process.memoryUsage().rss},samples},null,2));}
+function persist(){writeFileSync(reportPath,JSON.stringify({source,harnessDigest,indexManifestDigest:createHash('sha256').update(readFileSync('firestore.m04.indexes.json')).digest('hex'),origin:context.origin,startedAt:new Date(Date.now()-(performance.now()-started)).toISOString(),recordedAtIST:new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}),target:maximum,durationSeconds:seconds,smoke:process.argv.includes('--smoke'),capacityCertified:false,conditions:reports,runIds,failures,budget:{limits:budget.limits,vercelLimits:budget.vercelLimits,readAuthorization:budget.readAuthorization,writeAuthorization:budget.writeAuthorization,estimated:budget.totals()},generator:{cpu:process.cpuUsage(cpuStart),elapsedMs:performance.now()-started,eventLoopP95ms:lag.percentile(95)/1e6,rssBytes:process.memoryUsage().rss},samples},null,2));}
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 function stats(rows){const values=rows.filter(r=>typeof r.status==='number'&&r.status<400).map(r=>r.ms).sort((a,b)=>a-b),q=p=>values.length?values[Math.ceil(values.length*p)-1]:null;return{count:rows.length,success:values.length,failures:rows.filter(r=>typeof r.status!=='number'||r.status>=400).length,p50:q(.5),p95:q(.95),max:values.at(-1)||null};}
 function classify(rows){const groups={};for(const row of rows){const key=row.method+' '+row.endpoint;(groups[key]||=[]).push(row);}return Object.fromEntries(Object.entries(groups).map(([key,value])=>[key,stats(value)]));}
@@ -35,7 +35,7 @@ async function save(actor,runId,files=[],current=null){
     try{receipt=await actor.api(path,data);}catch(error){const observed=await actor.api(`operations/${op}`);if(observed.status!=='committed')throw error;receipt=observed;}
     samples.push({endpoint:'workflow/save-ack',method:'WORKFLOW',timestamp:new Date().toISOString(),ms:performance.now()-begin,status:200});samples.push({endpoint:'workflow/save-metadata',method:'WORKFLOW',timestamp:new Date().toISOString(),ms:performance.now()-begin-transferMs,status:200});const item=(await actor.api(`submissions/${receipt.submissionId}`)).item;if(item.ownerUid!==actor.uid||item.testRunId!==runId||item.title!==values.title||item.version!==(current?current.version+1:1))throw new Error('INTEGRITY: save ownership, run, content or version mismatch.');
     if(!/^PP\d+$/.test(item.displayId)||Number(item.displayId.slice(2))!==item.sequence||(!current&&globalIds.has(item.displayId)))throw new Error('INTEGRITY: readable/numeric ID mismatch.');if(!current)globalIds.add(item.displayId);if(current&&current.media.some(file=>!item.media.some(next=>next.id===file.id)))throw new Error('INTEGRITY: retained attachment changed.');
-    samples.push({endpoint:'workflow/save-verified',method:'WORKFLOW',timestamp:new Date().toISOString(),ms:performance.now()-begin,status:200,bytes:files.reduce((n,f)=>n+f.size,0)});return item;
+    samples.push({endpoint:'workflow/save-verified',method:'WORKFLOW',timestamp:new Date().toISOString(),ms:performance.now()-begin,status:200,bytes:files.reduce((n,f)=>n+f.size,0)});if(files.length===10)anonymousTargets.push(item.media[0]);return item;
   }catch(error){stop=true;throw error;}
 }
 const ticker=setInterval(()=>console.log(JSON.stringify({phase:'running',activeRequests:context.inFlight||0,peak:context.peakInFlight||0,budget:budget.totals()})),30000);ticker.unref();
@@ -58,6 +58,12 @@ try{
   let diagnosticAlready=false;
   for(const users of levels){let levelLatencyFailed=false;
     for(const mode of tasks){if(stop)break;if(mode==='baseline'&&users!==1)continue;if(mode==='ten-files'&&![1,5,20].includes(users))continue;
+      // Check the entire stage before assigning members or creating fixtures.
+      const datasetSize=(await context.db.collection('submissions').count().get()).data().count;budget.record({reads:1});
+      const seedTarget=Number(arg('dataset','100'));if(mode==='seed'&&(!Number.isInteger(seedTarget)||seedTarget<0||seedTarget>500))throw new Error('Seed dataset must be 0–500.');
+      const forecastUsers=mode==='seed'?Math.max(0,seedTarget-datasetSize):users;
+      const forecast={reads:200+forecastUsers*(['browsing','mixed'].includes(mode)?600:mode==='ten-files'?500:mode==='arrival'?20:100),writes:60+forecastUsers*(['metadata','mixed','ten-files','seed'].includes(mode)?30:2),bytes:mode==='ten-files'?users*10000000:mode==='mixed'?Math.ceil(users*.25)*1000000+Math.ceil(users*.05)*10000000:0};
+      budget.check(forecast.reads,forecast.writes,forecast.bytes);
       const roleMix=['mixed','browsing'].includes(mode)&&users>=3;
       const studentCount=roleMix?users-Math.max(1,Math.round(users*.08))-Math.max(1,Math.round(users*.02)):users;
       const staff=roleMix?[...pool.capacityStaff.filter(a=>a.role==='faculty').slice(0,Math.max(1,Math.round(users*.08))),...pool.capacityStaff.filter(a=>a.role==='admin').slice(0,Math.max(1,Math.round(users*.02)))]:[],accounts=[...pool.students.slice(0,studentCount),...staff];
@@ -94,6 +100,7 @@ try{
       await observer;
       for(const result of results)if(result.status==='rejected'){stop=true;failures.push(result.reason.message);}
       const rows=samples.slice(stageStart),gate=gates(rows);Object.assign(condition,{state:stop||gate.hard?'stopped':gate.latencyPassed?'passed':'latency-failed',finishedAt:new Date().toISOString(),elapsedMs:performance.now()-stageBegin,completed,actualPeakRequests:context.peakInFlight,actualPeakTransfers:context.peakTransfers,requests:rows.length,requestsPerSecond:rows.length/((performance.now()-stageBegin)/1000),...gate,generator:{cpu:process.cpuUsage(cpu),eventLoopP95ms:lag.percentile(95)/1e6,rssBytes:process.memoryUsage().rss}});persist();console.log(JSON.stringify({runId,users,scenario:mode,state:condition.state,completed,latencies:gate.latencies,budget:budget.totals()}));
+      if(anonymousTargets.length){const anonymous=await browser.newContext();try{const page=await anonymous.newPage();let viewed=0;for(const file of anonymousTargets.splice(0)){await page.goto(file.webViewLink);if(new URL(page.url()).hostname==='accounts.google.com')throw new Error('INTEGRITY: anonymous Drive view requires sign-in.');await page.getByText(file.name,{exact:false}).first().waitFor({timeout:15000});viewed++;}condition.anonymousDriveViews=viewed;}catch(error){stop=true;condition.state='stopped';condition.hard=true;failures.push(error.message);}finally{await anonymous.close();}persist();}
       budget.cleanup=true;try{await control.api(`admin/test-runs/${runId}/results`,{operationId:randomUUID(),...condition,smoke:process.argv.includes('--smoke')});}finally{budget.cleanup=false;}context.runId=null;
       if(gate.hard)stop=true;if(!gate.latencyPassed)levelLatencyFailed=true;
     }
