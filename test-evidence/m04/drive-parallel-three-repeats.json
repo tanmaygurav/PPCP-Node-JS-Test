@@ -1,0 +1,1902 @@
+{
+  "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+  "harnessDigest": "9024b810ee03473edfb4c1557430ce240bb84f1f42d60fe689f495fc1e1d4131",
+  "indexManifestDigest": "f15133c0989ef11d6ea0ce793c540b6c9b21e6556be34d2ee90827e52cc76299",
+  "origin": "https://ppcp-m04-event-poc-git-codex-m-aeb1d2-tanmays-projects-8434e035.vercel.app",
+  "startedAt": "2026-10-30T03:17:47.142Z",
+  "recordedAtIST": "30/10/2026, 8:51:10 am",
+  "target": 1,
+  "durationSeconds": 180,
+  "smoke": false,
+  "capacityCertified": false,
+  "conditions": [
+    {
+      "runId": "4ac39652-d73f-471a-9a48-1a08347d9168",
+      "scenario": "ten-files",
+      "targetActiveUsers": 1,
+      "roles": {
+        "student": 1,
+        "faculty": 0,
+        "admin": 0
+      },
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "datasetSize": 44,
+      "durationSeconds": 180,
+      "thinkSeconds": [
+        10,
+        20
+      ],
+      "startedAt": "2026-10-30T03:17:49.332Z",
+      "attachmentMix": "10 x 1,000,000 bytes per uploader",
+      "readPattern": "Portal fan-out: me + list; me + detail + remarks, parallel within a screen; 10–20s per cycle",
+      "expected": "Correct IDs/ownership/versioning; list/detail p95<=2000ms; create/edit p95<=3000ms excluding transfer",
+      "state": "latency-failed",
+      "auxiliaryActors": {
+        "facultyController": 1,
+        "browserObserverUsesExistingIdentity": true
+      },
+      "measurementStartedAt": "2026-10-30T03:17:51.441Z",
+      "finishedAt": "2026-10-30T03:19:13.261Z",
+      "elapsedMs": 81821.2362,
+      "completed": 1,
+      "actualPeakRequests": 4,
+      "actualPeakTransfers": 1,
+      "requests": 37,
+      "requestsPerSecond": 0.45220528110504116,
+      "hard": false,
+      "latencyPassed": false,
+      "latencies": [
+        {
+          "endpoint": "GET submissions",
+          "p95": 422.96280000000024,
+          "target": 2000
+        },
+        {
+          "endpoint": "GET submissions/:id",
+          "p95": 392.087099999997,
+          "target": 2000
+        },
+        {
+          "endpoint": "POST submissions",
+          "p95": 6336.6217,
+          "target": 3000
+        },
+        {
+          "endpoint": "POST submissions/:id/edits",
+          "p95": 2325.244900000005,
+          "target": 3000
+        }
+      ],
+      "groups": {
+        "GET auth/config": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 45.134399999999914,
+          "p95": 45.134399999999914,
+          "max": 45.134399999999914
+        },
+        "GET appearance": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 157.89199999999983,
+          "p95": 157.89199999999983,
+          "max": 157.89199999999983
+        },
+        "GET me": {
+          "count": 3,
+          "success": 3,
+          "failures": 0,
+          "p50": 334.09640000000036,
+          "p95": 353.8207999999995,
+          "max": 353.8207999999995
+        },
+        "GET domains": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 350.6373000000003,
+          "p95": 350.6373000000003,
+          "max": 350.6373000000003
+        },
+        "GET submissions": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 422.96280000000024,
+          "p95": 422.96280000000024,
+          "max": 422.96280000000024
+        },
+        "BROWSER browser/list-usable": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 1520.5753999999997,
+          "p95": 1520.5753999999997,
+          "max": 1520.5753999999997
+        },
+        "GET submissions/:id": {
+          "count": 4,
+          "success": 4,
+          "failures": 0,
+          "p50": 378.9672999999966,
+          "p95": 392.087099999997,
+          "max": 392.087099999997
+        },
+        "GET submissions/:id/remarks": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 367.91200000000026,
+          "p95": 367.91200000000026,
+          "max": 367.91200000000026
+        },
+        "BROWSER browser/detail-usable": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 852.154199999999,
+          "p95": 852.154199999999,
+          "max": 852.154199999999
+        },
+        "POST upload-sessions": {
+          "count": 2,
+          "success": 2,
+          "failures": 0,
+          "p50": 614.1982999999964,
+          "p95": 6253.095599999999,
+          "max": 6253.095599999999
+        },
+        "PUT drive-transfer": {
+          "count": 10,
+          "success": 10,
+          "failures": 0,
+          "p50": 1587.6926999999996,
+          "p95": 2014.8894,
+          "max": 2014.8894
+        },
+        "POST submissions": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 6336.6217,
+          "p95": 6336.6217,
+          "max": 6336.6217
+        },
+        "WORKFLOW workflow/save-ack": {
+          "count": 2,
+          "success": 2,
+          "failures": 0,
+          "p50": 2958.5169000000024,
+          "p95": 29201.570399999997,
+          "max": 29201.570399999997
+        },
+        "WORKFLOW workflow/save-metadata": {
+          "count": 2,
+          "success": 2,
+          "failures": 0,
+          "p50": 2958.5232000000033,
+          "p95": 12709.846599999997,
+          "max": 12709.846599999997
+        },
+        "WORKFLOW workflow/save-verified": {
+          "count": 2,
+          "success": 2,
+          "failures": 0,
+          "p50": 3347.9720000000016,
+          "p95": 29600.592899999996,
+          "max": 29600.592899999996
+        },
+        "POST submissions/:id/edits": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 2325.244900000005,
+          "p95": 2325.244900000005,
+          "max": 2325.244900000005
+        },
+        "POST submissions/:id/lock": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 551.5665999999983,
+          "p95": 551.5665999999983,
+          "max": 551.5665999999983
+        },
+        "POST submissions/:id/remarks": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 516.1353999999992,
+          "p95": 516.1353999999992,
+          "max": 516.1353999999992
+        },
+        "POST submissions/:id/unlock": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 521.9979000000021,
+          "p95": 521.9979000000021,
+          "max": 521.9979000000021
+        }
+      },
+      "generator": {
+        "cpu": {
+          "user": 969000,
+          "system": 203000
+        },
+        "eventLoopP95ms": 32.129023,
+        "rssBytes": 150249472
+      },
+      "anonymousDriveViews": 1
+    },
+    {
+      "runId": "91e87f6a-d744-497a-b88a-3ae18d9aa24b",
+      "scenario": "ten-files",
+      "targetActiveUsers": 1,
+      "roles": {
+        "student": 1,
+        "faculty": 0,
+        "admin": 0
+      },
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "datasetSize": 45,
+      "durationSeconds": 180,
+      "thinkSeconds": [
+        10,
+        20
+      ],
+      "startedAt": "2026-10-30T03:19:16.038Z",
+      "attachmentMix": "10 x 1,000,000 bytes per uploader",
+      "readPattern": "Portal fan-out: me + list; me + detail + remarks, parallel within a screen; 10–20s per cycle",
+      "expected": "Correct IDs/ownership/versioning; list/detail p95<=2000ms; create/edit p95<=3000ms excluding transfer",
+      "state": "latency-failed",
+      "auxiliaryActors": {
+        "facultyController": 1,
+        "browserObserverUsesExistingIdentity": true
+      },
+      "measurementStartedAt": "2026-10-30T03:19:18.032Z",
+      "finishedAt": "2026-10-30T03:21:07.845Z",
+      "elapsedMs": 109813.1144,
+      "completed": 1,
+      "actualPeakRequests": 4,
+      "actualPeakTransfers": 1,
+      "requests": 37,
+      "requestsPerSecond": 0.3369359984270225,
+      "hard": false,
+      "latencyPassed": false,
+      "latencies": [
+        {
+          "endpoint": "GET submissions",
+          "p95": 377.8816999999981,
+          "target": 2000
+        },
+        {
+          "endpoint": "GET submissions/:id",
+          "p95": 387.67540000000736,
+          "target": 2000
+        },
+        {
+          "endpoint": "POST submissions",
+          "p95": 6449.975099999996,
+          "target": 3000
+        },
+        {
+          "endpoint": "POST submissions/:id/edits",
+          "p95": 2311.2700999999943,
+          "target": 3000
+        }
+      ],
+      "groups": {
+        "GET auth/config": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 62.89379999999073,
+          "p95": 62.89379999999073,
+          "max": 62.89379999999073
+        },
+        "GET appearance": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 110.32510000000184,
+          "p95": 110.32510000000184,
+          "max": 110.32510000000184
+        },
+        "GET me": {
+          "count": 3,
+          "success": 3,
+          "failures": 0,
+          "p50": 340.09990000000107,
+          "p95": 361.39160000000265,
+          "max": 361.39160000000265
+        },
+        "GET domains": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 364.34010000000126,
+          "p95": 364.34010000000126,
+          "max": 364.34010000000126
+        },
+        "GET submissions": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 377.8816999999981,
+          "p95": 377.8816999999981,
+          "max": 377.8816999999981
+        },
+        "BROWSER browser/list-usable": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 1548.4858000000095,
+          "p95": 1548.4858000000095,
+          "max": 1548.4858000000095
+        },
+        "GET submissions/:id": {
+          "count": 4,
+          "success": 4,
+          "failures": 0,
+          "p50": 367.1931999999797,
+          "p95": 387.67540000000736,
+          "max": 387.67540000000736
+        },
+        "GET submissions/:id/remarks": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 521.2266000000091,
+          "p95": 521.2266000000091,
+          "max": 521.2266000000091
+        },
+        "BROWSER browser/detail-usable": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 856.1995999999926,
+          "p95": 856.1995999999926,
+          "max": 856.1995999999926
+        },
+        "POST upload-sessions": {
+          "count": 2,
+          "success": 2,
+          "failures": 0,
+          "p50": 1448.5216000000073,
+          "p95": 6029.551299999992,
+          "max": 6029.551299999992
+        },
+        "PUT drive-transfer": {
+          "count": 10,
+          "success": 10,
+          "failures": 0,
+          "p50": 1500.752999999997,
+          "p95": 1586.8767999999982,
+          "max": 1586.8767999999982
+        },
+        "POST submissions": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 6449.975099999996,
+          "p95": 6449.975099999996,
+          "max": 6449.975099999996
+        },
+        "WORKFLOW workflow/save-ack": {
+          "count": 2,
+          "success": 2,
+          "failures": 0,
+          "p50": 3790.2887000000046,
+          "p95": 27771.402400000006,
+          "max": 27771.402400000006
+        },
+        "WORKFLOW workflow/save-metadata": {
+          "count": 2,
+          "success": 2,
+          "failures": 0,
+          "p50": 3790.294099999999,
+          "p95": 12611.896900000022,
+          "max": 12611.896900000022
+        },
+        "WORKFLOW workflow/save-verified": {
+          "count": 2,
+          "success": 2,
+          "failures": 0,
+          "p50": 4161.396700000012,
+          "p95": 28155.036099999998,
+          "max": 28155.036099999998
+        },
+        "POST submissions/:id/edits": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 2311.2700999999943,
+          "p95": 2311.2700999999943,
+          "max": 2311.2700999999943
+        },
+        "POST submissions/:id/lock": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 553.656100000022,
+          "p95": 553.656100000022,
+          "max": 553.656100000022
+        },
+        "POST submissions/:id/remarks": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 546.1774999999907,
+          "p95": 546.1774999999907,
+          "max": 546.1774999999907
+        },
+        "POST submissions/:id/unlock": {
+          "count": 1,
+          "success": 1,
+          "failures": 0,
+          "p50": 596.7705999999889,
+          "p95": 596.7705999999889,
+          "max": 596.7705999999889
+        }
+      },
+      "generator": {
+        "cpu": {
+          "user": 984000,
+          "system": 140000
+        },
+        "eventLoopP95ms": 32.161791,
+        "rssBytes": 156246016
+      },
+      "anonymousDriveViews": 1
+    }
+  ],
+  "runIds": [
+    "4ac39652-d73f-471a-9a48-1a08347d9168",
+    "91e87f6a-d744-497a-b88a-3ae18d9aa24b"
+  ],
+  "failures": [],
+  "budget": {
+    "limits": {
+      "reads": 27548,
+      "writes": 5373,
+      "bytes": 1000000000,
+      "driveUnitsPerMinute": 81250,
+      "driveRequestsPerMinute": 3000
+    },
+    "vercelLimits": {
+      "requests": 10000,
+      "cpuSeconds": 3531.5,
+      "memoryGBHours": 89.65,
+      "transferBytes": 24986952500
+    },
+    "readAuthorization": {
+      "id": "drive-parallel-20261030-reads",
+      "authorizedAt": "2026-10-30T03:09:05.826Z",
+      "baselineLedgerReads": 19548,
+      "additionalReads": 8000,
+      "reason": "Owner approved bounded Drive retesting plan with fresh reported quotas",
+      "effectiveAdditionalReads": 8000
+    },
+    "writeAuthorization": {
+      "id": "drive-parallel-20261030-writes",
+      "authorizedAt": "2026-10-30T03:09:05.826Z",
+      "baselineLedgerWrites": 2373,
+      "additionalWrites": 3000,
+      "reason": "Owner approved plan additional combined writes/deletes and cleanup",
+      "effectiveAdditionalWrites": 3000
+    },
+    "estimated": {
+      "reads": 19988,
+      "writes": 2445,
+      "bytes": 41000201
+    }
+  },
+  "generator": {
+    "cpu": {
+      "user": 2531000,
+      "system": 672000
+    },
+    "elapsedMs": 203855.6641,
+    "eventLoopP95ms": 32.161791,
+    "rssBytes": 157487104
+  },
+  "samples": [
+    {
+      "endpoint": "auth/signin",
+      "reservation": "87ccadee-a22e-4702-80d9-af86de70bf0d",
+      "method": "POST",
+      "ms": 337.4298000000001,
+      "status": 200,
+      "timestamp": "2026-10-30T03:17:47.488Z",
+      "observed": {
+        "reads": 0,
+        "writes": 0
+      }
+    },
+    {
+      "endpoint": "auth/session",
+      "reservation": "f1143da9-6d06-4e15-a67f-c997c8d57dfc",
+      "path": "auth/session",
+      "method": "POST",
+      "ms": 767.7737999999997,
+      "status": 200,
+      "bytes": 11,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:17:48.263Z",
+      "cpuUs": 31148,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "6c8f9845-b868-4de2-abb5-4e7b3afb8ab4",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.1, auth-signin-verify;dur=345.9, session-create;dur=311.4, handler;dur=702.3",
+      "observed": {
+        "reads": 1
+      }
+    },
+    {
+      "endpoint": "admin/test-runs",
+      "reservation": "d7eb9342-46bc-4a23-b312-e58adecc8292",
+      "path": "admin/test-runs",
+      "method": "POST",
+      "ms": 533.0832,
+      "status": 200,
+      "bytes": 163,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:17:49.241Z",
+      "cpuUs": 54027,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "88f9b065-564c-41fa-baa6-ccdf3e7b3308",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=37.3, auth-revoke;dur=304.4, access;dur=304.9, handler;dur=479.6",
+      "observed": {
+        "reads": 8,
+        "transactionExecutions": 1,
+        "transactionAttempts": 1,
+        "writes": 4
+      }
+    },
+    {
+      "endpoint": "auth/signin",
+      "reservation": "d3cc21e1-a355-4793-bb39-458e24752793",
+      "method": "POST",
+      "ms": 340.6875,
+      "status": 200,
+      "timestamp": "2026-10-30T03:17:49.674Z",
+      "observed": {
+        "reads": 0,
+        "writes": 0
+      }
+    },
+    {
+      "endpoint": "auth/session",
+      "reservation": "fcc140e3-96c9-4590-a91b-1706dab826ed",
+      "path": "auth/session",
+      "method": "POST",
+      "ms": 676.9238999999998,
+      "status": 200,
+      "bytes": 11,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:17:50.367Z",
+      "cpuUs": 13975,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "d8ea5135-1ab0-449d-893e-ebe7156cac08",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.2, auth-signin-verify;dur=307.0, session-create;dur=301.5, handler;dur=625.7",
+      "observed": {
+        "reads": 1
+      }
+    },
+    {
+      "endpoint": "auth/signin",
+      "reservation": "8c2eefd0-3bb0-4146-afad-18158487e74f",
+      "method": "POST",
+      "ms": 344.1283000000003,
+      "status": 200,
+      "timestamp": "2026-10-30T03:17:50.722Z",
+      "observed": {
+        "reads": 0,
+        "writes": 0
+      }
+    },
+    {
+      "endpoint": "auth/session",
+      "reservation": "deac184b-5739-44ec-8450-b2f0623eb888",
+      "path": "auth/session",
+      "method": "POST",
+      "ms": 696.4330999999993,
+      "status": 200,
+      "bytes": 11,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:17:51.434Z",
+      "cpuUs": 12443,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "88bbc84d-38bc-44fb-b888-b58e4e96c79d",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.1, auth-signin-verify;dur=305.0, session-create;dur=304.2, handler;dur=623.7",
+      "observed": {
+        "reads": 1
+      }
+    },
+    {
+      "endpoint": "auth/config",
+      "method": "GET",
+      "reservation": "7df1814c-3672-45cf-885d-3cb05e69bad7",
+      "ms": 45.134399999999914,
+      "status": 200,
+      "timestamp": "2026-10-30T03:17:51.691Z",
+      "bytes": 201,
+      "observed": {},
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "b64b7d2e-175e-437f-a8ed-90efa9562f7d",
+      "serverTiming": "handler;dur=0.1",
+      "cpuUs": 149,
+      "browserObserver": true
+    },
+    {
+      "endpoint": "appearance",
+      "method": "GET",
+      "reservation": "a802b8fe-3aed-46e3-bd99-bd463e119f0d",
+      "ms": 157.89199999999983,
+      "status": 200,
+      "timestamp": "2026-10-30T03:17:51.799Z",
+      "bytes": 88,
+      "observed": {
+        "reads": 1
+      },
+      "instance": "12336ecc-66cb-4731-95d9-e344b5577d08",
+      "firstObserved": false,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "eca76fb5-41aa-48c9-af0b-b5fb2c719f57",
+      "serverTiming": "database-init;dur=0.0, handler;dur=66.4",
+      "cpuUs": 78640,
+      "browserObserver": true
+    },
+    {
+      "endpoint": "me",
+      "method": "GET",
+      "reservation": "3f6c6eb2-ab93-4b9c-8547-08a7d930b056",
+      "ms": 332.2632999999996,
+      "status": 200,
+      "timestamp": "2026-10-30T03:17:52.078Z",
+      "bytes": 421,
+      "observed": {
+        "reads": 1
+      },
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "bf3990ce-a6c1-4c9c-b78e-bedfa8c6ea82",
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=15.6, auth-revoke;dur=310.0, access;dur=310.6, handler;dur=310.7",
+      "cpuUs": 32822,
+      "browserObserver": true
+    },
+    {
+      "endpoint": "domains",
+      "method": "GET",
+      "reservation": "8be9cbc5-53c8-4bd5-adb7-c832d3ea108c",
+      "ms": 350.6373000000003,
+      "status": 200,
+      "timestamp": "2026-10-30T03:17:52.442Z",
+      "bytes": 25,
+      "observed": {
+        "reads": 3
+      },
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "56dcd17d-2b1a-4e75-89aa-331843091dab",
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=14.8, auth-revoke;dur=295.1, access;dur=295.7, handler;dur=328.5",
+      "cpuUs": 66435,
+      "browserObserver": true
+    },
+    {
+      "endpoint": "me",
+      "method": "GET",
+      "reservation": "d12a8ec6-7814-4ab9-b00d-93f4978ed3ce",
+      "ms": 353.8207999999995,
+      "status": 200,
+      "timestamp": "2026-10-30T03:17:52.460Z",
+      "bytes": 421,
+      "observed": {
+        "reads": 1
+      },
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "a003b96e-9cdf-4770-be2b-231b95dc392a",
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.4, profile;dur=12.5, auth-revoke;dur=314.7, access;dur=315.2, handler;dur=315.3",
+      "cpuUs": 60639,
+      "browserObserver": true
+    },
+    {
+      "endpoint": "submissions",
+      "method": "GET",
+      "reservation": "fbf8ed9d-85e1-4370-8b8d-50532add3448",
+      "ms": 422.96280000000024,
+      "status": 200,
+      "timestamp": "2026-10-30T03:17:52.531Z",
+      "bytes": 24564,
+      "observed": {
+        "reads": 21
+      },
+      "instance": "12336ecc-66cb-4731-95d9-e344b5577d08",
+      "firstObserved": false,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "09dcc168-1956-45e2-96d8-a033d14393fe",
+      "serverTiming": "database-init;dur=0.1, auth-validate;dur=0.7, profile;dur=34.6, auth-revoke;dur=302.1, access;dur=302.9, query;dur=72.6, handler;dur=375.7",
+      "cpuUs": 78268,
+      "browserObserver": true
+    },
+    {
+      "endpoint": "browser/list-usable",
+      "method": "BROWSER",
+      "ms": 1520.5753999999997,
+      "status": 200,
+      "timestamp": "2026-10-30T03:17:53.045Z"
+    },
+    {
+      "endpoint": "me",
+      "method": "GET",
+      "reservation": "fbb442c2-93a9-451b-bfe4-3d39a1fffb4d",
+      "ms": 334.09640000000036,
+      "status": 200,
+      "timestamp": "2026-10-30T03:17:53.420Z",
+      "bytes": 421,
+      "observed": {
+        "reads": 1
+      },
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "76fca46b-4660-44da-babd-0a0571698ca2",
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=13.7, auth-revoke;dur=311.9, access;dur=312.5, handler;dur=312.6",
+      "cpuUs": 17214,
+      "browserObserver": true
+    },
+    {
+      "endpoint": "submissions/:id",
+      "method": "GET",
+      "reservation": "cd7a3bae-5ac4-4f12-b7ad-08c795623845",
+      "ms": 362.0769,
+      "status": 200,
+      "timestamp": "2026-10-30T03:17:53.451Z",
+      "bytes": 4109,
+      "observed": {
+        "reads": 2
+      },
+      "instance": "12336ecc-66cb-4731-95d9-e344b5577d08",
+      "firstObserved": false,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "56117d13-cfd8-40af-9448-0048b48fa236",
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.9, profile;dur=15.6, auth-revoke;dur=307.2, access;dur=308.3, query;dur=17.9, handler;dur=326.5",
+      "cpuUs": 23186,
+      "browserObserver": true
+    },
+    {
+      "endpoint": "submissions/:id/remarks",
+      "method": "GET",
+      "reservation": "4e5ec135-a032-4d35-9fc7-4c529dae3cd3",
+      "ms": 367.91200000000026,
+      "status": 200,
+      "timestamp": "2026-10-30T03:17:53.458Z",
+      "bytes": 358,
+      "observed": {
+        "reads": 4
+      },
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "b887a4a6-627e-403f-b97e-bc51b26de1fb",
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.4, profile;dur=14.5, auth-revoke;dur=282.6, access;dur=283.0, handler;dur=336.1",
+      "cpuUs": 23668,
+      "browserObserver": true
+    },
+    {
+      "endpoint": "browser/detail-usable",
+      "method": "BROWSER",
+      "ms": 852.154199999999,
+      "status": 200,
+      "timestamp": "2026-10-30T03:17:53.899Z"
+    },
+    {
+      "endpoint": "upload-sessions",
+      "reservation": "3e07d57c-8391-41c0-8df3-2f4a68ed6643",
+      "path": "upload-sessions",
+      "method": "POST",
+      "ms": 6253.095599999999,
+      "status": 201,
+      "bytes": 4508,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:17:57.701Z",
+      "cpuUs": 302403,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "bf3b6021-d8fe-4631-ae75-8ff62b9c77d4",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=14.0, auth-revoke;dur=321.0, access;dur=321.6, transaction;dur=119.4, drive-queue;dur=0.1, drive-http;dur=13842.0, drive-reserve;dur=350.2, drive-metadata;dur=4142.5, drive-verify;dur=4142.6, drive-session;dur=9355.5, drive-prepare-wall;dur=5314.8, upload-preparation;dur=5885.8, handler;dur=6207.8",
+      "observed": {
+        "reads": 11,
+        "transactionExecutions": 3,
+        "transactionAttempts": 3,
+        "storeTransactionAttempts": 2,
+        "driveActivePeak": 3,
+        "driveRequests": 21,
+        "driveStatus200": 11,
+        "driveUnitsEstimate": 1055,
+        "writes": 2,
+        "driveStatus404": 10
+      }
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:17:59.728Z",
+      "ms": 2014.8894,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:18:01.328Z",
+      "ms": 1585.8520999999982,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:18:02.908Z",
+      "ms": 1574.3971000000001,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:18:04.505Z",
+      "ms": 1587.6926999999996,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:18:06.172Z",
+      "ms": 1659.6035999999986,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:18:07.772Z",
+      "ms": 1593.4153000000006,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:18:09.467Z",
+      "ms": 1689.7525999999998,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:18:11.014Z",
+      "ms": 1524.4205000000002,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:18:12.708Z",
+      "ms": 1687.4990999999973,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:18:14.297Z",
+      "ms": 1574.553899999999,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "submissions",
+      "reservation": "0512fefd-18bf-4ad4-9fbc-28a7f14af5e4",
+      "path": "submissions",
+      "method": "POST",
+      "ms": 6336.6217,
+      "status": 200,
+      "bytes": 239,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:18:20.636Z",
+      "cpuUs": 182465,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "361cd75a-7951-4f06-bac6-3c2caa145b09",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=14.6, auth-revoke;dur=338.0, access;dur=338.6, transaction;dur=273.8, drive-queue;dur=0.1, drive-http;dur=14274.2, drive-metadata;dur=4426.3, drive-sharing;dur=9873.3, drive-publish;dur=14300.0, drive-publish-wall;dur=5604.1, save;dur=5927.5, handler;dur=6266.3",
+      "observed": {
+        "reads": 14,
+        "transactionExecutions": 2,
+        "transactionAttempts": 2,
+        "storeTransactionAttempts": 2,
+        "driveActivePeak": 3,
+        "driveRequests": 20,
+        "driveStatus200": 20,
+        "driveUnitsEstimate": 1050,
+        "writes": 4
+      }
+    },
+    {
+      "endpoint": "workflow/save-ack",
+      "method": "WORKFLOW",
+      "timestamp": "2026-10-30T03:18:20.643Z",
+      "ms": 29201.570399999997,
+      "status": 200
+    },
+    {
+      "endpoint": "workflow/save-metadata",
+      "method": "WORKFLOW",
+      "timestamp": "2026-10-30T03:18:20.643Z",
+      "ms": 12709.846599999997,
+      "status": 200
+    },
+    {
+      "endpoint": "submissions/:id",
+      "reservation": "11736b6f-68d1-4e7b-8685-c718579e0fec",
+      "path": "submissions/:id",
+      "method": "GET",
+      "ms": 392.087099999997,
+      "status": 200,
+      "bytes": 4104,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:18:21.037Z",
+      "cpuUs": 16437,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "efed8cf8-5aee-4119-8483-45bf7f1b8966",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.1, auth-validate;dur=0.5, profile;dur=15.3, auth-revoke;dur=308.9, access;dur=309.5, query;dur=16.2, handler;dur=325.9",
+      "observed": {
+        "reads": 2
+      }
+    },
+    {
+      "endpoint": "workflow/save-verified",
+      "method": "WORKFLOW",
+      "timestamp": "2026-10-30T03:18:21.042Z",
+      "ms": 29600.592899999996,
+      "status": 200,
+      "bytes": 10000000
+    },
+    {
+      "endpoint": "upload-sessions",
+      "reservation": "523d8dd9-af86-47f1-af85-027b73001fc3",
+      "path": "upload-sessions",
+      "method": "POST",
+      "ms": 614.1982999999964,
+      "status": 201,
+      "bytes": 146,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:18:32.688Z",
+      "cpuUs": 79746,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "1c423aa5-07ab-4fae-8f46-c39cb0455810",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=16.5, auth-revoke;dur=314.3, access;dur=314.8, transaction;dur=98.5, drive-reserve;dur=0.0, drive-prepare-wall;dur=0.0, upload-preparation;dur=226.4, handler;dur=541.5",
+      "observed": {
+        "reads": 11,
+        "transactionExecutions": 3,
+        "transactionAttempts": 3,
+        "storeTransactionAttempts": 2,
+        "writes": 1
+      }
+    },
+    {
+      "endpoint": "submissions/:id/edits",
+      "reservation": "3158e4e2-f7ce-44c3-b737-3a3c12114699",
+      "path": "submissions/:id/edits",
+      "method": "POST",
+      "ms": 2325.244900000005,
+      "status": 200,
+      "bytes": 239,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:18:35.021Z",
+      "cpuUs": 204752,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "61629bfc-2cff-4268-b807-738b898071f3",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=18.5, auth-revoke;dur=293.2, access;dur=293.8, transaction;dur=204.0, drive-queue;dur=0.1, drive-http;dur=4312.7, drive-metadata;dur=4324.3, drive-publish;dur=4324.6, drive-publish-wall;dur=1663.1, save;dur=1923.0, handler;dur=2217.0",
+      "observed": {
+        "reads": 14,
+        "transactionExecutions": 2,
+        "transactionAttempts": 2,
+        "storeTransactionAttempts": 2,
+        "driveActivePeak": 3,
+        "driveRequests": 10,
+        "driveStatus200": 10,
+        "driveUnitsEstimate": 50,
+        "writes": 3
+      }
+    },
+    {
+      "endpoint": "workflow/save-ack",
+      "method": "WORKFLOW",
+      "timestamp": "2026-10-30T03:18:35.025Z",
+      "ms": 2958.5169000000024,
+      "status": 200
+    },
+    {
+      "endpoint": "workflow/save-metadata",
+      "method": "WORKFLOW",
+      "timestamp": "2026-10-30T03:18:35.025Z",
+      "ms": 2958.5232000000033,
+      "status": 200
+    },
+    {
+      "endpoint": "submissions/:id",
+      "reservation": "1b7490cf-485d-4445-b383-a76a78fa0c2b",
+      "path": "submissions/:id",
+      "method": "GET",
+      "ms": 378.9672999999966,
+      "status": 200,
+      "bytes": 4110,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:18:35.405Z",
+      "cpuUs": 13389,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "d6db7d95-6f88-49f6-962a-210c8615e9e6",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.6, profile;dur=14.0, auth-revoke;dur=308.5, access;dur=309.1, query;dur=22.6, handler;dur=332.0",
+      "observed": {
+        "reads": 2
+      }
+    },
+    {
+      "endpoint": "workflow/save-verified",
+      "method": "WORKFLOW",
+      "timestamp": "2026-10-30T03:18:35.414Z",
+      "ms": 3347.9720000000016,
+      "status": 200,
+      "bytes": 0
+    },
+    {
+      "endpoint": "submissions/:id/lock",
+      "reservation": "96fc2a1e-05e8-4bd5-b13e-ecb591df23bf",
+      "path": "submissions/:id/lock",
+      "method": "POST",
+      "ms": 551.5665999999983,
+      "status": 200,
+      "bytes": 239,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:18:51.395Z",
+      "cpuUs": 44570,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "7172c571-b9e8-4ac6-8e39-97226faa7b55",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=22.1, auth-revoke;dur=306.3, access;dur=306.9, transaction;dur=168.7, handler;dur=476.1",
+      "observed": {
+        "reads": 6,
+        "transactionExecutions": 1,
+        "transactionAttempts": 1,
+        "storeTransactionAttempts": 1,
+        "writes": 2
+      }
+    },
+    {
+      "endpoint": "submissions/:id/remarks",
+      "reservation": "5c070112-23d3-4f56-b690-bc893ad59791",
+      "path": "submissions/:id/remarks",
+      "method": "POST",
+      "ms": 516.1353999999992,
+      "status": 200,
+      "bytes": 242,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:19:02.328Z",
+      "cpuUs": 35993,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "ba4d976d-5869-4d36-8819-2270ba1db050",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.6, profile;dur=15.2, auth-revoke;dur=310.7, access;dur=311.4, transaction;dur=142.9, handler;dur=454.8",
+      "observed": {
+        "reads": 6,
+        "transactionExecutions": 1,
+        "transactionAttempts": 1,
+        "storeTransactionAttempts": 1,
+        "writes": 3
+      }
+    },
+    {
+      "endpoint": "submissions/:id/unlock",
+      "reservation": "db845262-85b9-4658-b8b9-320ef95ce13a",
+      "path": "submissions/:id/unlock",
+      "method": "POST",
+      "ms": 521.9979000000021,
+      "status": 200,
+      "bytes": 241,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:19:12.865Z",
+      "cpuUs": 35843,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "6dbca5bc-7a32-4f52-8a9b-465a5a67404a",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=14.4, auth-revoke;dur=303.5, access;dur=304.0, transaction;dur=137.6, handler;dur=442.1",
+      "observed": {
+        "reads": 6,
+        "transactionExecutions": 1,
+        "transactionAttempts": 1,
+        "storeTransactionAttempts": 1,
+        "writes": 2
+      }
+    },
+    {
+      "endpoint": "submissions/:id",
+      "reservation": "afe80f2e-faf4-4982-9165-3bfd1b230efb",
+      "path": "submissions/:id",
+      "method": "GET",
+      "ms": 383.64590000000317,
+      "status": 200,
+      "bytes": 4109,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:19:13.256Z",
+      "cpuUs": 12732,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "4c74f976-6b82-4377-ae61-2bd46ddd61fd",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=13.2, auth-revoke;dur=303.3, access;dur=303.8, query;dur=14.5, handler;dur=318.5",
+      "observed": {
+        "reads": 2
+      }
+    },
+    {
+      "endpoint": "admin/test-runs/:id/results",
+      "reservation": "bd84dcbb-e472-480c-b17a-ed85cc748401",
+      "path": "admin/test-runs/:id/results",
+      "method": "POST",
+      "ms": 436.87940000000526,
+      "status": 200,
+      "bytes": 145,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:19:15.437Z",
+      "cpuUs": 37197,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "e375e09e-d661-4d1d-ba0a-05e82072f255",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=14.0, auth-revoke;dur=291.7, access;dur=292.2, handler;dur=391.5",
+      "observed": {
+        "reads": 5,
+        "transactionExecutions": 1,
+        "transactionAttempts": 1,
+        "writes": 2
+      }
+    },
+    {
+      "endpoint": "admin/test-runs",
+      "reservation": "7daefb1c-e15c-44eb-a7c5-45c3b723c8d0",
+      "path": "admin/test-runs",
+      "method": "POST",
+      "ms": 488.9847000000009,
+      "status": 200,
+      "bytes": 163,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:19:15.986Z",
+      "cpuUs": 69173,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "19591959-e48b-4e20-9c49-aa20f447f701",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=13.5, auth-revoke;dur=307.7, access;dur=308.3, handler;dur=452.7",
+      "observed": {
+        "reads": 8,
+        "transactionExecutions": 1,
+        "transactionAttempts": 1,
+        "writes": 4
+      }
+    },
+    {
+      "endpoint": "auth/signin",
+      "reservation": "ca29bf78-ccfc-4898-bc3a-10084a8776ff",
+      "method": "POST",
+      "ms": 336.8293999999878,
+      "status": 200,
+      "timestamp": "2026-10-30T03:19:16.376Z",
+      "observed": {
+        "reads": 0,
+        "writes": 0
+      }
+    },
+    {
+      "endpoint": "auth/session",
+      "reservation": "653d5240-82f8-4510-8b4d-a1cd353460a8",
+      "path": "auth/session",
+      "method": "POST",
+      "ms": 654.4256000000023,
+      "status": 200,
+      "bytes": 11,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:19:17.047Z",
+      "cpuUs": 74863,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "16daafe7-4c37-40fe-a48a-52dd3b1a0cf9",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.1, auth-signin-verify;dur=303.1, session-create;dur=294.1, handler;dur=611.2",
+      "observed": {
+        "reads": 1
+      }
+    },
+    {
+      "endpoint": "auth/signin",
+      "reservation": "554f8bd6-593b-4d8f-8e86-210a4810a1dc",
+      "method": "POST",
+      "ms": 324.01140000000305,
+      "status": 200,
+      "timestamp": "2026-10-30T03:19:17.375Z",
+      "observed": {
+        "reads": 0,
+        "writes": 0
+      }
+    },
+    {
+      "endpoint": "auth/session",
+      "reservation": "2664a518-b682-43e0-84eb-8df33d8a09c6",
+      "path": "auth/session",
+      "method": "POST",
+      "ms": 649.517200000002,
+      "status": 200,
+      "bytes": 11,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:19:18.029Z",
+      "cpuUs": 12278,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "70c256d0-4152-47f7-8166-6bf5606e6e8b",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.1, auth-signin-verify;dur=290.4, session-create;dur=301.8, handler;dur=608.3",
+      "observed": {
+        "reads": 1
+      }
+    },
+    {
+      "endpoint": "auth/config",
+      "method": "GET",
+      "reservation": "369a9194-aaaf-40df-89a0-edd68993712d",
+      "ms": 62.89379999999073,
+      "status": 200,
+      "timestamp": "2026-10-30T03:19:18.383Z",
+      "bytes": 201,
+      "observed": {},
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "55832a50-6c19-4460-9231-00c62d962d07",
+      "serverTiming": "handler;dur=0.1",
+      "cpuUs": 113,
+      "browserObserver": true
+    },
+    {
+      "endpoint": "appearance",
+      "method": "GET",
+      "reservation": "70a352ef-ff2c-4fac-bb69-6a64ae2e5dda",
+      "ms": 110.32510000000184,
+      "status": 200,
+      "timestamp": "2026-10-30T03:19:18.425Z",
+      "bytes": 88,
+      "observed": {
+        "reads": 1
+      },
+      "instance": "12336ecc-66cb-4731-95d9-e344b5577d08",
+      "firstObserved": false,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "2d089408-901c-47a5-83ee-43bcaada0ec1",
+      "serverTiming": "database-init;dur=0.0, handler;dur=36.6",
+      "cpuUs": 9345,
+      "browserObserver": true
+    },
+    {
+      "endpoint": "me",
+      "method": "GET",
+      "reservation": "0d47af2d-9f9a-4b74-b100-10750aaebce8",
+      "ms": 361.39160000000265,
+      "status": 200,
+      "timestamp": "2026-10-30T03:19:18.784Z",
+      "bytes": 421,
+      "observed": {
+        "reads": 1
+      },
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "5489d2d8-c38a-40e5-8a4c-a544341da051",
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.4, profile;dur=23.1, auth-revoke;dur=316.1, access;dur=316.6, handler;dur=316.7",
+      "cpuUs": 14262,
+      "browserObserver": true
+    },
+    {
+      "endpoint": "me",
+      "method": "GET",
+      "reservation": "27c960a4-a8a1-46b1-8edb-11236b02c08c",
+      "ms": 340.09990000000107,
+      "status": 200,
+      "timestamp": "2026-10-30T03:19:19.154Z",
+      "bytes": 421,
+      "observed": {
+        "reads": 1
+      },
+      "instance": "12336ecc-66cb-4731-95d9-e344b5577d08",
+      "firstObserved": false,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "84d2b08d-a81f-4cc4-9f4e-98d575ef841a",
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.7, profile;dur=32.6, auth-revoke;dur=304.1, access;dur=304.9, handler;dur=305.2",
+      "cpuUs": 17922,
+      "browserObserver": true
+    },
+    {
+      "endpoint": "domains",
+      "method": "GET",
+      "reservation": "af01f2a0-7de3-4840-b88a-d5d978fdbe24",
+      "ms": 364.34010000000126,
+      "status": 200,
+      "timestamp": "2026-10-30T03:19:19.170Z",
+      "bytes": 25,
+      "observed": {
+        "reads": 3
+      },
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "1034d544-bba4-4e46-abaf-797b887d7176",
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=14.7, auth-revoke;dur=304.1, access;dur=304.7, handler;dur=324.7",
+      "cpuUs": 65869,
+      "browserObserver": true
+    },
+    {
+      "endpoint": "submissions",
+      "method": "GET",
+      "reservation": "8eab18c4-6878-449e-8ae5-9e6cd1799031",
+      "ms": 377.8816999999981,
+      "status": 200,
+      "timestamp": "2026-10-30T03:19:19.195Z",
+      "bytes": 26254,
+      "observed": {
+        "reads": 22
+      },
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "1fe4902b-942d-48f7-a91b-7ed0b77c147e",
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.4, profile;dur=14.6, auth-revoke;dur=297.6, access;dur=298.0, query;dur=46.8, handler;dur=344.9",
+      "cpuUs": 71352,
+      "browserObserver": true
+    },
+    {
+      "endpoint": "browser/list-usable",
+      "method": "BROWSER",
+      "ms": 1548.4858000000095,
+      "status": 200,
+      "timestamp": "2026-10-30T03:19:19.655Z"
+    },
+    {
+      "endpoint": "me",
+      "method": "GET",
+      "reservation": "5975cd8f-c6b4-4e6e-b5af-c41e57a391a4",
+      "ms": 315.824099999998,
+      "status": 200,
+      "timestamp": "2026-10-30T03:19:20.015Z",
+      "bytes": 421,
+      "observed": {
+        "reads": 1
+      },
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "dde9101f-a6c6-4211-8eea-f46359de5c7d",
+      "serverTiming": "database-init;dur=0.1, auth-validate;dur=0.5, profile;dur=13.9, auth-revoke;dur=294.6, access;dur=295.1, handler;dur=295.3",
+      "cpuUs": 7323,
+      "browserObserver": true
+    },
+    {
+      "endpoint": "submissions/:id",
+      "method": "GET",
+      "reservation": "4ad94a26-57f8-40bf-9db5-83a27c431b01",
+      "ms": 387.67540000000736,
+      "status": 200,
+      "timestamp": "2026-10-30T03:19:20.092Z",
+      "bytes": 4109,
+      "observed": {
+        "reads": 2
+      },
+      "instance": "12336ecc-66cb-4731-95d9-e344b5577d08",
+      "firstObserved": false,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "cc564833-5b42-47cf-b290-02d2ff71808e",
+      "serverTiming": "database-init;dur=0.1, auth-validate;dur=0.7, profile;dur=16.3, auth-revoke;dur=325.6, access;dur=326.4, query;dur=22.3, handler;dur=348.9",
+      "cpuUs": 19253,
+      "browserObserver": true
+    },
+    {
+      "endpoint": "submissions/:id/remarks",
+      "method": "GET",
+      "reservation": "814de35f-9e56-4386-883d-ac2cc941d8fc",
+      "ms": 521.2266000000091,
+      "status": 200,
+      "timestamp": "2026-10-30T03:19:20.227Z",
+      "bytes": 358,
+      "observed": {
+        "reads": 4
+      },
+      "instance": "c207c87f-dcac-46e7-92df-0a7bbf3e5f6b",
+      "firstObserved": false,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "10db9a5b-8dc4-49be-9911-e80fb1ff61e7",
+      "serverTiming": "database-init;dur=0.1, auth-validate;dur=0.6, profile;dur=118.0, auth-revoke;dur=365.1, access;dur=365.8, handler;dur=463.6",
+      "cpuUs": 114710,
+      "browserObserver": true
+    },
+    {
+      "endpoint": "browser/detail-usable",
+      "method": "BROWSER",
+      "ms": 856.1995999999926,
+      "status": 200,
+      "timestamp": "2026-10-30T03:19:20.513Z"
+    },
+    {
+      "endpoint": "upload-sessions",
+      "reservation": "65d824a0-7383-45e8-a7d7-b53b5a4fa74c",
+      "path": "upload-sessions",
+      "method": "POST",
+      "ms": 6029.551299999992,
+      "status": 201,
+      "bytes": 4512,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:19:24.070Z",
+      "cpuUs": 200847,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "99e38fa2-8132-4652-8615-debf6017a0fc",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=12.7, auth-revoke;dur=317.7, access;dur=318.3, transaction;dur=125.4, drive-queue;dur=0.1, drive-http;dur=13454.9, drive-reserve;dur=357.4, drive-metadata;dur=3908.9, drive-verify;dur=3909.0, drive-session;dur=9195.8, drive-prepare-wall;dur=5057.8, upload-preparation;dur=5630.1, handler;dur=5948.6",
+      "observed": {
+        "reads": 11,
+        "transactionExecutions": 3,
+        "transactionAttempts": 3,
+        "storeTransactionAttempts": 2,
+        "driveActivePeak": 3,
+        "driveRequests": 21,
+        "driveStatus200": 11,
+        "driveUnitsEstimate": 1055,
+        "writes": 2,
+        "driveStatus404": 10
+      }
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:19:25.615Z",
+      "ms": 1533.3254000000015,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:19:27.215Z",
+      "ms": 1586.8767999999982,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:19:28.730Z",
+      "ms": 1508.4802999999956,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:19:30.219Z",
+      "ms": 1476.426999999996,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:19:31.713Z",
+      "ms": 1483.7191999999923,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:19:33.222Z",
+      "ms": 1500.752999999997,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:19:34.752Z",
+      "ms": 1523.6627000000008,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:19:36.230Z",
+      "ms": 1472.6528999999864,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:19:37.735Z",
+      "ms": 1488.6236999999965,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "drive-transfer",
+      "method": "PUT",
+      "timestamp": "2026-10-30T03:19:39.338Z",
+      "ms": 1585.4486000000034,
+      "status": 200,
+      "bytes": 1000000
+    },
+    {
+      "endpoint": "submissions",
+      "reservation": "ed825243-94cb-4661-a54f-6d358526c8af",
+      "path": "submissions",
+      "method": "POST",
+      "ms": 6449.975099999996,
+      "status": 200,
+      "bytes": 239,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:19:45.797Z",
+      "cpuUs": 159172,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "a020e7d3-bedb-4908-90d8-1d7a1787a922",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.1, auth-validate;dur=0.5, profile;dur=14.8, auth-revoke;dur=311.2, access;dur=311.8, transaction;dur=231.4, drive-queue;dur=0.1, drive-http;dur=14525.3, drive-metadata;dur=4289.0, drive-sharing;dur=10258.7, drive-publish;dur=14548.0, drive-publish-wall;dur=5777.4, save;dur=6058.6, handler;dur=6370.6",
+      "observed": {
+        "reads": 14,
+        "transactionExecutions": 2,
+        "transactionAttempts": 2,
+        "storeTransactionAttempts": 2,
+        "driveActivePeak": 3,
+        "driveRequests": 20,
+        "driveStatus200": 20,
+        "driveUnitsEstimate": 1050,
+        "writes": 4
+      }
+    },
+    {
+      "endpoint": "workflow/save-ack",
+      "method": "WORKFLOW",
+      "timestamp": "2026-10-30T03:19:45.804Z",
+      "ms": 27771.402400000006,
+      "status": 200
+    },
+    {
+      "endpoint": "workflow/save-metadata",
+      "method": "WORKFLOW",
+      "timestamp": "2026-10-30T03:19:45.804Z",
+      "ms": 12611.896900000022,
+      "status": 200
+    },
+    {
+      "endpoint": "submissions/:id",
+      "reservation": "04c54d32-d6a7-44c1-9a5a-867f494bb3ae",
+      "path": "submissions/:id",
+      "method": "GET",
+      "ms": 376.3162000000011,
+      "status": 200,
+      "bytes": 4104,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:19:46.182Z",
+      "cpuUs": 16015,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "96a535ae-0d51-43ea-9408-d1fbd50ca6ac",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=18.5, auth-revoke;dur=318.2, access;dur=318.8, query;dur=15.3, handler;dur=334.2",
+      "observed": {
+        "reads": 2
+      }
+    },
+    {
+      "endpoint": "workflow/save-verified",
+      "method": "WORKFLOW",
+      "timestamp": "2026-10-30T03:19:46.187Z",
+      "ms": 28155.036099999998,
+      "status": 200,
+      "bytes": 10000000
+    },
+    {
+      "endpoint": "upload-sessions",
+      "reservation": "a8ee40d6-becf-468a-a9ea-4f1e161db348",
+      "path": "upload-sessions",
+      "method": "POST",
+      "ms": 1448.5216000000073,
+      "status": 201,
+      "bytes": 146,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:20:06.371Z",
+      "cpuUs": 134794,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "faa8ec0e-d384-4ca1-95fc-410dc15fa591",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=19.2, auth-revoke;dur=1060.2, access;dur=1060.7, transaction;dur=112.7, drive-reserve;dur=0.0, drive-prepare-wall;dur=0.0, upload-preparation;dur=286.8, handler;dur=1347.8",
+      "observed": {
+        "reads": 11,
+        "transactionExecutions": 3,
+        "transactionAttempts": 3,
+        "storeTransactionAttempts": 2,
+        "writes": 1
+      }
+    },
+    {
+      "endpoint": "submissions/:id/edits",
+      "reservation": "978bcb04-2a8f-4831-81b7-dc31a8e20b19",
+      "path": "submissions/:id/edits",
+      "method": "POST",
+      "ms": 2311.2700999999943,
+      "status": 200,
+      "bytes": 239,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:20:08.687Z",
+      "cpuUs": 111865,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "11fedc02-5b0c-4690-a4f8-85499ed6be28",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=13.0, auth-revoke;dur=295.7, access;dur=296.3, transaction;dur=217.5, drive-queue;dur=0.1, drive-http;dur=4588.3, drive-metadata;dur=4639.8, drive-publish;dur=4640.1, drive-publish-wall;dur=1677.2, save;dur=1959.2, handler;dur=2255.8",
+      "observed": {
+        "reads": 14,
+        "transactionExecutions": 2,
+        "transactionAttempts": 2,
+        "storeTransactionAttempts": 2,
+        "driveActivePeak": 3,
+        "driveRequests": 10,
+        "driveStatus200": 10,
+        "driveUnitsEstimate": 50,
+        "writes": 3
+      }
+    },
+    {
+      "endpoint": "workflow/save-ack",
+      "method": "WORKFLOW",
+      "timestamp": "2026-10-30T03:20:08.692Z",
+      "ms": 3790.2887000000046,
+      "status": 200
+    },
+    {
+      "endpoint": "workflow/save-metadata",
+      "method": "WORKFLOW",
+      "timestamp": "2026-10-30T03:20:08.692Z",
+      "ms": 3790.294099999999,
+      "status": 200
+    },
+    {
+      "endpoint": "submissions/:id",
+      "reservation": "3576642c-f921-479f-bc38-402cd0f3df40",
+      "path": "submissions/:id",
+      "method": "GET",
+      "ms": 360.2178000000131,
+      "status": 200,
+      "bytes": 4110,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:20:09.053Z",
+      "cpuUs": 13942,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "e88c9cc2-2c6f-4cf0-9206-cdaaeaec3b90",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=14.6, auth-revoke;dur=295.1, access;dur=295.6, query;dur=18.4, handler;dur=314.1",
+      "observed": {
+        "reads": 2
+      }
+    },
+    {
+      "endpoint": "workflow/save-verified",
+      "method": "WORKFLOW",
+      "timestamp": "2026-10-30T03:20:09.063Z",
+      "ms": 4161.396700000012,
+      "status": 200,
+      "bytes": 0
+    },
+    {
+      "endpoint": "submissions/:id/lock",
+      "reservation": "00df274d-1dde-42ce-add4-72daccedef6d",
+      "path": "submissions/:id/lock",
+      "method": "POST",
+      "ms": 553.656100000022,
+      "status": 200,
+      "bytes": 239,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:20:28.622Z",
+      "cpuUs": 38667,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "0184e237-5c4b-4a91-a260-ddcf9762f1e6",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=15.7, auth-revoke;dur=334.4, access;dur=335.0, transaction;dur=128.1, handler;dur=463.5",
+      "observed": {
+        "reads": 6,
+        "transactionExecutions": 1,
+        "transactionAttempts": 1,
+        "storeTransactionAttempts": 1,
+        "writes": 2
+      }
+    },
+    {
+      "endpoint": "submissions/:id/remarks",
+      "reservation": "230092f6-1548-4d05-a3c4-2d067a85f21e",
+      "path": "submissions/:id/remarks",
+      "method": "POST",
+      "ms": 546.1774999999907,
+      "status": 200,
+      "bytes": 242,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:20:46.927Z",
+      "cpuUs": 31868,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "139a0710-e45f-44e1-b990-4c648d941b38",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=22.2, auth-revoke;dur=316.3, access;dur=316.8, transaction;dur=171.2, handler;dur=488.5",
+      "observed": {
+        "reads": 6,
+        "transactionExecutions": 1,
+        "transactionAttempts": 1,
+        "storeTransactionAttempts": 1,
+        "writes": 3
+      }
+    },
+    {
+      "endpoint": "submissions/:id/unlock",
+      "reservation": "d53475d9-180a-43a2-b965-a80245e8d49c",
+      "path": "submissions/:id/unlock",
+      "method": "POST",
+      "ms": 596.7705999999889,
+      "status": 200,
+      "bytes": 241,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:21:07.457Z",
+      "cpuUs": 38679,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "ab398d11-fb4b-4c40-8e4d-47e8c8de44ed",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=25.8, auth-revoke;dur=339.2, access;dur=339.7, transaction;dur=170.7, handler;dur=510.8",
+      "observed": {
+        "reads": 6,
+        "transactionExecutions": 1,
+        "transactionAttempts": 1,
+        "storeTransactionAttempts": 1,
+        "writes": 2
+      }
+    },
+    {
+      "endpoint": "submissions/:id",
+      "reservation": "91df6689-a34b-4371-b9a9-f87ce26072fb",
+      "path": "submissions/:id",
+      "method": "GET",
+      "ms": 367.1931999999797,
+      "status": 200,
+      "bytes": 4109,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:21:07.830Z",
+      "cpuUs": 11601,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "6bc6d12b-bbcb-4a2b-92ee-adfc28508e64",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=21.8, auth-revoke;dur=300.8, access;dur=301.4, query;dur=16.1, handler;dur=317.7",
+      "observed": {
+        "reads": 2
+      }
+    },
+    {
+      "endpoint": "admin/test-runs/:id/results",
+      "reservation": "c8a98b8c-1e0a-46ac-830a-c2a1f58c9ac8",
+      "path": "admin/test-runs/:id/results",
+      "method": "POST",
+      "ms": 470.35130000000936,
+      "status": 200,
+      "bytes": 145,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:21:10.018Z",
+      "cpuUs": 33569,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "c9efa1a1-6cb1-44e7-9bfd-b60234d0b6dd",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=21.1, auth-revoke;dur=319.0, access;dur=319.5, handler;dur=419.2",
+      "observed": {
+        "reads": 5,
+        "transactionExecutions": 1,
+        "transactionAttempts": 1,
+        "writes": 2
+      }
+    },
+    {
+      "endpoint": "admin/test-runs/:id/close",
+      "reservation": "16d85824-4d04-4046-a046-86a81d3c77dd",
+      "path": "admin/test-runs/:id/close",
+      "method": "POST",
+      "ms": 465.0689999999886,
+      "status": 200,
+      "bytes": 145,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:21:10.531Z",
+      "cpuUs": 56305,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "e2fe4a4d-a8ba-44e5-ba86-13752677618d",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=14.9, auth-revoke;dur=321.2, access;dur=321.7, handler;dur=409.9",
+      "observed": {
+        "reads": 5,
+        "transactionExecutions": 1,
+        "transactionAttempts": 1,
+        "writes": 1
+      }
+    },
+    {
+      "endpoint": "admin/test-runs/:id/close",
+      "reservation": "b44f1d1e-5b11-42bb-9910-2046d7ebfb6b",
+      "path": "admin/test-runs/:id/close",
+      "method": "POST",
+      "ms": 453.2378000000026,
+      "status": 200,
+      "bytes": 145,
+      "attempt": 0,
+      "timestamp": "2026-10-30T03:21:10.989Z",
+      "cpuUs": 52610,
+      "source": "87788bf201f0fbf0295621dc931bbbb947eac599",
+      "requestId": "dc2d0e83-01cc-41a9-b6e4-2b8133b70728",
+      "instance": "f19f4d78-5e90-49c7-8e79-dabb44911034",
+      "firstObserved": false,
+      "serverTiming": "database-init;dur=0.0, auth-validate;dur=0.5, profile;dur=20.7, auth-revoke;dur=313.8, access;dur=314.4, handler;dur=407.8",
+      "observed": {
+        "reads": 5,
+        "transactionExecutions": 1,
+        "transactionAttempts": 1,
+        "writes": 1
+      }
+    }
+  ]
+}

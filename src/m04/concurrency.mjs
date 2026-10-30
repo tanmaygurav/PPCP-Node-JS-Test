@@ -1,5 +1,5 @@
 // This limit applies to one file workflow, not to browser byte transfers.
-export const DRIVE_FILE_CONCURRENCY = 3;
+export const DRIVE_FILE_CONCURRENCY = 5;
 
 export async function orderedPool(items, limit, work) {
   if (!Number.isInteger(limit) || limit < 1) throw new Error('Invalid worker limit.');

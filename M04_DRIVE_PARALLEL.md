@@ -24,4 +24,8 @@ Only after boundary acceptance, establish new-source baselines and continue the 
 
 ## Hosted observations
 
-Pending Preview measurements. No capacity certification or Production promotion is implied by local/emulator success.
+Three-worker source `87788bf201f0fbf0295621dc931bbbb947eac599`, protected Preview deployment `dpl_3GA8xP5u2yn6bg1dmnohMgDs8k7a`, completed three independent boundary workflows. Create times: 6,298 / 6,337 / 6,450 ms. Retained-file edit times: 2,380 / 2,325 / 2,311 ms. All HTTP requests/integrity checks passed, anonymous Drive viewing passed once per trial, and PP039 comparisons passed. No quota/server errors or ten-second hard failures occurred. These are latency misses, not capacity acceptance.
+
+First-trial elapsed preparation was 6,648 ms, including `drive-prepare-wall` 5,419 ms. Publication elapsed `drive-publish-wall` was 5,610 ms while cumulative per-file publication work was 14,541 ms; retained-file publication elapsed was 1,721 ms versus 4,693 ms of cumulative work. Peak active Drive operations observed was three. The external request counts were unchanged (21 preparation including ten expected pre-upload 404 probes, 20 create, ten retained-file edit). No overlapping spans are added to infer elapsed time.
+
+The approved second candidate changes only the runtime per-request file pool from three to five, retaining six instance-wide Drive permits. It is pending three identical hosted trials. Production remains unchanged. No higher-load escalation is allowed unless the boundary gate passes.
